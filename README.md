@@ -1,6 +1,6 @@
-# Cloud Foundry Buildpack Usage CLI Plugin
+# Cloud Foundry App Info Usage CLI Plugin
 
-Cloud Foundry plugin extension to view all buildpacks used in across a Cloud Foundry or in specific organizations and spaces.
+Cloud Foundry plugin extension to view the buildpacks, instances, capacity assigned to all the applications those are running in a Cloud Foundry deployment.
 
 ## Install
 
