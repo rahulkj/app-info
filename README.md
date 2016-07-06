@@ -55,5 +55,5 @@ pivotal,dev,test,STARTED,1,1024 MB,1024 MB
 ## Uninstall
 
 ```
-$ cf uninstall-plugin buildpack-usage
+$ cf uninstall-plugin app-info
 ```
