@@ -33,7 +33,7 @@ pivotal,dev,test,STARTED,java-buildpack=v3.6-offline-https://github.com/cloudfou
 ```
 
 ```
-$ cf buildpack-usage --verbose
+$ cf app-info --verbose
 
 Following is the csv output
 
