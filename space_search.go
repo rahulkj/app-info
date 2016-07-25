@@ -29,7 +29,7 @@ type SpaceSearchEntity struct {
 }
 
 // GetSpaceData requests all of the Application data from Cloud Foundry
-func (c BuildpackUsage) GetSpaces(cli plugin.CliConnection) map[string]SpaceSearchEntity {
+func (c AppInfo) GetSpaces(cli plugin.CliConnection) map[string]SpaceSearchEntity {
 	var data map[string]SpaceSearchEntity
 	data = make(map[string]SpaceSearchEntity)
 	spaces := c.GetSpaceData(cli)
@@ -42,7 +42,7 @@ func (c BuildpackUsage) GetSpaces(cli plugin.CliConnection) map[string]SpaceSear
 }
 
 // GetSpaceData requests all of the Application data from Cloud Foundry
-func (c BuildpackUsage) GetSpaceData(cli plugin.CliConnection) SpaceSearchResults {
+func (c AppInfo) GetSpaceData(cli plugin.CliConnection) SpaceSearchResults {
 	var res SpaceSearchResults
 	res = c.UnmarshallSpaceSearchResults("/v2/spaces?order-direction=asc&results-per-page=100", cli)
 
@@ -57,7 +57,7 @@ func (c BuildpackUsage) GetSpaceData(cli plugin.CliConnection) SpaceSearchResult
 	return res
 }
 
-func (c BuildpackUsage) UnmarshallSpaceSearchResults(apiUrl string, cli plugin.CliConnection) SpaceSearchResults {
+func (c AppInfo) UnmarshallSpaceSearchResults(apiUrl string, cli plugin.CliConnection) SpaceSearchResults {
 	var tRes SpaceSearchResults
 	cmd := []string{"curl", apiUrl}
 	output, _ := cli.CliCommandWithoutTerminalOutput(cmd...)

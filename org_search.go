@@ -27,7 +27,7 @@ type OrgSearchEntity struct {
 	Name string `json:"name"`
 }
 
-func (c BuildpackUsage) GetOrgs(cli plugin.CliConnection) map[string]string {
+func (c AppInfo) GetOrgs(cli plugin.CliConnection) map[string]string {
 	var data map[string]string
 	data = make(map[string]string)
 	orgs := c.GetOrgData(cli)
@@ -40,7 +40,7 @@ func (c BuildpackUsage) GetOrgs(cli plugin.CliConnection) map[string]string {
 }
 
 // GetOrgData requests all of the Application data from Cloud Foundry
-func (c BuildpackUsage) GetOrgData(cli plugin.CliConnection) OrgSearchResults {
+func (c AppInfo) GetOrgData(cli plugin.CliConnection) OrgSearchResults {
 	var res OrgSearchResults
 	res = c.UnmarshallOrgSearchResults("/v2/organizations?order-direction=asc&results-per-page=100", cli)
 
@@ -55,7 +55,7 @@ func (c BuildpackUsage) GetOrgData(cli plugin.CliConnection) OrgSearchResults {
 	return res
 }
 
-func (c BuildpackUsage) UnmarshallOrgSearchResults(apiUrl string, cli plugin.CliConnection) OrgSearchResults {
+func (c AppInfo) UnmarshallOrgSearchResults(apiUrl string, cli plugin.CliConnection) OrgSearchResults {
 	var tRes OrgSearchResults
 	cmd := []string{"curl", apiUrl}
 	output, _ := cli.CliCommandWithoutTerminalOutput(cmd...)

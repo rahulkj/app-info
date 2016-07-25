@@ -35,7 +35,7 @@ type AppSearchEntity struct {
 }
 
 // GetAppData requests all of the Application data from Cloud Foundry
-func (c BuildpackUsage) GetAppData(cli plugin.CliConnection) AppSearchResults {
+func (c AppInfo) GetAppData(cli plugin.CliConnection) AppSearchResults {
 	var res AppSearchResults
 	res = c.UnmarshallAppSearchResults("/v2/apps?order-direction=asc&results-per-page=100", cli)
 
@@ -50,7 +50,7 @@ func (c BuildpackUsage) GetAppData(cli plugin.CliConnection) AppSearchResults {
 	return res
 }
 
-func (c BuildpackUsage) UnmarshallAppSearchResults(apiUrl string, cli plugin.CliConnection) AppSearchResults {
+func (c AppInfo) UnmarshallAppSearchResults(apiUrl string, cli plugin.CliConnection) AppSearchResults {
 	var tRes AppSearchResults
 	cmd := []string{"curl", apiUrl}
 	output, _ := cli.CliCommandWithoutTerminalOutput(cmd...)

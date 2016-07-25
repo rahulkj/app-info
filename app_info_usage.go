@@ -6,8 +6,8 @@ import (
 	"github.com/cloudfoundry/cli/plugin"
 )
 
-// BuildpackUsage represents Buildpack Usage CLI interface
-type BuildpackUsage struct{}
+// AppInfo represents Buildpack Usage CLI interface
+type AppInfo struct{}
 
 // Metadata is the data retrived from the response json
 type Metadata struct {
@@ -15,7 +15,7 @@ type Metadata struct {
 }
 
 // GetMetadata provides the Cloud Foundry CLI with metadata to provide user about how to use buildpack-usage command
-func (c *BuildpackUsage) GetMetadata() plugin.PluginMetadata {
+func (c *AppInfo) GetMetadata() plugin.PluginMetadata {
 	return plugin.PluginMetadata{
 		Name: "app-info",
 		Version: plugin.VersionType{
@@ -36,11 +36,11 @@ func (c *BuildpackUsage) GetMetadata() plugin.PluginMetadata {
 }
 
 func main() {
-	plugin.Start(new(BuildpackUsage))
+	plugin.Start(new(AppInfo))
 }
 
 // Run is what is executed by the Cloud Foundry CLI when the buildpack-usage command is specified
-func (c BuildpackUsage) Run(cli plugin.CliConnection, args []string) {
+func (c AppInfo) Run(cli plugin.CliConnection, args []string) {
 	if args[0] == "app-info" {
 		orgs := c.GetOrgs(cli)
 		spaces := c.GetSpaces(cli)
@@ -57,7 +57,7 @@ func (c BuildpackUsage) Run(cli plugin.CliConnection, args []string) {
 }
 
 // PrintInCSVFormat prints the app and buildpack used info on the console
-func (c BuildpackUsage) PrintInCSVFormat(orgs map[string]string, spaces map[string]SpaceSearchEntity, apps AppSearchResults) {
+func (c AppInfo) PrintInCSVFormat(orgs map[string]string, spaces map[string]SpaceSearchEntity, apps AppSearchResults) {
 	fmt.Println("")
 
 	fmt.Printf("Following is the csv output \n\n")
@@ -79,7 +79,7 @@ func (c BuildpackUsage) PrintInCSVFormat(orgs map[string]string, spaces map[stri
 }
 
 // PrintVerboseOutputInCSVFormat prints the app state, instances, memroy and disk data to console
-func (c BuildpackUsage) PrintVerboseOutputInCSVFormat(orgs map[string]string, spaces map[string]SpaceSearchEntity, apps AppSearchResults) {
+func (c AppInfo) PrintVerboseOutputInCSVFormat(orgs map[string]string, spaces map[string]SpaceSearchEntity, apps AppSearchResults) {
 	fmt.Println("")
 
 	fmt.Printf("Following is the csv output \n\n")
