@@ -18,12 +18,7 @@ type OrgSearchResults struct {
 
 // OrgSearchResources represents resources attribute of JSON response from Cloud Foundry API
 type OrgSearchResources struct {
-	Entity   OrgSearchEntity `json:"entity"`
-	Metadata Metadata        `json:"metadata"`
-}
-
-// OrgSearchEntity represents entity attribute of resources attribute within JSON response from Cloud Foundry API
-type OrgSearchEntity struct {
+	GUID string `json:"guid"`
 	Name string `json:"name"`
 }
 
@@ -33,7 +28,7 @@ func (c AppInfo) GetOrgs(cli plugin.CliConnection) map[string]string {
 	orgs := c.GetOrgData(cli)
 
 	for _, val := range orgs.Resources {
-		data[val.Metadata.GUID] = val.Entity.Name
+		data[val.GUID] = val.Name
 	}
 
 	return data
@@ -42,11 +37,11 @@ func (c AppInfo) GetOrgs(cli plugin.CliConnection) map[string]string {
 // GetOrgData requests all of the Application data from Cloud Foundry
 func (c AppInfo) GetOrgData(cli plugin.CliConnection) OrgSearchResults {
 	var res OrgSearchResults
-	res = c.UnmarshallOrgSearchResults("/v2/organizations?order-direction=asc&results-per-page=100", cli)
+	res = c.UnmarshallOrgSearchResults("/v3/organizations", cli)
 
-	if res.TotalPages > 1 {
-		for i := 2; i <= res.TotalPages; i++ {
-			apiUrl := fmt.Sprintf("/v2/organizations?order-direction=asc&page=%v&results-per-page=100", strconv.Itoa(i))
+	if res.TotalPages > 0 {
+		for i := 0; i <= res.TotalPages; i++ {
+			apiUrl := fmt.Sprintf("/v3/organizations", strconv.Itoa(i))
 			tRes := c.UnmarshallOrgSearchResults(apiUrl, cli)
 			res.Resources = append(res.Resources, tRes.Resources...)
 		}

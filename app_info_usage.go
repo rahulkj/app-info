@@ -57,7 +57,7 @@ func (c AppInfo) Run(cli plugin.CliConnection, args []string) {
 }
 
 // PrintInCSVFormat prints the app and buildpack used info on the console
-func (c AppInfo) PrintInCSVFormat(orgs map[string]string, spaces map[string]SpaceSearchEntity, apps AppSearchResults) {
+func (c AppInfo) PrintInCSVFormat(orgs map[string]string, spaces map[string]SpaceSearchResources, apps AppSearchResults) {
 	fmt.Println("")
 
 	fmt.Printf("Following is the csv output \n\n")
@@ -66,20 +66,17 @@ func (c AppInfo) PrintInCSVFormat(orgs map[string]string, spaces map[string]Spac
 
 	for _, val := range apps.Resources {
 		bp := val.Entity.Buildpack
-		if bp == "" {
-			bp = val.Entity.DetectedBuildpack
-		}
 
 		space := spaces[val.Entity.SpaceGUID]
 		spaceName := space.Name
-		orgName := orgs[space.OrgGUID]
+		orgName := orgs[space.Relationships.RelationshipsOrg.OrgData.OrgGUID]
 
 		fmt.Printf("%s,%s,%s,%s,%s\n", orgName, spaceName, val.Entity.Name, val.Entity.State, bp)
 	}
 }
 
 // PrintVerboseOutputInCSVFormat prints the app state, instances, memroy and disk data to console
-func (c AppInfo) PrintVerboseOutputInCSVFormat(orgs map[string]string, spaces map[string]SpaceSearchEntity, apps AppSearchResults) {
+func (c AppInfo) PrintVerboseOutputInCSVFormat(orgs map[string]string, spaces map[string]SpaceSearchResources, apps AppSearchResults) {
 	fmt.Println("")
 
 	fmt.Printf("Following is the csv output \n\n")
@@ -90,7 +87,7 @@ func (c AppInfo) PrintVerboseOutputInCSVFormat(orgs map[string]string, spaces ma
 
 		space := spaces[val.Entity.SpaceGUID]
 		spaceName := space.Name
-		orgName := orgs[space.OrgGUID]
+		orgName := orgs[space.Relationships.RelationshipsOrg.OrgData.OrgGUID]
 
 		fmt.Printf("%s,%s,%s,%s,%v,%v MB,%v MB\n", orgName, spaceName, val.Entity.Name, val.Entity.State, val.Entity.Instances, val.Entity.Memory, val.Entity.DiskQuota)
 	}

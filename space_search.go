@@ -18,24 +18,31 @@ type SpaceSearchResults struct {
 
 // SpaceSearchResources represents resources attribute of JSON response from Cloud Foundry API
 type SpaceSearchResources struct {
-	Entity   SpaceSearchEntity `json:"entity"`
-	Metadata Metadata          `json:"metadata"`
+	Name          string             `json:"name"`
+	SpaceGUID     string             `json:"guid"`
+	Relationships SpaceRelationships `json:"relationships"`
 }
 
-// SpaceSearchEntity represents entity attribute of resources attribute within JSON response from Cloud Foundry API
-type SpaceSearchEntity struct {
-	Name    string `json:"name"`
-	OrgGUID string `json:"organization_guid"`
+type SpaceRelationships struct {
+	RelationshipsOrg RelationshipsOrg `json:"organization"`
+}
+
+type RelationshipsOrg struct {
+	OrgData OrgData `json:"data"`
+}
+
+type OrgData struct {
+	OrgGUID string `json:"guid"`
 }
 
 // GetSpaceData requests all of the Application data from Cloud Foundry
-func (c AppInfo) GetSpaces(cli plugin.CliConnection) map[string]SpaceSearchEntity {
-	var data map[string]SpaceSearchEntity
-	data = make(map[string]SpaceSearchEntity)
+func (c AppInfo) GetSpaces(cli plugin.CliConnection) map[string]SpaceSearchResources {
+	var data map[string]SpaceSearchResources
+	data = make(map[string]SpaceSearchResources)
 	spaces := c.GetSpaceData(cli)
 
 	for _, val := range spaces.Resources {
-		data[val.Metadata.GUID] = val.Entity
+		data[val.SpaceGUID] = val
 	}
 
 	return data
@@ -44,11 +51,11 @@ func (c AppInfo) GetSpaces(cli plugin.CliConnection) map[string]SpaceSearchEntit
 // GetSpaceData requests all of the Application data from Cloud Foundry
 func (c AppInfo) GetSpaceData(cli plugin.CliConnection) SpaceSearchResults {
 	var res SpaceSearchResults
-	res = c.UnmarshallSpaceSearchResults("/v2/spaces?order-direction=asc&results-per-page=100", cli)
+	res = c.UnmarshallSpaceSearchResults("/v3/spaces", cli)
 
 	if res.TotalPages > 1 {
 		for i := 2; i <= res.TotalPages; i++ {
-			apiUrl := fmt.Sprintf("/v2/spaces?order-direction=asc&page=%v&results-per-page=100", strconv.Itoa(i))
+			apiUrl := fmt.Sprintf("/v3/spaces", strconv.Itoa(i))
 			tRes := c.UnmarshallSpaceSearchResults(apiUrl, cli)
 			res.Resources = append(res.Resources, tRes.Resources...)
 		}
