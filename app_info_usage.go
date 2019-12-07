@@ -20,7 +20,7 @@ func (c *AppInfo) GetMetadata() plugin.PluginMetadata {
 		Name: "app-info",
 		Version: plugin.VersionType{
 			Major: 1,
-			Minor: 1,
+			Minor: 2,
 			Build: 0,
 		},
 		Commands: []plugin.Command{
