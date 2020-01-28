@@ -6,7 +6,8 @@ Cloud Foundry plugin extension to view the buildpacks, instances, capacity assig
 
 ```
 $ go get github.com/rahulkj/app-info
-$ cf install-plugin $GOPATH/bin/app-info
+$ go build github.com/rahulkj/app-info
+$ cf install-plugin app-info
 ```
 
 ## Usage
