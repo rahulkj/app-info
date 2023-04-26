@@ -36,8 +36,7 @@ func (c AppInfo) GetOrgs(cli plugin.CliConnection) map[string]string {
 
 // GetOrgData requests all of the Application data from Cloud Foundry
 func (c AppInfo) GetOrgData(cli plugin.CliConnection) OrgSearchResults {
-	var res OrgSearchResults
-	res = c.UnmarshallOrgSearchResults("/v3/organizations", cli)
+	var res OrgSearchResults = c.UnmarshallOrgSearchResults("/v3/organizations", cli)
 
 	if res.TotalPages > 0 {
 		for i := 0; i <= res.TotalPages; i++ {

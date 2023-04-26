@@ -37,8 +37,7 @@ type OrgData struct {
 
 // GetSpaceData requests all of the Application data from Cloud Foundry
 func (c AppInfo) GetSpaces(cli plugin.CliConnection) map[string]SpaceSearchResources {
-	var data map[string]SpaceSearchResources
-	data = make(map[string]SpaceSearchResources)
+	var data map[string]SpaceSearchResources = make(map[string]SpaceSearchResources)
 	spaces := c.GetSpaceData(cli)
 
 	for _, val := range spaces.Resources {
@@ -50,8 +49,7 @@ func (c AppInfo) GetSpaces(cli plugin.CliConnection) map[string]SpaceSearchResou
 
 // GetSpaceData requests all of the Application data from Cloud Foundry
 func (c AppInfo) GetSpaceData(cli plugin.CliConnection) SpaceSearchResults {
-	var res SpaceSearchResults
-	res = c.UnmarshallSpaceSearchResults("/v3/spaces", cli)
+	var res SpaceSearchResults = c.UnmarshallSpaceSearchResults("/v3/spaces", cli)
 
 	if res.TotalPages > 1 {
 		for i := 2; i <= res.TotalPages; i++ {
