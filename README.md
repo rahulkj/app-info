@@ -58,7 +58,7 @@ bob,dev,cf-example-staticfile,STARTED,staticfile_buildpack,staticfile
 ```
 
 ```
-> cf app-info --manifest
+> cf app-info --manifests
 
 Gathering pplication metadata from all orgs and spaces
 Output will be generated in:  /Users/xxxxx/Documents/output
