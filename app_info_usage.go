@@ -1,7 +1,9 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"os"
 
 	"code.cloudfoundry.org/cli/plugin"
 )
@@ -19,16 +21,21 @@ func (c *AppInfo) GetMetadata() plugin.PluginMetadata {
 	return plugin.PluginMetadata{
 		Name: "app-info",
 		Version: plugin.VersionType{
-			Major: 1,
-			Minor: 2,
+			Major: 2,
+			Minor: 0,
 			Build: 0,
 		},
 		Commands: []plugin.Command{
 			{
 				Name:     "app-info",
-				HelpText: "Command to view all apps running across all orgs/spaces in the cf deployment with specific details",
+				HelpText: "Command to view all apps running across all orgs/spaces in the cf deployment",
 				UsageDetails: plugin.Usage{
-					Usage: "cf app-info\n   cf app-info --verbose",
+					Usage: "cf app-info [flags]",
+					Options: map[string]string{
+						"--csv or -c":       "Minimal application details",
+						"--json or -j":      "All application details in json format",
+						"--manifests or -m": "Generate application mainfests in current working directory",
+					},
 				},
 			},
 		},
@@ -42,23 +49,28 @@ func main() {
 // Run is what is executed by the Cloud Foundry CLI when the buildpack-usage command is specified
 func (c AppInfo) Run(cli plugin.CliConnection, args []string) {
 	if args[0] == "app-info" {
-		orgs := c.GetOrgs(cli)
-		spaces := c.GetSpaces(cli)
-		apps := c.GetAppData(cli)
-		if len(args) == 2 {
-			if args[1] == "--verbose" {
-				c.PrintVerboseOutputInCSVFormat(orgs, spaces, apps)
-			}
-		} else {
-			c.PrintInCSVFormat(orgs, spaces, apps)
+		if len(args) < 2 {
+			fmt.Printf("Missing flags, please run help to see the valid options")
+			os.Exit(0)
 		}
 
+		if args[1] == "--json" || args[1] == "-j" {
+			c.printVerboseOutputInJsonFormat(cli)
+		} else if args[1] == "--manifests" || args[1] == "-m" {
+			c.downloadApplicationManifests(cli)
+		} else if args[1] == "--csv" || args[1] == "-c" {
+			c.printInCSVFormat(cli)
+		} else {
+			fmt.Printf("Invalid flags, please run help to see the valid options")
+		}
 	}
 }
 
 // PrintInCSVFormat prints the app and buildpack used info on the console
-func (c AppInfo) PrintInCSVFormat(orgs map[string]string, spaces map[string]SpaceSearchResources, apps AppSearchResults) {
+func (c AppInfo) printInCSVFormat(cli plugin.CliConnection) {
 	fmt.Println("")
+
+	orgs, spaces, apps := c.GatherData(cli)
 
 	fmt.Printf("Following is the csv output \n\n")
 
@@ -77,14 +89,22 @@ func (c AppInfo) PrintInCSVFormat(orgs map[string]string, spaces map[string]Spac
 	}
 }
 
-// PrintVerboseOutputInCSVFormat prints the app state, instances, memroy and disk data to console
-func (c AppInfo) PrintVerboseOutputInCSVFormat(orgs map[string]string, spaces map[string]SpaceSearchResources, apps AppSearchResults) {
+// PrintVerboseOutputInJsonFormat prints the app state, instances, memroy and disk data to console
+func (c AppInfo) printVerboseOutputInJsonFormat(cli plugin.CliConnection) {
 	fmt.Println("")
+
+	orgs, spaces, apps := c.GatherData(cli)
+
+	b, err := json.Marshal(apps)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(string(b))
 
 	fmt.Printf("Following is the csv output \n\n")
 
 	fmt.Printf("%s,%s,%s,%s,%s,%s,%s,%s,%s\n", "ORG", "SPACE", "APPLICATION", "STATE", "INSTANCES", "MEMORY", "DISK", "STARTUP-COMMAND", "ENVIRONMENT-JSON")
-
 	for _, val := range apps.Resources {
 
 		space := spaces[val.Entity.SpaceGUID]
@@ -93,4 +113,25 @@ func (c AppInfo) PrintVerboseOutputInCSVFormat(orgs map[string]string, spaces ma
 
 		fmt.Printf("%s,%s,%s,%s,%v,%v MB,%v MB,%s,%s\n", orgName, spaceName, val.Entity.Name, val.Entity.State, val.Entity.Instances, val.Entity.Memory, val.Entity.DiskQuota, val.Entity.StartCommand, val.Entity.Environment)
 	}
+}
+
+func (c AppInfo) downloadApplicationManifests(cli plugin.CliConnection) {
+
+	fmt.Println("Gathering pplication metadata from all orgs and spaces")
+
+	currentDir, err := os.Getwd()
+	if err != nil {
+		fmt.Printf("Failed to access current directory: %s\n", err)
+		return
+	}
+
+	currentDir = currentDir + "/output"
+
+	fmt.Println("Output will be generated in: ", currentDir)
+
+	os.MkdirAll(currentDir, os.ModePerm)
+
+	c.GenerateAppManifests(currentDir, cli)
+
+	fmt.Println("Generate application manifests are located in: ", currentDir)
 }

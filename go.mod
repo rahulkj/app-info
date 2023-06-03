@@ -5,6 +5,7 @@ go 1.19
 require (
 	code.cloudfoundry.org/cli v7.1.0+incompatible
 	github.com/cloudfoundry/cli v7.1.0+incompatible
+	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (

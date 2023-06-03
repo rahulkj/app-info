@@ -3,8 +3,13 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
+
+	"gopkg.in/yaml.v3"
 
 	"github.com/cloudfoundry/cli/plugin"
 )
@@ -27,31 +32,25 @@ type AppMetadata struct {
 }
 
 type AppEntity struct {
-	Name                string            `json:"name"`
-	Instances           int               `json:"instances"`
-	State               string            `json:"state"`
-	Memory              int               `json:"memory"`
-	DiskQuota           int               `json:"disk_quota"`
-	Buildpack           string            `json:"buildpack"`
-	DetectedBuildPack   string            `json:"detected_buildpack"`
-	SpaceGUID           string            `json:"space_guid"`
-	StartCommand        string            `json:"detected_start_command"`
-	Environment         map[string]string `json:"environment_json"`
-	Command             string            `json:"command"`
-	HealthCheck         string            `json:"health_check_type"`
-	HealthCheckEndpoint string            `json:"health_check_http_endpoint"`
-	Routes              []string
-	RoutesUrl           string `json:"routes_url"`
-	Stack               string
-	StackUrl            string `json:"stack_url"`
-	ServiceInstances    []ServiceInstanceEntity
-	ServiceUrl          string `json:"service_bindings_url"`
-}
-
-type AppServices struct {
-	ServiceName    string
-	ServiceVersion string
-	ServiceType    string
+	Name                string                  `json:"name"`
+	Instances           int                     `json:"instances"`
+	State               string                  `json:"state"`
+	Memory              int                     `json:"memory"`
+	DiskQuota           int                     `json:"disk_quota"`
+	Buildpack           string                  `json:"buildpack"`
+	DetectedBuildPack   string                  `json:"detected_buildpack"`
+	SpaceGUID           string                  `json:"space_guid"`
+	StartCommand        string                  `json:"detected_start_command"`
+	Environment         map[string]string       `json:"environment_json"`
+	Command             string                  `json:"command"`
+	HealthCheck         string                  `json:"health_check_type"`
+	HealthCheckEndpoint string                  `json:"health_check_http_endpoint"`
+	Routes              []string                `json:"routes"`
+	RoutesUrl           string                  `json:"routes_url"`
+	Stack               string                  `json:"stack"`
+	StackUrl            string                  `json:"stack_url"`
+	ServiceInstances    []ServiceInstanceEntity `json:"service_instances`
+	ServiceUrl          string                  `json:"service_bindings_url"`
 }
 
 type Services struct {
@@ -115,15 +114,14 @@ func (c AppInfo) GetAppData(cli plugin.CliConnection) AppSearchResults {
 		}
 	}
 
-	for _, app := range res.Resources {
-		routes := c.getRoutes(app, cli)
-		app.Entity.Routes = routes
+	for i, app := range res.Resources {
+		c.getRoutes(&app, cli)
 
-		stack := c.getStacks(app, cli)
-		app.Entity.Stack = stack
+		c.getStacks(&app, cli)
 
-		services := c.getServices(app, cli)
-		app.Entity.ServiceInstances = services
+		c.getServices(&app, cli)
+
+		res.Resources[i] = app
 	}
 
 	return res
@@ -138,7 +136,7 @@ func (c AppInfo) UnmarshallAppSearchResults(apiUrl string, cli plugin.CliConnect
 	return tRes
 }
 
-func (c AppInfo) getRoutes(app AppSearchResources, cli plugin.CliConnection) []string {
+func (c AppInfo) getRoutes(app *AppSearchResources, cli plugin.CliConnection) {
 	var routeURLs []string
 	var routes Routes
 	cmd := []string{"curl", app.Entity.RoutesUrl}
@@ -156,18 +154,19 @@ func (c AppInfo) getRoutes(app AppSearchResources, cli plugin.CliConnection) []s
 		routeURLs = append(routeURLs, routeURL)
 	}
 
-	return routeURLs
+	app.Entity.Routes = routeURLs
 }
 
-func (c AppInfo) getStacks(app AppSearchResources, cli plugin.CliConnection) string {
+func (c AppInfo) getStacks(app *AppSearchResources, cli plugin.CliConnection) {
 	var stack Entity
 	cmd := []string{"curl", app.Entity.StackUrl}
 	output, _ := cli.CliCommandWithoutTerminalOutput(cmd...)
 	json.Unmarshal([]byte(strings.Join(output, "")), &stack)
-	return stack.Entity.Name
+
+	app.Entity.Stack = stack.Entity.Name
 }
 
-func (c AppInfo) getServices(app AppSearchResources, cli plugin.CliConnection) []ServiceInstanceEntity {
+func (c AppInfo) getServices(app *AppSearchResources, cli plugin.CliConnection) {
 	var services Services
 	var serviceInstances []ServiceInstanceEntity
 
@@ -183,5 +182,74 @@ func (c AppInfo) getServices(app AppSearchResources, cli plugin.CliConnection) [
 		serviceInstances = append(serviceInstances, serviceInstance.Entity)
 	}
 
-	return serviceInstances
+	app.Entity.ServiceInstances = serviceInstances
+}
+
+func (c AppInfo) GatherData(cli plugin.CliConnection) (map[string]string, map[string]SpaceSearchResources, AppSearchResults) {
+	orgs := c.GetOrgs(cli)
+	spaces := c.GetSpaces(cli)
+	apps := c.GetAppData(cli)
+
+	return orgs, spaces, apps
+}
+
+func (c AppInfo) DownloadApplicationManifest(currentDir string, cli plugin.CliConnection) {
+	orgs, spaces, apps := c.GatherData(cli)
+
+	for _, app := range apps.Resources {
+
+		space := spaces[app.Entity.SpaceGUID]
+		spaceName := space.Name
+		orgName := orgs[space.Relationships.RelationshipsOrg.OrgData.OrgGUID]
+
+		cmd := []string{"curl", "/v3/apps/" + app.Metadata.AppGUID + "/manifest"}
+		appManifest, _ := cli.CliCommandWithoutTerminalOutput(cmd...)
+
+		yamlData := strings.Join(appManifest, "\n")
+
+		fileName := app.Entity.Name + ".yml"
+
+		orgDir := currentDir + "/" + orgName + "/" + spaceName
+
+		os.MkdirAll(orgDir, os.ModePerm)
+
+		filePath := filepath.Join(orgDir, fileName)
+
+		if err := ioutil.WriteFile(filePath, []byte(yamlData), 0644); err != nil {
+			fmt.Printf("Failed to write file '%s': %s\n", fileName, err)
+			return
+		}
+		fmt.Printf("File '%s' created successfully.\n", fileName)
+	}
+}
+
+func (c AppInfo) GenerateAppManifests(currentDir string, cli plugin.CliConnection) {
+	orgs, spaces, apps := c.GatherData(cli)
+
+	for _, app := range apps.Resources {
+
+		space := spaces[app.Entity.SpaceGUID]
+		spaceName := space.Name
+		orgName := orgs[space.Relationships.RelationshipsOrg.OrgData.OrgGUID]
+
+		yamlData, err := yaml.Marshal(app)
+		if err != nil {
+			fmt.Printf("Failed to marshal YAML: %s\n", err)
+			return
+		}
+
+		fileName := app.Entity.Name + ".yml"
+
+		orgDir := currentDir + "/" + orgName + "/" + spaceName
+
+		os.MkdirAll(orgDir, os.ModePerm)
+
+		filePath := filepath.Join(orgDir, fileName)
+
+		if err := ioutil.WriteFile(filePath, []byte(yamlData), 0644); err != nil {
+			fmt.Printf("Failed to write file '%s': %s\n", fileName, err)
+			return
+		}
+		fmt.Printf("File '%s' created successfully.\n", fileName)
+	}
 }
