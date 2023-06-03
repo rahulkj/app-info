@@ -3,12 +3,9 @@
 Cloud Foundry plugin extension to view the buildpacks, instances, capacity assigned to all the applications those are running in a Cloud Foundry deployment.
 
 ## Install
-
-```
-$ go get github.com/rahulkj/app-info
-$ go build github.com/rahulkj/app-info
-$ cf install-plugin app-info
-```
+* Download the [latest release](https://github.com/rahulkj/app-info/releases/) for your OS 
+* Run the command
+    `cf install-plugin <Path-To-The-Downloaded-Location>/app-info-<OS>-amd64 -f`
 
 ## Usage
 
