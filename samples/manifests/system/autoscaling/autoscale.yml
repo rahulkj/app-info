@@ -12,14 +12,14 @@ entity:
     startcommand: '>&2 echo Error: no start command specified during staging or launch && exit 1'
     environment:
         API_CLIENT_ID: autoscaling_api
-        BASIC_AUTH_PASSWORD: bfupYYVkaKivtl0o31y7DlhNhG2bTY
-        BASIC_AUTH_USERNAME: SbYMpMaKRHgoxALORdeI
+        BASIC_AUTH_PASSWORD: XXXXXXXXXXXX
+        BASIC_AUTH_USERNAME: XXXXXXXXXXXX
         BROKER_NAME: app-autoscaler
         CC_HOST: https://api.sys.tas.example.io
         DATABASE_CA_CERT: No database CA certificate provided
         DATABASE_SERVER_NAME: ""
         DATABASE_SKIP_SSL_VALIDATION: "false"
-        DATABASE_URL: mysql://ojTbLChadFqDINYfsLnr:izN8PrTMvzUOW0ztTS3ydVA34bpKP4@mysql.service.cf.internal:3306/autoscale
+        DATABASE_URL: mysql://YYYYYY:XXXXXXXXXXXX@mysql.service.cf.internal:3306/autoscale
         ENABLE_DATABASE_TLS: "false"
         GODEBUG: x509sha1=1
         HOST: autoscale.sys.tas.example.io
@@ -39,7 +39,7 @@ entity:
         SCHEME: https
         SERVICE_ID: 6c1d35ca-b696-4e74-a9b9-4a45aab66e7d
         UAA_CLIENT_ID: autoscaling_service
-        UAA_CLIENT_SECRET: PEgOrEA-1pXUbqXCoYbQZURvfmRTVx0c
+        UAA_CLIENT_SECRET: XXXXXXXXXXXX
         UAA_HOST: https://login.sys.tas.example.io
         VERIFY_SSL: "true"
     command: bin/cf-autoscaling

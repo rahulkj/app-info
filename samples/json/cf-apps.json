@@ -1,1 +1,800 @@
-{"total_results":20,"total_pages":1,"resources":[{"metadata":{"guid":"6559b939-9882-4ba9-8888-9fc21a5d484b"},"entity":{"name":"app-usage-scheduler","instances":1,"state":"STARTED","memory":1024,"disk_quota":1024,"buildpack":"ruby_buildpack","detected_buildpack":"ruby","space_guid":"df9049fc-4e41-48b7-989d-95eb5a3a7fe2","detected_start_command":"bin/rails server -b 0.0.0.0 -p $PORT -e $RAILS_ENV","environment_json":{"ALLOW_TEST_DATA_CREATION":"false","ALLOW_VIEWING_LOGS":"false","CLOUD_CONTROLLER_URL":"https://api.sys.tas.example.io","CUTOFF_AGE_IN_DAYS":"365","DATABASE_URL":"mysql2://app_usage:GhrJzsLPdDavyyXUp39Qxw7OKzcXNj@mysql.service.cf.internal:3306/app_usage_service?reconnect=true","SECRET_KEY_BASE":"MNcQEJG7PzoipwAalg900YLBkhrBdw","SKIP_SSL_VALIDATION":"false","UAA_URL":"https://login.sys.tas.example.io","USAGE_SERVICE_UAA_CLIENT_ID":"usage_service","USAGE_SERVICE_UAA_CLIENT_SECRET":"UiD7dtvEvqD7DxGaU5EIxhJwcZV-uoGN"},"command":"bundle exec rake scheduler:start","health_check_type":"process","health_check_http_endpoint":"","routes":null,"routes_url":"/v2/apps/6559b939-9882-4ba9-8888-9fc21a5d484b/routes","stack":"cflinuxfs3","stack_url":"/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369","ServiceInstances":null,"service_bindings_url":"/v2/apps/6559b939-9882-4ba9-8888-9fc21a5d484b/service_bindings"}},{"metadata":{"guid":"77bc7a2b-14a9-46f6-838a-2f32337a3275"},"entity":{"name":"app-usage-worker","instances":1,"state":"STARTED","memory":2048,"disk_quota":1024,"buildpack":"ruby_buildpack","detected_buildpack":"ruby","space_guid":"df9049fc-4e41-48b7-989d-95eb5a3a7fe2","detected_start_command":"bin/rails server -b 0.0.0.0 -p $PORT -e $RAILS_ENV","environment_json":{"ALLOW_TEST_DATA_CREATION":"false","ALLOW_VIEWING_LOGS":"false","CLOUD_CONTROLLER_URL":"https://api.sys.tas.example.io","CUTOFF_AGE_IN_DAYS":"365","DATABASE_URL":"mysql2://app_usage:GhrJzsLPdDavyyXUp39Qxw7OKzcXNj@mysql.service.cf.internal:3306/app_usage_service?reconnect=true","SECRET_KEY_BASE":"MNcQEJG7PzoipwAalg900YLBkhrBdw","SKIP_SSL_VALIDATION":"false","UAA_URL":"https://login.sys.tas.example.io","USAGE_SERVICE_UAA_CLIENT_ID":"usage_service","USAGE_SERVICE_UAA_CLIENT_SECRET":"UiD7dtvEvqD7DxGaU5EIxhJwcZV-uoGN"},"command":"bundle exec rake worker:start","health_check_type":"process","health_check_http_endpoint":"","routes":null,"routes_url":"/v2/apps/77bc7a2b-14a9-46f6-838a-2f32337a3275/routes","stack":"cflinuxfs3","stack_url":"/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369","ServiceInstances":[{"name":"structured-format-json","type":"user_provided_service_instance","maintenance_info":{"version":"","description":""}}],"service_bindings_url":"/v2/apps/77bc7a2b-14a9-46f6-838a-2f32337a3275/service_bindings"}},{"metadata":{"guid":"b1e79c62-5ec9-43c7-897a-7f3517f8d553"},"entity":{"name":"app-usage-server","instances":2,"state":"STARTED","memory":1024,"disk_quota":1024,"buildpack":"ruby_buildpack","detected_buildpack":"ruby","space_guid":"df9049fc-4e41-48b7-989d-95eb5a3a7fe2","detected_start_command":"bin/rails server -b 0.0.0.0 -p $PORT -e $RAILS_ENV","environment_json":{"ALLOW_TEST_DATA_CREATION":"false","ALLOW_VIEWING_LOGS":"false","CLOUD_CONTROLLER_URL":"https://api.sys.tas.example.io","CUTOFF_AGE_IN_DAYS":"365","DATABASE_URL":"mysql2://app_usage:GhrJzsLPdDavyyXUp39Qxw7OKzcXNj@mysql.service.cf.internal:3306/app_usage_service?reconnect=true","SECRET_KEY_BASE":"MNcQEJG7PzoipwAalg900YLBkhrBdw","SKIP_SSL_VALIDATION":"false","UAA_URL":"https://login.sys.tas.example.io","USAGE_SERVICE_UAA_CLIENT_ID":"usage_service","USAGE_SERVICE_UAA_CLIENT_SECRET":"UiD7dtvEvqD7DxGaU5EIxhJwcZV-uoGN"},"command":"bundle exec rake server:start","health_check_type":"http","health_check_http_endpoint":"/heartbeat/server_status","routes":["app-usage.sys.tas.example.io"],"routes_url":"/v2/apps/b1e79c62-5ec9-43c7-897a-7f3517f8d553/routes","stack":"cflinuxfs3","stack_url":"/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369","ServiceInstances":null,"service_bindings_url":"/v2/apps/b1e79c62-5ec9-43c7-897a-7f3517f8d553/service_bindings"}},{"metadata":{"guid":"a1c4cf7d-305f-4a49-92dc-802f7d638161"},"entity":{"name":"search-server-green","instances":2,"state":"STOPPED","memory":256,"disk_quota":1024,"buildpack":"nodejs_buildpack","detected_buildpack":"nodejs","space_guid":"df9049fc-4e41-48b7-989d-95eb5a3a7fe2","detected_start_command":"npm start","environment_json":{"FOUNDATIONS":"{\"home\":{\"ccUrl\":\"https://api.sys.tas.example.io\",\"invitationsServiceUrl\":\"https://p-invitations.sys.tas.example.io\",\"logoutUrl\":\"https://login.sys.tas.example.io/logout.do\",\"metricsUrl\":\"https://metrics.sys.tas.example.io\",\"metricStoreUrl\":\"https://metric-store.sys.tas.example.io\",\"uaaUrl\":\"https://login.sys.tas.example.io\",\"usageServiceUrl\":\"https://app-usage.sys.tas.example.io\",\"systemDomain\":\"sys.tas.example.io\"}}","NODE_TLS_REJECT_UNAUTHORIZED":"1"},"command":"","health_check_type":"port","health_check_http_endpoint":"","routes":null,"routes_url":"/v2/apps/a1c4cf7d-305f-4a49-92dc-802f7d638161/routes","stack":"cflinuxfs3","stack_url":"/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369","ServiceInstances":null,"service_bindings_url":"/v2/apps/a1c4cf7d-305f-4a49-92dc-802f7d638161/service_bindings"}},{"metadata":{"guid":"1f8cd4c8-b829-47d9-a998-e2ed0f484e37"},"entity":{"name":"p-invitations-green","instances":2,"state":"STOPPED","memory":256,"disk_quota":1024,"buildpack":"nodejs_buildpack","detected_buildpack":"","space_guid":"df9049fc-4e41-48b7-989d-95eb5a3a7fe2","detected_start_command":"","environment_json":{"CLOUD_CONTROLLER_URL":"https://api.sys.tas.example.io","COMPANY_NAME":"","INVITATIONS_CLIENT_ID":"invitations","INVITATIONS_CLIENT_SECRET":"yL1TYI8gY90vdgIgJ7XaKwfIPdbXSc_0","NODE_TLS_REJECT_UNAUTHORIZED":"1","NOTIFICATIONS_URL":"https://notifications.sys.tas.example.io","PRODUCT_NAME":"Apps Manager","SUCCESS_CALLBACK_URL":"","SUPPORT_EMAIL":"","UAA_URL":"https://login.sys.tas.example.io"},"command":"","health_check_type":"port","health_check_http_endpoint":"","routes":null,"routes_url":"/v2/apps/1f8cd4c8-b829-47d9-a998-e2ed0f484e37/routes","stack":"cflinuxfs3","stack_url":"/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369","ServiceInstances":null,"service_bindings_url":"/v2/apps/1f8cd4c8-b829-47d9-a998-e2ed0f484e37/service_bindings"}},{"metadata":{"guid":"d638acd7-d659-4c3d-ba41-70e21216e778"},"entity":{"name":"appmetrics","instances":1,"state":"STARTED","memory":4096,"disk_quota":1024,"buildpack":"java_buildpack_offline","detected_buildpack":"java","space_guid":"b777a228-b497-40b3-9657-4119ba9e6750","detected_start_command":"JAVA_OPTS=\"-agentpath:$PWD/.java-buildpack/open_jdk_jre/bin/jvmkill-1.16.0_RELEASE=printHeapHistogram=1 -Djava.io.tmpdir=$TMPDIR -XX:ActiveProcessorCount=$(nproc) -Djava.ext.dirs= -Djava.security.properties=$PWD/.java-buildpack/java_security/java.security $JAVA_OPTS\" \u0026\u0026 CALCULATED_MEMORY=$($PWD/.java-buildpack/open_jdk_jre/bin/java-buildpack-memory-calculator-3.13.0_RELEASE -totMemory=$MEMORY_LIMIT -loadedClasses=23718 -poolType=metaspace -stackThreads=25 -vmOptions=\"$JAVA_OPTS\") \u0026\u0026 echo JVM Memory Configuration: $CALCULATED_MEMORY \u0026\u0026 JAVA_OPTS=\"$JAVA_OPTS $CALCULATED_MEMORY\" \u0026\u0026 MALLOC_ARENA_MAX=2 eval exec $PWD/.java-buildpack/open_jdk_jre/bin/java $JAVA_OPTS -cp $PWD/.:$PWD/.java-buildpack/client_certificate_mapper/client_certificate_mapper-1.11.0_RELEASE.jar:$PWD/.java-buildpack/container_security_provider/container_security_provider-1.19.0_RELEASE.jar io.pivotal.catalyst.MetricsApplicationKt","environment_json":{"ADMIN_CLIENT_ID":"apps_metrics_processing","ADMIN_CLIENT_SECRET":"i0sYb-PEl8EGvgcks8iwEv5dITB_wAf9","APPMETRICS_DOMAIN":"metrics.sys.tas.example.io","CLIENT_ID":"catalyst","CLIENT_SECRET":"AQc-HHWC7u8zWXjBdX_oYHcAGUEB-OlN","CLOUD_CONTROLLER_URL":"https://api.sys.tas.example.io","DOCS_URL":"https://docs.pivotal.io/app-metrics/2-1/","ENABLE_GOOGLE_ANALYTICS":"false","ENABLE_LOGS":"true","ENCRYPTION_KEY":"A9MpJgwhfSnxaqTb","JBP_CONFIG_OPEN_JDK_JRE":"{ jre: { version: 11.+ }, memory_calculator: { stack_threads: 25 } }","JBP_CONFIG_SPRING_AUTO_RECONFIGURATION":"{ enabled: false }","LOG_STORE_URL":"https://log-store.sys.tas.example.io","METRIC_DATA_URL":"https://metric-store.sys.tas.example.io","METRIC_REDIRECT_URL":"https://metrics.sys.tas.example.io/auth/code","POSTGRES_CA_CERT":"-----BEGIN CERTIFICATE-----\nMIIDUTCCAjmgAwIBAgIVAPMSMAM/c6/3B+lkMT+ieMrarX+pMA0GCSqGSIb3DQEB\nCwUAMB8xCzAJBgNVBAYTAlVTMRAwDgYDVQQKDAdQaXZvdGFsMB4XDTIzMDEzMTIz\nMTgzM1oXDTI3MDEzMTIzMTgzM1owHzELMAkGA1UEBhMCVVMxEDAOBgNVBAoMB1Bp\ndm90YWwwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQD6lENb6i5Ly3v5\njC68hapQkZjjKQ3Cv44BhkpTuAohKzhYGej6uOZREuqN01eHYvlXCXUfFgAp761T\nOAJV+tMsv2sYwL1bO2sAWsDX+pQKrVk1cIWCuWG2ocv5Ho8acZ0PyR4DZT6vDKYB\npHxqIYiugcCiZiro0F6cX7iAv3ATmxywdBBIWj5Xk2XgW8or/IJm53YX+kxCU0YL\nr1S5AhBpCwHYute5l1q6IKWr9bXhcnqzF0jXwHKNBTypJmiQpmsTRjHhm6x8wWPt\nPSBlWpTj+8uuBWIIJyl19YwCBuI2p7bmtPUaTs2bFs9LuRS7QIQa7HLkGWx6NgHT\n2t0i4qbrAgMBAAGjgYMwgYAwHQYDVR0OBBYEFAUu5lF3l0IF/Kxyk2csTvFRlNuz\nMB8GA1UdIwQYMBaAFAUu5lF3l0IF/Kxyk2csTvFRlNuzMB0GA1UdJQQWMBQGCCsG\nAQUFBwMCBggrBgEFBQcDATAPBgNVHRMBAf8EBTADAQH/MA4GA1UdDwEB/wQEAwIB\nBjANBgkqhkiG9w0BAQsFAAOCAQEAtuMwjUXxpuVKETcZBuZ8s926BCpztJ7eQi1o\n2VTd9QqwBPxtWIOUYfEU74Fi34GFt7Gp6azk+MlDddGXk+L6yEqBPQ24Nx+dSOeB\njqsWlMLrsf6gb2GmEl8ZctaALLlzu1B6Hoh5zAjsuvltJYA0S92sNx+5tf17G33j\nvRrji/A8ulo0EpjxBiWzrLHpV3gY34zv6VKI3/BSbh6Iz+sfPdWd3YdZph74g7we\nWuaUXShTU1c7cknYdK/4KXg0XyBv206FbbhjykpzNM9moVu9D+SgWkVkk5/OG1GG\nMcXIyaJlL08v2bBEUtIsm19F9AcsKrhdwq4xGA2nR4ZeU8eqWA==\n-----END CERTIFICATE-----\n\n","POSTGRES_CLIENT_CERT":"-----BEGIN CERTIFICATE-----\nMIIDhzCCAm+gAwIBAgIUSdjO0kIY+sdoUrqSthlHzFwLs60wDQYJKoZIhvcNAQEL\nBQAwHzELMAkGA1UEBhMCVVMxEDAOBgNVBAoMB1Bpdm90YWwwHhcNMjMwMjA3MTgz\nMzQ2WhcNMjUwMjA3MTgzMzQ2WjBCMQswCQYDVQQGEwJVUzEQMA4GA1UECgwHUGl2\nb3RhbDEhMB8GA1UEAwwYcG9zdGdyZXNfYXBwbWV0cmljc19tdGxzMIIBIjANBgkq\nhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA7Qy9tHDGYxp3v/e6X5OJdAahDxLEdolq\nwbD3UMagf3vXmHWSCMfs57mdP6HT9IiE5q7tJwGjrZ3ajHvlmgaeOAcLDMRANYZ7\nmUvWbxsEmR8UE1Lj7Hp2CSiY9fH9U1R3Xiq8Y2igaNoJPrl1eY+AmqAwsgh5/SM1\nuzlLEiWjmMdamwS3ejBE2Zng1YAHC2zF8hLxrhe5ZzMGpMVWM/HVgaVzH78ezQh5\nfLcvTjF1oo5wcJhVyWb5a8xDRWeH6tk5YCxj+hbLjzt+N/wjpcPtwowEc0JXbt3n\nTlbcsNrubrm8y0iSUMycWOJ5yqEyXGBAlkvR5XOo/QjfV0iXmkBuywIDAQABo4GX\nMIGUMB0GA1UdDgQWBBT5/r4yn9QB+L8I/9+uD8bCBDRdlTAfBgNVHSMEGDAWgBQF\nLuZRd5dCBfyscpNnLE7xUZTbszAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUH\nAwEwDgYDVR0PAQH/BAQDAgWgMCMGA1UdEQQcMBqCGHBvc3RncmVzX2FwcG1ldHJp\nY3NfbXRsczANBgkqhkiG9w0BAQsFAAOCAQEA8prMzIZi25/3Ddfv+BOl53WWWUui\ns9hc91A+CVVIwuaJ62PLMyMtE1Lz18lP+UfJ1LAF6XNTCFqiX7ICehhyLPZxwFSR\ngXYcJ1yDmL/4tdbHQQBFsU+iGgI1bOz3giUjyWopSJ0m2u9MVpWtb3YvopbNs41h\n71O3HFGF3MV3fy5lu0v1LNVIQSGc66Od7b20oUtzI6yBg7yGzis7v374nzplmBop\nOQ+6KjX7R5ZtOBLHDPbD7FcsQ1S9SA7TpMSLRz8lLBbZGZHLVgKKkx4OtO5+HP/Y\n2surdTyntHY9bsC4waaw3CHRUBLdNFybabdE0ZBY3F3KprwQYRKdkdGbvQ==\n-----END CERTIFICATE-----\n\n","POSTGRES_CLIENT_KEY":"-----BEGIN RSA PRIVATE KEY-----\nMIIEpQIBAAKCAQEA7Qy9tHDGYxp3v/e6X5OJdAahDxLEdolqwbD3UMagf3vXmHWS\nCMfs57mdP6HT9IiE5q7tJwGjrZ3ajHvlmgaeOAcLDMRANYZ7mUvWbxsEmR8UE1Lj\n7Hp2CSiY9fH9U1R3Xiq8Y2igaNoJPrl1eY+AmqAwsgh5/SM1uzlLEiWjmMdamwS3\nejBE2Zng1YAHC2zF8hLxrhe5ZzMGpMVWM/HVgaVzH78ezQh5fLcvTjF1oo5wcJhV\nyWb5a8xDRWeH6tk5YCxj+hbLjzt+N/wjpcPtwowEc0JXbt3nTlbcsNrubrm8y0iS\nUMycWOJ5yqEyXGBAlkvR5XOo/QjfV0iXmkBuywIDAQABAoIBADvhSw6IqmSga/2P\nK4I3N7Kadhbjq8MxxUj2VhMOib6KXxTBJkmXjy2eAq3vSCZuUfwf1gJTdLBHvsxc\nA8zbvR30EYOBE6MxvIkl0h4w2gGAC0cyWicDbEu1+KWwIkjpflnIO9x0soiqA0nX\n+Wfiqx7kNkjSwVYDjfAkceU8os3VmYBFFtl3gxi4K8K/GxwC+zvs64n9PspVPvMd\nVfqtdYiMk9LhiiTv1Ir0ziFIR5Rf8Bmv11RMbz/yhQc3wt8Bx+TnJAJbD2nJxnvA\nMbAmgzNrS9Pt4SGJl6FVcjOhBXYw0Cxx4Kv2fbQ7ke36hIWi7oNtGej52zCu9q3T\nhcgAO4ECgYEA+u/Kqu3TCZL8UbHRkSmB8PvfpJ4XEtJm/zWqj8c7rlkezZ0e2nqL\nyNDgUSekhD+oj6fPd/4zfhgJC07H6Us2JRs/f5Kpudne8oWMhxCI1btZ5hodaFbk\nFod60vCbyGTqX+b6f3FBISeW++ikKgsWSB74Z/GkeYvL9VKTNckq+EECgYEA8dU3\nfuSf9rjbQGJvUyY/5LSCNGJNndHkpInmCvGVYd+dBD+puu+o2MWMx8IH4XbSkneK\nLTpnTqmS3UIG/hGMHgQl1J+asL0POTS8wLdPPM03DDDCAyiyP1PHNz5lM/+pYOx/\n+RUXwbnxSj3GAVdQD5gZY6RcZXqzBQFxTUnWxAsCgYEAks0dv4mKYJuAyTpB465o\nulZfq6pgzT4Ry1PWCG8B1ymD/73fgukWRdEMqe2LLWMgdYoysXwhG69r+xWHlk/N\nyT97kmJ2sKdo6nB+mbVul7sXCKpWcegDX7q6fBUOzdlb0+cIvO3AsGi8x3p+L6p0\nypRztjuDgSfrlgVM4bZiUQECgYEAuIbgNKQQ5zrAmc1Ccujxwfp2i7Ai13SsCVzr\nupgCS09MSUymn2x1owqCVH5acxCutnIebkptP5mm5cuW+FC9YL37e9VZPNjV/+mc\nyVRWUuenxFaEA9MOx8GOdjnXESlYvgtXzuDoYrsWQXcHWkicX3nIjb6BfjF03jHu\nmXHpPWcCgYEAsVnWuHaHcGFNNAQJcicWOaUSH+yFhi82qOSO/9tAi8Er0IuPMJjD\niiSSnf9/ubPwNIRVuNZKwV1Yr7CHsP86wGl0KtbHdEy9leTzo1R7+gAtHTW2e+Ze\nISqt7z8rkZiSPD951ZCfnjFWHNwM2meytydpc1edkUKt3+OrCbJEzEo=\n-----END RSA PRIVATE KEY-----\n\n","POSTGRES_JDBC_URL":"jdbc:postgresql://postgres_appmetrics_mtls:5432/indicators?ssl=true\u0026sslfactory=io.pivotal.catalyst.ssl.PostgresInMemorySSLFactory\u0026user=pgadmin","RUN_DB_MIGRATIONS":"true","SKIP_SSL_VERIFY":"false","SYSTEM_DOMAIN":"sys.tas.example.io","TLS_VERSION":"TLSv1.2","UAA_URL":"https://login.sys.tas.example.io","USE_SOCKS_PROXY":"false","VERSION":"2.1.5-build.10"},"command":"","health_check_type":"port","health_check_http_endpoint":"","routes":["metrics.sys.tas.example.io","appmetrics.sys.tas.example.io"],"routes_url":"/v2/apps/d638acd7-d659-4c3d-ba41-70e21216e778/routes","stack":"cflinuxfs3","stack_url":"/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369","ServiceInstances":null,"service_bindings_url":"/v2/apps/d638acd7-d659-4c3d-ba41-70e21216e778/service_bindings"}},{"metadata":{"guid":"a9a9b168-4f3e-45de-bb05-c4556bed19eb"},"entity":{"name":"hello-world","instances":5,"state":"STARTED","memory":1024,"disk_quota":1024,"buildpack":"","detected_buildpack":"nodejs","space_guid":"6ddc1f4a-e3f3-4b3e-a4ee-74f07492ddf7","detected_start_command":"npm start","environment_json":null,"command":"","health_check_type":"port","health_check_http_endpoint":"","routes":["hello-world.apps.tas.example.io"],"routes_url":"/v2/apps/a9a9b168-4f3e-45de-bb05-c4556bed19eb/routes","stack":"cflinuxfs3","stack_url":"/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369","ServiceInstances":null,"service_bindings_url":"/v2/apps/a9a9b168-4f3e-45de-bb05-c4556bed19eb/service_bindings"}},{"metadata":{"guid":"a2bcf91e-100d-47bb-bbde-4822023b2783"},"entity":{"name":"spring-music","instances":2,"state":"STARTED","memory":1024,"disk_quota":1024,"buildpack":"","detected_buildpack":"java","space_guid":"a879dd1c-0c6d-483a-9ea0-9ca7bd8632bd","detected_start_command":"JAVA_OPTS=\"-agentpath:$PWD/.java-buildpack/open_jdk_jre/bin/jvmkill-1.17.0_RELEASE=printHeapHistogram=1 -Djava.io.tmpdir=$TMPDIR -XX:ActiveProcessorCount=$(nproc) -Djava.ext.dirs=$PWD/.java-buildpack/container_security_provider:$PWD/.java-buildpack/open_jdk_jre/lib/ext -Djava.security.properties=$PWD/.java-buildpack/java_security/java.security $JAVA_OPTS\" \u0026\u0026 CALCULATED_MEMORY=$($PWD/.java-buildpack/open_jdk_jre/bin/java-buildpack-memory-calculator-3.13.0_RELEASE -totMemory=$MEMORY_LIMIT -loadedClasses=21397 -poolType=metaspace -stackThreads=250 -vmOptions=\"$JAVA_OPTS\") \u0026\u0026 echo JVM Memory Configuration: $CALCULATED_MEMORY \u0026\u0026 JAVA_OPTS=\"$JAVA_OPTS $CALCULATED_MEMORY\" \u0026\u0026 MALLOC_ARENA_MAX=2 SERVER_PORT=$PORT eval exec $PWD/.java-buildpack/open_jdk_jre/bin/java $JAVA_OPTS -cp $PWD/. org.springframework.boot.loader.JarLauncher","environment_json":{"JBP_CONFIG_SPRING_AUTO_RECONFIGURATION":"{enabled: false}","SPRING_PROFILES_ACTIVE":"http2"},"command":"","health_check_type":"port","health_check_http_endpoint":"","routes":["spring-music-nice-tiger-si.apps.tas.example.io"],"routes_url":"/v2/apps/a2bcf91e-100d-47bb-bbde-4822023b2783/routes","stack":"cflinuxfs3","stack_url":"/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369","ServiceInstances":[{"name":"dev_mysql_ha","type":"managed_service_instance","maintenance_info":{"version":"2.10.10-build.40","description":"MySQL(\"2.10.10-build.40\") for VMware Tanzu"}},{"name":"myqueue","type":"managed_service_instance","maintenance_info":{"version":"2.1.2-build.13","description":"RabbitMQ tile version \"2.1.2-build.13\""}}],"service_bindings_url":"/v2/apps/a2bcf91e-100d-47bb-bbde-4822023b2783/service_bindings"}},{"metadata":{"guid":"34f27890-1548-40d3-899c-6be1d827d605"},"entity":{"name":"spring-music-testing","instances":1,"state":"STARTED","memory":1024,"disk_quota":1024,"buildpack":"","detected_buildpack":"java","space_guid":"a879dd1c-0c6d-483a-9ea0-9ca7bd8632bd","detected_start_command":"JAVA_OPTS=\"-agentpath:$PWD/.java-buildpack/open_jdk_jre/bin/jvmkill-1.16.0_RELEASE=printHeapHistogram=1 -Djava.io.tmpdir=$TMPDIR -XX:ActiveProcessorCount=$(nproc) -Djava.ext.dirs=$PWD/.java-buildpack/container_security_provider:$PWD/.java-buildpack/open_jdk_jre/lib/ext -Djava.security.properties=$PWD/.java-buildpack/java_security/java.security $JAVA_OPTS\" \u0026\u0026 CALCULATED_MEMORY=$($PWD/.java-buildpack/open_jdk_jre/bin/java-buildpack-memory-calculator-3.13.0_RELEASE -totMemory=$MEMORY_LIMIT -loadedClasses=21397 -poolType=metaspace -stackThreads=250 -vmOptions=\"$JAVA_OPTS\") \u0026\u0026 echo JVM Memory Configuration: $CALCULATED_MEMORY \u0026\u0026 JAVA_OPTS=\"$JAVA_OPTS $CALCULATED_MEMORY\" \u0026\u0026 MALLOC_ARENA_MAX=2 SERVER_PORT=$PORT eval exec $PWD/.java-buildpack/open_jdk_jre/bin/java $JAVA_OPTS -cp $PWD/. org.springframework.boot.loader.JarLauncher","environment_json":{"JBP_CONFIG_SPRING_AUTO_RECONFIGURATION":"{enabled: false}","SPRING_PROFILES_ACTIVE":"http2"},"command":"","health_check_type":"port","health_check_http_endpoint":"","routes":["spring-music-testing-exhausted-bat-yj.apps.tas.example.io"],"routes_url":"/v2/apps/34f27890-1548-40d3-899c-6be1d827d605/routes","stack":"cflinuxfs3","stack_url":"/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369","ServiceInstances":null,"service_bindings_url":"/v2/apps/34f27890-1548-40d3-899c-6be1d827d605/service_bindings"}},{"metadata":{"guid":"383b9878-b175-406b-88a3-1e7455134bca"},"entity":{"name":"search-server-blue","instances":2,"state":"STARTED","memory":256,"disk_quota":1024,"buildpack":"nodejs_buildpack","detected_buildpack":"nodejs","space_guid":"df9049fc-4e41-48b7-989d-95eb5a3a7fe2","detected_start_command":"npm start","environment_json":{"FOUNDATIONS":"{\"home\":{\"ccUrl\":\"https://api.sys.tas.example.io\",\"invitationsServiceUrl\":\"https://p-invitations.sys.tas.example.io\",\"logoutUrl\":\"https://login.sys.tas.example.io/logout.do\",\"metricsUrl\":\"https://metrics.sys.tas.example.io\",\"metricStoreUrl\":\"https://metric-store.sys.tas.example.io\",\"uaaUrl\":\"https://login.sys.tas.example.io\",\"usageServiceUrl\":\"https://app-usage.sys.tas.example.io\",\"systemDomain\":\"sys.tas.example.io\"}}","NODE_TLS_REJECT_UNAUTHORIZED":"1"},"command":"","health_check_type":"port","health_check_http_endpoint":"","routes":["search-server.sys.tas.example.io"],"routes_url":"/v2/apps/383b9878-b175-406b-88a3-1e7455134bca/routes","stack":"cflinuxfs3","stack_url":"/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369","ServiceInstances":null,"service_bindings_url":"/v2/apps/383b9878-b175-406b-88a3-1e7455134bca/service_bindings"}},{"metadata":{"guid":"f2304e82-653f-4dd6-9038-6812b112a4d3"},"entity":{"name":"p-invitations-blue","instances":2,"state":"STARTED","memory":256,"disk_quota":1024,"buildpack":"nodejs_buildpack","detected_buildpack":"nodejs","space_guid":"df9049fc-4e41-48b7-989d-95eb5a3a7fe2","detected_start_command":"npm start","environment_json":{"CLOUD_CONTROLLER_URL":"https://api.sys.tas.example.io","COMPANY_NAME":"","INVITATIONS_CLIENT_ID":"invitations","INVITATIONS_CLIENT_SECRET":"yL1TYI8gY90vdgIgJ7XaKwfIPdbXSc_0","NODE_TLS_REJECT_UNAUTHORIZED":"1","NOTIFICATIONS_URL":"https://notifications.sys.tas.example.io","PRODUCT_NAME":"Apps Manager","SUCCESS_CALLBACK_URL":"","SUPPORT_EMAIL":"","UAA_URL":"https://login.sys.tas.example.io"},"command":"","health_check_type":"port","health_check_http_endpoint":"","routes":["p-invitations.sys.tas.example.io"],"routes_url":"/v2/apps/f2304e82-653f-4dd6-9038-6812b112a4d3/routes","stack":"cflinuxfs3","stack_url":"/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369","ServiceInstances":null,"service_bindings_url":"/v2/apps/f2304e82-653f-4dd6-9038-6812b112a4d3/service_bindings"}},{"metadata":{"guid":"37f0e972-fa88-4473-a90c-6ddb8dc1b228"},"entity":{"name":"apps-manager-js-green","instances":6,"state":"STOPPED","memory":128,"disk_quota":1024,"buildpack":"staticfile_buildpack","detected_buildpack":"staticfile","space_guid":"df9049fc-4e41-48b7-989d-95eb5a3a7fe2","detected_start_command":"$HOME/boot.sh","environment_json":{"ACCENT_COLOR":"#00A79D","ACCOUNT_URL":"https://login.sys.tas.example.io/profile","AMJS_ENV_VAR_KEYS":"ACCENT_COLOR ACCOUNT_URL APP_POLL_INTERVAL APPS_DOMAIN COMPANY_NAME CREATE_UPS_ENABLED CURRENCY_LOOKUP ENABLE_OFFLINE_TOOLS CF_CLI_VERSION ENABLE_HTTP2 DISPLAY_PLAN_PRICES ENABLE_INVITING_USERS FAVICON_SRC FOOTER_LINKS FOOTER_TEXT FOUNDATIONS GLOBAL_WRAPPER_BG_COLOR GLOBAL_WRAPPER_FOOTER_CONTENT GLOBAL_WRAPPER_HEADER_CONTENT GLOBAL_WRAPPER_TEXT_COLOR HOME_FOUNDATION LOGO_SRC MARKETPLACE_NAME MARKETPLACE_URL METRIC_REGISTRAR_ENABLED NETWORKING_SELF_SERVICE POLL_INTERVAL PRODUCT_NAME SEARCH_SERVICE_URL SECONDARY_NAVIGATION_LINKS SKIP_SSL_VALIDATION UAA_SAML_PROVIDER_NAME","APPS_DOMAIN":"apps.tas.example.io","APP_POLL_INTERVAL":"10","CF_CLI_VERSION":"v8","COMPANY_NAME":"","CREATE_UPS_ENABLED":"true","CURRENCY_LOOKUP":"{ \"usd\": \"$\", \"eur\": \"€\" }","DISPLAY_PLAN_PRICES":"false","ENABLE_HTTP2":"true","ENABLE_INVITING_USERS":"true","ENABLE_OFFLINE_TOOLS":"false","FAVICON_SRC":"/vmw-bug.png","FOOTER_LINKS":"[]","FOOTER_TEXT":"","FOUNDATIONS":"{\"home\":{\"ccUrl\":\"https://api.sys.tas.example.io\",\"invitationsServiceUrl\":\"https://p-invitations.sys.tas.example.io\",\"logoutUrl\":\"https://login.sys.tas.example.io/logout.do\",\"metricsUrl\":\"https://metrics.sys.tas.example.io\",\"metricStoreUrl\":\"https://metric-store.sys.tas.example.io\",\"uaaUrl\":\"https://login.sys.tas.example.io\",\"usageServiceUrl\":\"https://app-usage.sys.tas.example.io\",\"systemDomain\":\"sys.tas.example.io\"}}","GLOBAL_WRAPPER_BG_COLOR":"#D6D6D6","GLOBAL_WRAPPER_FOOTER_CONTENT":"","GLOBAL_WRAPPER_HEADER_CONTENT":"","GLOBAL_WRAPPER_TEXT_COLOR":"#333","HOME_FOUNDATION":"home","LOGO_SRC":"/vmw-bug.svg","MARKETPLACE_NAME":"Marketplace","MARKETPLACE_URL":"/marketplace","METRIC_REGISTRAR_ENABLED":"true","NETWORKING_SELF_SERVICE":"false","POLL_INTERVAL":"30","PRODUCT_NAME":"Apps Manager","SEARCH_SERVICE_URL":"https://search-server.sys.tas.example.io","SECONDARY_NAVIGATION_LINKS":"[{\"guid\":\"b7a25b37-9a4c-4b32-957b-04d9e6848661\",\"href\":\"https://docs.pivotal.io/pivotalcf/2-13/pas/intro.html\",\"name\":\"Docs\"},{\"guid\":\"265b8105-2025-4c4b-8d9e-89db9f0e5c94\",\"href\":\"/tools\",\"name\":\"Tools\"}]","SKIP_SSL_VALIDATION":"false","UAA_SAML_PROVIDER_NAME":""},"command":"ruby -e 'require \"json\"; env = {}; ENV[\"AMJS_ENV_VAR_KEYS\"].split(\" \").each do |k|; if ENV.key?(k); env[k] = ENV[k].gsub(\"\\r\", \"\\\\r\").gsub(\"\\n\", \"\\\\n\"); end; end; File.open(\"public/config.json\", \"w\") do |file|; file.write(JSON.generate(env)); end;' \u0026\u0026 $HOME/boot.sh","health_check_type":"port","health_check_http_endpoint":"","routes":null,"routes_url":"/v2/apps/37f0e972-fa88-4473-a90c-6ddb8dc1b228/routes","stack":"cflinuxfs3","stack_url":"/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369","ServiceInstances":null,"service_bindings_url":"/v2/apps/37f0e972-fa88-4473-a90c-6ddb8dc1b228/service_bindings"}},{"metadata":{"guid":"d001fd19-87e9-4095-bb84-4293a5144c76"},"entity":{"name":"spring-music-testing1","instances":1,"state":"STARTED","memory":1024,"disk_quota":1024,"buildpack":"","detected_buildpack":"java","space_guid":"a879dd1c-0c6d-483a-9ea0-9ca7bd8632bd","detected_start_command":"JAVA_OPTS=\"-agentpath:$PWD/.java-buildpack/open_jdk_jre/bin/jvmkill-1.17.0_RELEASE=printHeapHistogram=1 -Djava.io.tmpdir=$TMPDIR -XX:ActiveProcessorCount=$(nproc) -Djava.ext.dirs=$PWD/.java-buildpack/container_security_provider:$PWD/.java-buildpack/open_jdk_jre/lib/ext -Djava.security.properties=$PWD/.java-buildpack/java_security/java.security $JAVA_OPTS\" \u0026\u0026 CALCULATED_MEMORY=$($PWD/.java-buildpack/open_jdk_jre/bin/java-buildpack-memory-calculator-3.13.0_RELEASE -totMemory=$MEMORY_LIMIT -loadedClasses=21397 -poolType=metaspace -stackThreads=250 -vmOptions=\"$JAVA_OPTS\") \u0026\u0026 echo JVM Memory Configuration: $CALCULATED_MEMORY \u0026\u0026 JAVA_OPTS=\"$JAVA_OPTS $CALCULATED_MEMORY\" \u0026\u0026 MALLOC_ARENA_MAX=2 SERVER_PORT=$PORT eval exec $PWD/.java-buildpack/open_jdk_jre/bin/java $JAVA_OPTS -cp $PWD/. org.springframework.boot.loader.JarLauncher","environment_json":{"JBP_CONFIG_SPRING_AUTO_RECONFIGURATION":"{enabled: false}","SPRING_PROFILES_ACTIVE":"http2"},"command":"","health_check_type":"port","health_check_http_endpoint":"","routes":["spring-music-testing1-sleepy-hyena-kl.apps.tas.example.io"],"routes_url":"/v2/apps/d001fd19-87e9-4095-bb84-4293a5144c76/routes","stack":"cflinuxfs3","stack_url":"/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369","ServiceInstances":null,"service_bindings_url":"/v2/apps/d001fd19-87e9-4095-bb84-4293a5144c76/service_bindings"}},{"metadata":{"guid":"32eca540-65d2-4351-b3a9-6e1d679136bd"},"entity":{"name":"testing","instances":1,"state":"STARTED","memory":1024,"disk_quota":1024,"buildpack":"","detected_buildpack":"java","space_guid":"a879dd1c-0c6d-483a-9ea0-9ca7bd8632bd","detected_start_command":"JAVA_OPTS=\"-agentpath:$PWD/.java-buildpack/open_jdk_jre/bin/jvmkill-1.17.0_RELEASE=printHeapHistogram=1 -Djava.io.tmpdir=$TMPDIR -XX:ActiveProcessorCount=$(nproc) -Djava.ext.dirs=$PWD/.java-buildpack/container_security_provider:$PWD/.java-buildpack/open_jdk_jre/lib/ext -Djava.security.properties=$PWD/.java-buildpack/java_security/java.security $JAVA_OPTS\" \u0026\u0026 CALCULATED_MEMORY=$($PWD/.java-buildpack/open_jdk_jre/bin/java-buildpack-memory-calculator-3.13.0_RELEASE -totMemory=$MEMORY_LIMIT -loadedClasses=21397 -poolType=metaspace -stackThreads=250 -vmOptions=\"$JAVA_OPTS\") \u0026\u0026 echo JVM Memory Configuration: $CALCULATED_MEMORY \u0026\u0026 JAVA_OPTS=\"$JAVA_OPTS $CALCULATED_MEMORY\" \u0026\u0026 MALLOC_ARENA_MAX=2 SERVER_PORT=$PORT eval exec $PWD/.java-buildpack/open_jdk_jre/bin/java $JAVA_OPTS -cp $PWD/. org.springframework.boot.loader.JarLauncher","environment_json":{"JBP_CONFIG_SPRING_AUTO_RECONFIGURATION":"{enabled: false}","JBP_CONFIG_TOMCAT":"{ tomcat: { external_configuration_enabled: true }, external_configuration: { repository_root: \"http://repository...\" } }","SPRING_PROFILES_ACTIVE":"http2","root":"\\\"helloworld\\\""},"command":"","health_check_type":"port","health_check_http_endpoint":"","routes":["testing-insightful-bandicoot-ow.apps.tas.example.io"],"routes_url":"/v2/apps/32eca540-65d2-4351-b3a9-6e1d679136bd/routes","stack":"cflinuxfs3","stack_url":"/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369","ServiceInstances":null,"service_bindings_url":"/v2/apps/32eca540-65d2-4351-b3a9-6e1d679136bd/service_bindings"}},{"metadata":{"guid":"e8682924-4f03-4713-bbe6-c091068d91d3"},"entity":{"name":"ra-java-metric","instances":1,"state":"STARTED","memory":1024,"disk_quota":1024,"buildpack":"","detected_buildpack":"java","space_guid":"a879dd1c-0c6d-483a-9ea0-9ca7bd8632bd","detected_start_command":"JAVA_OPTS=\"-agentpath:$PWD/.java-buildpack/open_jdk_jre/bin/jvmkill-1.17.0_RELEASE=printHeapHistogram=1 -Djava.io.tmpdir=$TMPDIR -XX:ActiveProcessorCount=$(nproc) -Djava.ext.dirs= -Djava.security.properties=$PWD/.java-buildpack/java_security/java.security $JAVA_OPTS\" \u0026\u0026 CALCULATED_MEMORY=$($PWD/.java-buildpack/open_jdk_jre/bin/java-buildpack-memory-calculator-3.13.0_RELEASE -totMemory=$MEMORY_LIMIT -loadedClasses=16149 -poolType=metaspace -stackThreads=250 -vmOptions=\"$JAVA_OPTS\") \u0026\u0026 echo JVM Memory Configuration: $CALCULATED_MEMORY \u0026\u0026 JAVA_OPTS=\"$JAVA_OPTS $CALCULATED_MEMORY\" \u0026\u0026 MALLOC_ARENA_MAX=2 eval exec $PWD/.java-buildpack/open_jdk_jre/bin/java $JAVA_OPTS -cp $PWD/.:$PWD/.java-buildpack/client_certificate_mapper/client_certificate_mapper-1.11.0_RELEASE.jar:$PWD/.java-buildpack/container_security_provider/container_security_provider-1.19.0_RELEASE.jar com.vmware.App","environment_json":{"JBP_CONFIG_OPEN_JDK_JRE":"{ jre: { version: 17.+ } }"},"command":"","health_check_type":"port","health_check_http_endpoint":"","routes":["ra-java-metric.apps.tas.example.io"],"routes_url":"/v2/apps/e8682924-4f03-4713-bbe6-c091068d91d3/routes","stack":"cflinuxfs3","stack_url":"/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369","ServiceInstances":null,"service_bindings_url":"/v2/apps/e8682924-4f03-4713-bbe6-c091068d91d3/service_bindings"}},{"metadata":{"guid":"a892b35d-f054-4ffd-a10e-bd356e3ad9b8"},"entity":{"name":"apps-manager-js-blue","instances":6,"state":"STARTED","memory":128,"disk_quota":1024,"buildpack":"staticfile_buildpack","detected_buildpack":"staticfile","space_guid":"df9049fc-4e41-48b7-989d-95eb5a3a7fe2","detected_start_command":"$HOME/boot.sh","environment_json":{"ACCENT_COLOR":"#00A79D","ACCOUNT_URL":"https://login.sys.tas.example.io/profile","AMJS_ENV_VAR_KEYS":"ACCENT_COLOR ACCOUNT_URL APP_POLL_INTERVAL APPS_DOMAIN COMPANY_NAME CREATE_UPS_ENABLED CURRENCY_LOOKUP ENABLE_OFFLINE_TOOLS CF_CLI_VERSION ENABLE_HTTP2 DISPLAY_PLAN_PRICES ENABLE_INVITING_USERS FAVICON_SRC FOOTER_LINKS FOOTER_TEXT FOUNDATIONS GLOBAL_WRAPPER_BG_COLOR GLOBAL_WRAPPER_FOOTER_CONTENT GLOBAL_WRAPPER_HEADER_CONTENT GLOBAL_WRAPPER_TEXT_COLOR HOME_FOUNDATION LOGO_SRC MARKETPLACE_NAME MARKETPLACE_URL METRIC_REGISTRAR_ENABLED NETWORKING_SELF_SERVICE POLL_INTERVAL PRODUCT_NAME SEARCH_SERVICE_URL SECONDARY_NAVIGATION_LINKS SKIP_SSL_VALIDATION UAA_SAML_PROVIDER_NAME","APPS_DOMAIN":"apps.tas.example.io","APP_POLL_INTERVAL":"10","CF_CLI_VERSION":"v8","COMPANY_NAME":"","CREATE_UPS_ENABLED":"true","CURRENCY_LOOKUP":"{ \"usd\": \"$\", \"eur\": \"€\" }","DISPLAY_PLAN_PRICES":"false","ENABLE_HTTP2":"true","ENABLE_INVITING_USERS":"true","ENABLE_OFFLINE_TOOLS":"false","FAVICON_SRC":"/vmw-bug.png","FOOTER_LINKS":"[]","FOOTER_TEXT":"","FOUNDATIONS":"{\"home\":{\"ccUrl\":\"https://api.sys.tas.example.io\",\"invitationsServiceUrl\":\"https://p-invitations.sys.tas.example.io\",\"logoutUrl\":\"https://login.sys.tas.example.io/logout.do\",\"metricsUrl\":\"https://metrics.sys.tas.example.io\",\"metricStoreUrl\":\"https://metric-store.sys.tas.example.io\",\"uaaUrl\":\"https://login.sys.tas.example.io\",\"usageServiceUrl\":\"https://app-usage.sys.tas.example.io\",\"systemDomain\":\"sys.tas.example.io\"}}","GLOBAL_WRAPPER_BG_COLOR":"#D6D6D6","GLOBAL_WRAPPER_FOOTER_CONTENT":"","GLOBAL_WRAPPER_HEADER_CONTENT":"","GLOBAL_WRAPPER_TEXT_COLOR":"#333","HOME_FOUNDATION":"home","LOGO_SRC":"/vmw-bug.svg","MARKETPLACE_NAME":"Marketplace","MARKETPLACE_URL":"/marketplace","METRIC_REGISTRAR_ENABLED":"true","NETWORKING_SELF_SERVICE":"false","POLL_INTERVAL":"30","PRODUCT_NAME":"Apps Manager","SEARCH_SERVICE_URL":"https://search-server.sys.tas.example.io","SECONDARY_NAVIGATION_LINKS":"[{\"guid\":\"b7a25b37-9a4c-4b32-957b-04d9e6848661\",\"href\":\"https://docs.pivotal.io/pivotalcf/2-13/pas/intro.html\",\"name\":\"Docs\"},{\"guid\":\"265b8105-2025-4c4b-8d9e-89db9f0e5c94\",\"href\":\"/tools\",\"name\":\"Tools\"}]","SKIP_SSL_VALIDATION":"false","UAA_SAML_PROVIDER_NAME":""},"command":"ruby -e 'require \"json\"; env = {}; ENV[\"AMJS_ENV_VAR_KEYS\"].split(\" \").each do |k|; if ENV.key?(k); env[k] = ENV[k].gsub(\"\\r\", \"\\\\r\").gsub(\"\\n\", \"\\\\n\"); end; end; File.open(\"public/config.json\", \"w\") do |file|; file.write(JSON.generate(env)); end;' \u0026\u0026 $HOME/boot.sh","health_check_type":"port","health_check_http_endpoint":"","routes":["apps.sys.tas.example.io"],"routes_url":"/v2/apps/a892b35d-f054-4ffd-a10e-bd356e3ad9b8/routes","stack":"cflinuxfs3","stack_url":"/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369","ServiceInstances":null,"service_bindings_url":"/v2/apps/a892b35d-f054-4ffd-a10e-bd356e3ad9b8/service_bindings"}},{"metadata":{"guid":"4f992685-9b51-4e00-a55a-74a733846f91"},"entity":{"name":"autoscale","instances":3,"state":"STARTED","memory":256,"disk_quota":1024,"buildpack":"binary_buildpack","detected_buildpack":"binary","space_guid":"462ecfdd-e63e-4472-a59d-ba767d8cb069","detected_start_command":"\u003e\u00262 echo Error: no start command specified during staging or launch \u0026\u0026 exit 1","environment_json":{"API_CLIENT_ID":"autoscaling_api","BASIC_AUTH_PASSWORD":"bfupYYVkaKivtl0o31y7DlhNhG2bTY","BASIC_AUTH_USERNAME":"SbYMpMaKRHgoxALORdeI","BROKER_NAME":"app-autoscaler","CC_HOST":"https://api.sys.tas.example.io","DATABASE_CA_CERT":"No database CA certificate provided","DATABASE_SERVER_NAME":"","DATABASE_SKIP_SSL_VALIDATION":"false","DATABASE_URL":"mysql://ojTbLChadFqDINYfsLnr:izN8PrTMvzUOW0ztTS3ydVA34bpKP4@mysql.service.cf.internal:3306/autoscale","ENABLE_DATABASE_TLS":"false","GODEBUG":"x509sha1=1","HOST":"autoscale.sys.tas.example.io","LOGCACHE_HOST":"https://log-cache.sys.tas.example.io","LOG_LEVEL":"error","LOG_VERBOSE":"false","MARKETPLACE_COMPANY_NAME":"VMware, Inc. or its affiliates","MARKETPLACE_DOCUMENTATION_URL":"https://docs.pivotal.io/pivotalcf/3-0/appsman-services/autoscaler/using-autoscaler.html","MARKETPLACE_IMAGE_URL":"data:image/png;base64,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","METRIC_COLLECTION_INTERVAL":"120s","NOTIFICATIONS_ENABLED":"true","NOTIFICATIONS_HOST":"https://notifications.sys.tas.example.io","PLAN_ID":"544ade5f-0479-49ce-bd36-082dbebfd504","RABBIT_URL_CACHE_INTERVAL":"600s","ROOT":"$HOME","SCALING_INTERVAL":"35s","SCHEME":"https","SERVICE_ID":"6c1d35ca-b696-4e74-a9b9-4a45aab66e7d","UAA_CLIENT_ID":"autoscaling_service","UAA_CLIENT_SECRET":"PEgOrEA-1pXUbqXCoYbQZURvfmRTVx0c","UAA_HOST":"https://login.sys.tas.example.io","VERIFY_SSL":"true"},"command":"bin/cf-autoscaling","health_check_type":"port","health_check_http_endpoint":"","routes":["autoscale.sys.tas.example.io"],"routes_url":"/v2/apps/4f992685-9b51-4e00-a55a-74a733846f91/routes","stack":"cflinuxfs3","stack_url":"/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369","ServiceInstances":null,"service_bindings_url":"/v2/apps/4f992685-9b51-4e00-a55a-74a733846f91/service_bindings"}},{"metadata":{"guid":"988004e5-f76a-4b14-bedd-0dc7a40e4c6b"},"entity":{"name":"autoscale-api","instances":1,"state":"STARTED","memory":1024,"disk_quota":1024,"buildpack":"java_buildpack_offline","detected_buildpack":"java","space_guid":"462ecfdd-e63e-4472-a59d-ba767d8cb069","detected_start_command":"JAVA_OPTS=\"-agentpath:$PWD/.java-buildpack/open_jdk_jre/bin/jvmkill-1.17.0_RELEASE=printHeapHistogram=1 -Djava.io.tmpdir=$TMPDIR -XX:ActiveProcessorCount=$(nproc) -Djava.ext.dirs= -Djava.security.properties=$PWD/.java-buildpack/java_security/java.security $JAVA_OPTS\" \u0026\u0026 CALCULATED_MEMORY=$($PWD/.java-buildpack/open_jdk_jre/bin/java-buildpack-memory-calculator-3.13.0_RELEASE -totMemory=$MEMORY_LIMIT -loadedClasses=25562 -poolType=metaspace -stackThreads=250 -vmOptions=\"$JAVA_OPTS\") \u0026\u0026 echo JVM Memory Configuration: $CALCULATED_MEMORY \u0026\u0026 JAVA_OPTS=\"$JAVA_OPTS $CALCULATED_MEMORY\" \u0026\u0026 MALLOC_ARENA_MAX=2 SERVER_PORT=$PORT eval exec $PWD/.java-buildpack/open_jdk_jre/bin/java $JAVA_OPTS -cp $PWD/.:$PWD/.java-buildpack/container_security_provider/container_security_provider-1.19.0_RELEASE.jar org.springframework.boot.loader.JarLauncher","environment_json":{"API_CLIENT":"autoscaling_api","API_CLIENT_SECRET":"MCiDQX91UMyuvM-pribNr-mDMfYUn1vh","BROKER_HOST":"https://autoscale.sys.tas.example.io/v2","CC_HOST":"https://api.sys.tas.example.io","DATABASE_URL":"jdbc:mysql://mysql.service.cf.internal:3306/autoscale?user=ojTbLChadFqDINYfsLnr\u0026password=izN8PrTMvzUOW0ztTS3ydVA34bpKP4\u0026serverTimezone=UTC\u0026useLegacyDatetimeCode=false","DISABLE_API_CONNECTION_POOLING":"false","HOST_NAME":"https://autoscale.sys.tas.example.io/api/v2","JAVA_OPTS":"-Dcloudfoundry.metrics.skipSslValidation=false","JBP_CONFIG_OPEN_JDK_JRE":"{ \"jre\": { version: 11.+ } }","LOG_VERBOSE":"false","SKIP_CERT_VERIFY":"false","UAA_HOST":"https://login.sys.tas.example.io"},"command":"","health_check_type":"port","health_check_http_endpoint":"","routes":["autoscale.sys.tas.example.io"],"routes_url":"/v2/apps/988004e5-f76a-4b14-bedd-0dc7a40e4c6b/routes","stack":"cflinuxfs3","stack_url":"/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369","ServiceInstances":null,"service_bindings_url":"/v2/apps/988004e5-f76a-4b14-bedd-0dc7a40e4c6b/service_bindings"}},{"metadata":{"guid":"5e1c088a-c7f7-40d1-b13c-089df2d5e659"},"entity":{"name":"staticfile","instances":1,"state":"STARTED","memory":64,"disk_quota":256,"buildpack":"staticfile_buildpack","detected_buildpack":"staticfile","space_guid":"a879dd1c-0c6d-483a-9ea0-9ca7bd8632bd","detected_start_command":"$HOME/boot.sh","environment_json":{},"command":"","health_check_type":"port","health_check_http_endpoint":"","routes":["staticfile-appreciative-rhinocerous-ji.apps.tas.example.io"],"routes_url":"/v2/apps/5e1c088a-c7f7-40d1-b13c-089df2d5e659/routes","stack":"cflinuxfs3","stack_url":"/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369","ServiceInstances":null,"service_bindings_url":"/v2/apps/5e1c088a-c7f7-40d1-b13c-089df2d5e659/service_bindings"}},{"metadata":{"guid":"ef4890de-a450-4c0a-9768-48d803a90b5c"},"entity":{"name":"cf-example-staticfile","instances":1,"state":"STARTED","memory":64,"disk_quota":256,"buildpack":"staticfile_buildpack","detected_buildpack":"staticfile","space_guid":"a879dd1c-0c6d-483a-9ea0-9ca7bd8632bd","detected_start_command":"$HOME/boot.sh","environment_json":{},"command":"","health_check_type":"port","health_check_http_endpoint":"","routes":["cf-example-staticfile-shy-serval-yy.apps.tas.example.io"],"routes_url":"/v2/apps/ef4890de-a450-4c0a-9768-48d803a90b5c/routes","stack":"cflinuxfs3","stack_url":"/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369","ServiceInstances":null,"service_bindings_url":"/v2/apps/ef4890de-a450-4c0a-9768-48d803a90b5c/service_bindings"}}]}
+{
+    "resources": [
+        {
+            "entity": {
+                "buildpack": "ruby_buildpack",
+                "command": "bundle exec rake scheduler:start",
+                "detected_buildpack": "ruby",
+                "detected_start_command": "bin/rails server -b 0.0.0.0 -p $PORT -e $RAILS_ENV",
+                "disk_quota": 1024,
+                "environment_json": {
+                    "ALLOW_TEST_DATA_CREATION": "false",
+                    "ALLOW_VIEWING_LOGS": "false",
+                    "CLOUD_CONTROLLER_URL": "https://api.sys.tas.example.io",
+                    "CUTOFF_AGE_IN_DAYS": "365",
+                    "DATABASE_URL": "mysql2://app_usage:XXXXXXXXXXXX@mysql.service.cf.internal:3306/app_usage_service?reconnect=true",
+                    "SECRET_KEY_BASE": "XXXXXXXXXXX",
+                    "SKIP_SSL_VALIDATION": "false",
+                    "UAA_URL": "https://login.sys.tas.example.io",
+                    "USAGE_SERVICE_UAA_CLIENT_ID": "usage_service",
+                    "USAGE_SERVICE_UAA_CLIENT_SECRET": "XXXXXXXXXXXX"
+                },
+                "health_check_http_endpoint": "",
+                "health_check_type": "process",
+                "instances": 1,
+                "memory": 1024,
+                "name": "app-usage-scheduler",
+                "routes": null,
+                "routes_url": "/v2/apps/6559b939-9882-4ba9-8888-9fc21a5d484b/routes",
+                "service_bindings_url": "/v2/apps/6559b939-9882-4ba9-8888-9fc21a5d484b/service_bindings",
+                "ServiceInstances": null,
+                "space_guid": "df9049fc-4e41-48b7-989d-95eb5a3a7fe2",
+                "stack": "cflinuxfs3",
+                "stack_url": "/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369",
+                "state": "STARTED"
+            },
+            "metadata": {
+                "guid": "6559b939-9882-4ba9-8888-9fc21a5d484b"
+            }
+        },
+        {
+            "entity": {
+                "buildpack": "ruby_buildpack",
+                "command": "bundle exec rake worker:start",
+                "detected_buildpack": "ruby",
+                "detected_start_command": "bin/rails server -b 0.0.0.0 -p $PORT -e $RAILS_ENV",
+                "disk_quota": 1024,
+                "environment_json": {
+                    "ALLOW_TEST_DATA_CREATION": "false",
+                    "ALLOW_VIEWING_LOGS": "false",
+                    "CLOUD_CONTROLLER_URL": "https://api.sys.tas.example.io",
+                    "CUTOFF_AGE_IN_DAYS": "365",
+                    "DATABASE_URL": "mysql2://app_usage:XXXXXXXXXXXX@mysql.service.cf.internal:3306/app_usage_service?reconnect=true",
+                    "SECRET_KEY_BASE": "XXXXXXXXXXX",
+                    "SKIP_SSL_VALIDATION": "false",
+                    "UAA_URL": "https://login.sys.tas.example.io",
+                    "USAGE_SERVICE_UAA_CLIENT_ID": "usage_service",
+                    "USAGE_SERVICE_UAA_CLIENT_SECRET": "XXXXXXXXXXXX"
+                },
+                "health_check_http_endpoint": "",
+                "health_check_type": "process",
+                "instances": 1,
+                "memory": 2048,
+                "name": "app-usage-worker",
+                "routes": null,
+                "routes_url": "/v2/apps/77bc7a2b-14a9-46f6-838a-2f32337a3275/routes",
+                "service_bindings_url": "/v2/apps/77bc7a2b-14a9-46f6-838a-2f32337a3275/service_bindings",
+                "ServiceInstances": [
+                    {
+                        "maintenance_info": {
+                            "description": "",
+                            "version": ""
+                        },
+                        "name": "structured-format-json",
+                        "type": "user_provided_service_instance"
+                    }
+                ],
+                "space_guid": "df9049fc-4e41-48b7-989d-95eb5a3a7fe2",
+                "stack": "cflinuxfs3",
+                "stack_url": "/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369",
+                "state": "STARTED"
+            },
+            "metadata": {
+                "guid": "77bc7a2b-14a9-46f6-838a-2f32337a3275"
+            }
+        },
+        {
+            "entity": {
+                "buildpack": "ruby_buildpack",
+                "command": "bundle exec rake server:start",
+                "detected_buildpack": "ruby",
+                "detected_start_command": "bin/rails server -b 0.0.0.0 -p $PORT -e $RAILS_ENV",
+                "disk_quota": 1024,
+                "environment_json": {
+                    "ALLOW_TEST_DATA_CREATION": "false",
+                    "ALLOW_VIEWING_LOGS": "false",
+                    "CLOUD_CONTROLLER_URL": "https://api.sys.tas.example.io",
+                    "CUTOFF_AGE_IN_DAYS": "365",
+                    "DATABASE_URL": "mysql2://app_usage:XXXXXXXXXXXX@mysql.service.cf.internal:3306/app_usage_service?reconnect=true",
+                    "SECRET_KEY_BASE": "XXXXXXXXXXX",
+                    "SKIP_SSL_VALIDATION": "false",
+                    "UAA_URL": "https://login.sys.tas.example.io",
+                    "USAGE_SERVICE_UAA_CLIENT_ID": "usage_service",
+                    "USAGE_SERVICE_UAA_CLIENT_SECRET": "XXXXXXXXXXXX"
+                },
+                "health_check_http_endpoint": "/heartbeat/server_status",
+                "health_check_type": "http",
+                "instances": 2,
+                "memory": 1024,
+                "name": "app-usage-server",
+                "routes": [
+                    "app-usage.sys.tas.example.io"
+                ],
+                "routes_url": "/v2/apps/b1e79c62-5ec9-43c7-897a-7f3517f8d553/routes",
+                "service_bindings_url": "/v2/apps/b1e79c62-5ec9-43c7-897a-7f3517f8d553/service_bindings",
+                "ServiceInstances": null,
+                "space_guid": "df9049fc-4e41-48b7-989d-95eb5a3a7fe2",
+                "stack": "cflinuxfs3",
+                "stack_url": "/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369",
+                "state": "STARTED"
+            },
+            "metadata": {
+                "guid": "b1e79c62-5ec9-43c7-897a-7f3517f8d553"
+            }
+        },
+        {
+            "entity": {
+                "buildpack": "nodejs_buildpack",
+                "command": "",
+                "detected_buildpack": "nodejs",
+                "detected_start_command": "npm start",
+                "disk_quota": 1024,
+                "environment_json": {
+                    "FOUNDATIONS": "{\"home\":{\"ccUrl\":\"https://api.sys.tas.example.io\",\"invitationsServiceUrl\":\"https://p-invitations.sys.tas.example.io\",\"logoutUrl\":\"https://login.sys.tas.example.io/logout.do\",\"metricsUrl\":\"https://metrics.sys.tas.example.io\",\"metricStoreUrl\":\"https://metric-store.sys.tas.example.io\",\"uaaUrl\":\"https://login.sys.tas.example.io\",\"usageServiceUrl\":\"https://app-usage.sys.tas.example.io\",\"systemDomain\":\"sys.tas.example.io\"}}",
+                    "NODE_TLS_REJECT_UNAUTHORIZED": "1"
+                },
+                "health_check_http_endpoint": "",
+                "health_check_type": "port",
+                "instances": 2,
+                "memory": 256,
+                "name": "search-server-green",
+                "routes": null,
+                "routes_url": "/v2/apps/a1c4cf7d-305f-4a49-92dc-802f7d638161/routes",
+                "service_bindings_url": "/v2/apps/a1c4cf7d-305f-4a49-92dc-802f7d638161/service_bindings",
+                "ServiceInstances": null,
+                "space_guid": "df9049fc-4e41-48b7-989d-95eb5a3a7fe2",
+                "stack": "cflinuxfs3",
+                "stack_url": "/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369",
+                "state": "STOPPED"
+            },
+            "metadata": {
+                "guid": "a1c4cf7d-305f-4a49-92dc-802f7d638161"
+            }
+        },
+        {
+            "entity": {
+                "buildpack": "nodejs_buildpack",
+                "command": "",
+                "detected_buildpack": "",
+                "detected_start_command": "",
+                "disk_quota": 1024,
+                "environment_json": {
+                    "CLOUD_CONTROLLER_URL": "https://api.sys.tas.example.io",
+                    "COMPANY_NAME": "",
+                    "INVITATIONS_CLIENT_ID": "invitations",
+                    "INVITATIONS_CLIENT_SECRET": "XXXXXXXXXXXX",
+                    "NODE_TLS_REJECT_UNAUTHORIZED": "1",
+                    "NOTIFICATIONS_URL": "https://notifications.sys.tas.example.io",
+                    "PRODUCT_NAME": "Apps Manager",
+                    "SUCCESS_CALLBACK_URL": "",
+                    "SUPPORT_EMAIL": "",
+                    "UAA_URL": "https://login.sys.tas.example.io"
+                },
+                "health_check_http_endpoint": "",
+                "health_check_type": "port",
+                "instances": 2,
+                "memory": 256,
+                "name": "p-invitations-green",
+                "routes": null,
+                "routes_url": "/v2/apps/1f8cd4c8-b829-47d9-a998-e2ed0f484e37/routes",
+                "service_bindings_url": "/v2/apps/1f8cd4c8-b829-47d9-a998-e2ed0f484e37/service_bindings",
+                "ServiceInstances": null,
+                "space_guid": "df9049fc-4e41-48b7-989d-95eb5a3a7fe2",
+                "stack": "cflinuxfs3",
+                "stack_url": "/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369",
+                "state": "STOPPED"
+            },
+            "metadata": {
+                "guid": "1f8cd4c8-b829-47d9-a998-e2ed0f484e37"
+            }
+        },
+        {
+            "entity": {
+                "buildpack": "java_buildpack_offline",
+                "command": "",
+                "detected_buildpack": "java",
+                "detected_start_command": "JAVA_OPTS=\"-agentpath:$PWD/.java-buildpack/open_jdk_jre/bin/jvmkill-1.16.0_RELEASE=printHeapHistogram=1 -Djava.io.tmpdir=$TMPDIR -XX:ActiveProcessorCount=$(nproc) -Djava.ext.dirs= -Djava.security.properties=$PWD/.java-buildpack/java_security/java.security $JAVA_OPTS\" \u0026\u0026 CALCULATED_MEMORY=$($PWD/.java-buildpack/open_jdk_jre/bin/java-buildpack-memory-calculator-3.13.0_RELEASE -totMemory=$MEMORY_LIMIT -loadedClasses=23718 -poolType=metaspace -stackThreads=25 -vmOptions=\"$JAVA_OPTS\") \u0026\u0026 echo JVM Memory Configuration: $CALCULATED_MEMORY \u0026\u0026 JAVA_OPTS=\"$JAVA_OPTS $CALCULATED_MEMORY\" \u0026\u0026 MALLOC_ARENA_MAX=2 eval exec $PWD/.java-buildpack/open_jdk_jre/bin/java $JAVA_OPTS -cp $PWD/.:$PWD/.java-buildpack/client_certificate_mapper/client_certificate_mapper-1.11.0_RELEASE.jar:$PWD/.java-buildpack/container_security_provider/container_security_provider-1.19.0_RELEASE.jar io.pivotal.catalyst.MetricsApplicationKt",
+                "disk_quota": 1024,
+                "environment_json": {
+                    "ADMIN_CLIENT_ID": "apps_metrics_processing",
+                    "ADMIN_CLIENT_SECRET": "XXXXXXXXXXXX",
+                    "APPMETRICS_DOMAIN": "metrics.sys.tas.example.io",
+                    "CLIENT_ID": "catalyst",
+                    "CLIENT_SECRET": "XXXXXXXXXXXX",
+                    "CLOUD_CONTROLLER_URL": "https://api.sys.tas.example.io",
+                    "DOCS_URL": "https://docs.pivotal.io/app-metrics/2-1/",
+                    "ENABLE_GOOGLE_ANALYTICS": "false",
+                    "ENABLE_LOGS": "true",
+                    "ENCRYPTION_KEY": "XXXXXXXXXXXX",
+                    "JBP_CONFIG_OPEN_JDK_JRE": "{ jre: { version: 11.+ }, memory_calculator: { stack_threads: 25 } }",
+                    "JBP_CONFIG_SPRING_AUTO_RECONFIGURATION": "{ enabled: false }",
+                    "LOG_STORE_URL": "https://log-store.sys.tas.example.io",
+                    "METRIC_DATA_URL": "https://metric-store.sys.tas.example.io",
+                    "METRIC_REDIRECT_URL": "https://metrics.sys.tas.example.io/auth/code",
+                    "POSTGRES_CA_CERT": "-----BEGIN CERTIFICATE-----\n-----END CERTIFICATE-----\n\n",
+                    "POSTGRES_CLIENT_CERT": "-----BEGIN CERTIFICATE-----\n-----END CERTIFICATE-----\n\n",
+                    "POSTGRES_CLIENT_KEY": "-----BEGIN RSA PRIVATE KEY-----\n-----END RSA PRIVATE KEY-----\n\n",
+                    "POSTGRES_JDBC_URL": "jdbc:postgresql://postgres_appmetrics_mtls:5432/indicators?ssl=true\u0026sslfactory=io.pivotal.catalyst.ssl.PostgresInMemorySSLFactory\u0026user=pgadmin",
+                    "RUN_DB_MIGRATIONS": "true",
+                    "SKIP_SSL_VERIFY": "false",
+                    "SYSTEM_DOMAIN": "sys.tas.example.io",
+                    "TLS_VERSION": "TLSv1.2",
+                    "UAA_URL": "https://login.sys.tas.example.io",
+                    "USE_SOCKS_PROXY": "false",
+                    "VERSION": "2.1.5-build.10"
+                },
+                "health_check_http_endpoint": "",
+                "health_check_type": "port",
+                "instances": 1,
+                "memory": 4096,
+                "name": "appmetrics",
+                "routes": [
+                    "metrics.sys.tas.example.io",
+                    "appmetrics.sys.tas.example.io"
+                ],
+                "routes_url": "/v2/apps/d638acd7-d659-4c3d-ba41-70e21216e778/routes",
+                "service_bindings_url": "/v2/apps/d638acd7-d659-4c3d-ba41-70e21216e778/service_bindings",
+                "ServiceInstances": null,
+                "space_guid": "b777a228-b497-40b3-9657-4119ba9e6750",
+                "stack": "cflinuxfs3",
+                "stack_url": "/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369",
+                "state": "STARTED"
+            },
+            "metadata": {
+                "guid": "d638acd7-d659-4c3d-ba41-70e21216e778"
+            }
+        },
+        {
+            "entity": {
+                "buildpack": "",
+                "command": "",
+                "detected_buildpack": "nodejs",
+                "detected_start_command": "npm start",
+                "disk_quota": 1024,
+                "environment_json": null,
+                "health_check_http_endpoint": "",
+                "health_check_type": "port",
+                "instances": 5,
+                "memory": 1024,
+                "name": "hello-world",
+                "routes": [
+                    "hello-world.apps.tas.example.io"
+                ],
+                "routes_url": "/v2/apps/a9a9b168-4f3e-45de-bb05-c4556bed19eb/routes",
+                "service_bindings_url": "/v2/apps/a9a9b168-4f3e-45de-bb05-c4556bed19eb/service_bindings",
+                "ServiceInstances": null,
+                "space_guid": "6ddc1f4a-e3f3-4b3e-a4ee-74f07492ddf7",
+                "stack": "cflinuxfs3",
+                "stack_url": "/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369",
+                "state": "STARTED"
+            },
+            "metadata": {
+                "guid": "a9a9b168-4f3e-45de-bb05-c4556bed19eb"
+            }
+        },
+        {
+            "entity": {
+                "buildpack": "",
+                "command": "",
+                "detected_buildpack": "java",
+                "detected_start_command": "JAVA_OPTS=\"-agentpath:$PWD/.java-buildpack/open_jdk_jre/bin/jvmkill-1.17.0_RELEASE=printHeapHistogram=1 -Djava.io.tmpdir=$TMPDIR -XX:ActiveProcessorCount=$(nproc) -Djava.ext.dirs=$PWD/.java-buildpack/container_security_provider:$PWD/.java-buildpack/open_jdk_jre/lib/ext -Djava.security.properties=$PWD/.java-buildpack/java_security/java.security $JAVA_OPTS\" \u0026\u0026 CALCULATED_MEMORY=$($PWD/.java-buildpack/open_jdk_jre/bin/java-buildpack-memory-calculator-3.13.0_RELEASE -totMemory=$MEMORY_LIMIT -loadedClasses=21397 -poolType=metaspace -stackThreads=250 -vmOptions=\"$JAVA_OPTS\") \u0026\u0026 echo JVM Memory Configuration: $CALCULATED_MEMORY \u0026\u0026 JAVA_OPTS=\"$JAVA_OPTS $CALCULATED_MEMORY\" \u0026\u0026 MALLOC_ARENA_MAX=2 SERVER_PORT=$PORT eval exec $PWD/.java-buildpack/open_jdk_jre/bin/java $JAVA_OPTS -cp $PWD/. org.springframework.boot.loader.JarLauncher",
+                "disk_quota": 1024,
+                "environment_json": {
+                    "JBP_CONFIG_SPRING_AUTO_RECONFIGURATION": "{enabled: false}",
+                    "SPRING_PROFILES_ACTIVE": "http2"
+                },
+                "health_check_http_endpoint": "",
+                "health_check_type": "port",
+                "instances": 2,
+                "memory": 1024,
+                "name": "spring-music",
+                "routes": [
+                    "spring-music-nice-tiger-si.apps.tas.example.io"
+                ],
+                "routes_url": "/v2/apps/a2bcf91e-100d-47bb-bbde-4822023b2783/routes",
+                "service_bindings_url": "/v2/apps/a2bcf91e-100d-47bb-bbde-4822023b2783/service_bindings",
+                "ServiceInstances": [
+                    {
+                        "maintenance_info": {
+                            "description": "MySQL(\"2.10.10-build.40\") for VMware Tanzu",
+                            "version": "2.10.10-build.40"
+                        },
+                        "name": "dev_mysql_ha",
+                        "type": "managed_service_instance"
+                    },
+                    {
+                        "maintenance_info": {
+                            "description": "RabbitMQ tile version \"2.1.2-build.13\"",
+                            "version": "2.1.2-build.13"
+                        },
+                        "name": "myqueue",
+                        "type": "managed_service_instance"
+                    }
+                ],
+                "space_guid": "a879dd1c-0c6d-483a-9ea0-9ca7bd8632bd",
+                "stack": "cflinuxfs3",
+                "stack_url": "/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369",
+                "state": "STARTED"
+            },
+            "metadata": {
+                "guid": "a2bcf91e-100d-47bb-bbde-4822023b2783"
+            }
+        },
+        {
+            "entity": {
+                "buildpack": "",
+                "command": "",
+                "detected_buildpack": "java",
+                "detected_start_command": "JAVA_OPTS=\"-agentpath:$PWD/.java-buildpack/open_jdk_jre/bin/jvmkill-1.16.0_RELEASE=printHeapHistogram=1 -Djava.io.tmpdir=$TMPDIR -XX:ActiveProcessorCount=$(nproc) -Djava.ext.dirs=$PWD/.java-buildpack/container_security_provider:$PWD/.java-buildpack/open_jdk_jre/lib/ext -Djava.security.properties=$PWD/.java-buildpack/java_security/java.security $JAVA_OPTS\" \u0026\u0026 CALCULATED_MEMORY=$($PWD/.java-buildpack/open_jdk_jre/bin/java-buildpack-memory-calculator-3.13.0_RELEASE -totMemory=$MEMORY_LIMIT -loadedClasses=21397 -poolType=metaspace -stackThreads=250 -vmOptions=\"$JAVA_OPTS\") \u0026\u0026 echo JVM Memory Configuration: $CALCULATED_MEMORY \u0026\u0026 JAVA_OPTS=\"$JAVA_OPTS $CALCULATED_MEMORY\" \u0026\u0026 MALLOC_ARENA_MAX=2 SERVER_PORT=$PORT eval exec $PWD/.java-buildpack/open_jdk_jre/bin/java $JAVA_OPTS -cp $PWD/. org.springframework.boot.loader.JarLauncher",
+                "disk_quota": 1024,
+                "environment_json": {
+                    "JBP_CONFIG_SPRING_AUTO_RECONFIGURATION": "{enabled: false}",
+                    "SPRING_PROFILES_ACTIVE": "http2"
+                },
+                "health_check_http_endpoint": "",
+                "health_check_type": "port",
+                "instances": 1,
+                "memory": 1024,
+                "name": "spring-music-testing",
+                "routes": [
+                    "spring-music-testing-exhausted-bat-yj.apps.tas.example.io"
+                ],
+                "routes_url": "/v2/apps/34f27890-1548-40d3-899c-6be1d827d605/routes",
+                "service_bindings_url": "/v2/apps/34f27890-1548-40d3-899c-6be1d827d605/service_bindings",
+                "ServiceInstances": null,
+                "space_guid": "a879dd1c-0c6d-483a-9ea0-9ca7bd8632bd",
+                "stack": "cflinuxfs3",
+                "stack_url": "/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369",
+                "state": "STARTED"
+            },
+            "metadata": {
+                "guid": "34f27890-1548-40d3-899c-6be1d827d605"
+            }
+        },
+        {
+            "entity": {
+                "buildpack": "nodejs_buildpack",
+                "command": "",
+                "detected_buildpack": "nodejs",
+                "detected_start_command": "npm start",
+                "disk_quota": 1024,
+                "environment_json": {
+                    "FOUNDATIONS": "{\"home\":{\"ccUrl\":\"https://api.sys.tas.example.io\",\"invitationsServiceUrl\":\"https://p-invitations.sys.tas.example.io\",\"logoutUrl\":\"https://login.sys.tas.example.io/logout.do\",\"metricsUrl\":\"https://metrics.sys.tas.example.io\",\"metricStoreUrl\":\"https://metric-store.sys.tas.example.io\",\"uaaUrl\":\"https://login.sys.tas.example.io\",\"usageServiceUrl\":\"https://app-usage.sys.tas.example.io\",\"systemDomain\":\"sys.tas.example.io\"}}",
+                    "NODE_TLS_REJECT_UNAUTHORIZED": "1"
+                },
+                "health_check_http_endpoint": "",
+                "health_check_type": "port",
+                "instances": 2,
+                "memory": 256,
+                "name": "search-server-blue",
+                "routes": [
+                    "search-server.sys.tas.example.io"
+                ],
+                "routes_url": "/v2/apps/383b9878-b175-406b-88a3-1e7455134bca/routes",
+                "service_bindings_url": "/v2/apps/383b9878-b175-406b-88a3-1e7455134bca/service_bindings",
+                "ServiceInstances": null,
+                "space_guid": "df9049fc-4e41-48b7-989d-95eb5a3a7fe2",
+                "stack": "cflinuxfs3",
+                "stack_url": "/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369",
+                "state": "STARTED"
+            },
+            "metadata": {
+                "guid": "383b9878-b175-406b-88a3-1e7455134bca"
+            }
+        },
+        {
+            "entity": {
+                "buildpack": "nodejs_buildpack",
+                "command": "",
+                "detected_buildpack": "nodejs",
+                "detected_start_command": "npm start",
+                "disk_quota": 1024,
+                "environment_json": {
+                    "CLOUD_CONTROLLER_URL": "https://api.sys.tas.example.io",
+                    "COMPANY_NAME": "",
+                    "INVITATIONS_CLIENT_ID": "invitations",
+                    "INVITATIONS_CLIENT_SECRET": "XXXXXXXXXXXX",
+                    "NODE_TLS_REJECT_UNAUTHORIZED": "1",
+                    "NOTIFICATIONS_URL": "https://notifications.sys.tas.example.io",
+                    "PRODUCT_NAME": "Apps Manager",
+                    "SUCCESS_CALLBACK_URL": "",
+                    "SUPPORT_EMAIL": "",
+                    "UAA_URL": "https://login.sys.tas.example.io"
+                },
+                "health_check_http_endpoint": "",
+                "health_check_type": "port",
+                "instances": 2,
+                "memory": 256,
+                "name": "p-invitations-blue",
+                "routes": [
+                    "p-invitations.sys.tas.example.io"
+                ],
+                "routes_url": "/v2/apps/f2304e82-653f-4dd6-9038-6812b112a4d3/routes",
+                "service_bindings_url": "/v2/apps/f2304e82-653f-4dd6-9038-6812b112a4d3/service_bindings",
+                "ServiceInstances": null,
+                "space_guid": "df9049fc-4e41-48b7-989d-95eb5a3a7fe2",
+                "stack": "cflinuxfs3",
+                "stack_url": "/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369",
+                "state": "STARTED"
+            },
+            "metadata": {
+                "guid": "f2304e82-653f-4dd6-9038-6812b112a4d3"
+            }
+        },
+        {
+            "entity": {
+                "buildpack": "staticfile_buildpack",
+                "command": "ruby -e 'require \"json\"; env = {}; ENV[\"AMJS_ENV_VAR_KEYS\"].split(\" \").each do |k|; if ENV.key?(k); env[k] = ENV[k].gsub(\"\\r\", \"\\\\r\").gsub(\"\\n\", \"\\\\n\"); end; end; File.open(\"public/config.json\", \"w\") do |file|; file.write(JSON.generate(env)); end;' \u0026\u0026 $HOME/boot.sh",
+                "detected_buildpack": "staticfile",
+                "detected_start_command": "$HOME/boot.sh",
+                "disk_quota": 1024,
+                "environment_json": {
+                    "ACCENT_COLOR": "#00A79D",
+                    "ACCOUNT_URL": "https://login.sys.tas.example.io/profile",
+                    "AMJS_ENV_VAR_KEYS": "ACCENT_COLOR ACCOUNT_URL APP_POLL_INTERVAL APPS_DOMAIN COMPANY_NAME CREATE_UPS_ENABLED CURRENCY_LOOKUP ENABLE_OFFLINE_TOOLS CF_CLI_VERSION ENABLE_HTTP2 DISPLAY_PLAN_PRICES ENABLE_INVITING_USERS FAVICON_SRC FOOTER_LINKS FOOTER_TEXT FOUNDATIONS GLOBAL_WRAPPER_BG_COLOR GLOBAL_WRAPPER_FOOTER_CONTENT GLOBAL_WRAPPER_HEADER_CONTENT GLOBAL_WRAPPER_TEXT_COLOR HOME_FOUNDATION LOGO_SRC MARKETPLACE_NAME MARKETPLACE_URL METRIC_REGISTRAR_ENABLED NETWORKING_SELF_SERVICE POLL_INTERVAL PRODUCT_NAME SEARCH_SERVICE_URL SECONDARY_NAVIGATION_LINKS SKIP_SSL_VALIDATION UAA_SAML_PROVIDER_NAME",
+                    "APP_POLL_INTERVAL": "10",
+                    "APPS_DOMAIN": "apps.tas.example.io",
+                    "CF_CLI_VERSION": "v8",
+                    "COMPANY_NAME": "",
+                    "CREATE_UPS_ENABLED": "true",
+                    "CURRENCY_LOOKUP": "{ \"usd\": \"$\", \"eur\": \"€\" }",
+                    "DISPLAY_PLAN_PRICES": "false",
+                    "ENABLE_HTTP2": "true",
+                    "ENABLE_INVITING_USERS": "true",
+                    "ENABLE_OFFLINE_TOOLS": "false",
+                    "FAVICON_SRC": "/vmw-bug.png",
+                    "FOOTER_LINKS": "[]",
+                    "FOOTER_TEXT": "",
+                    "FOUNDATIONS": "{\"home\":{\"ccUrl\":\"https://api.sys.tas.example.io\",\"invitationsServiceUrl\":\"https://p-invitations.sys.tas.example.io\",\"logoutUrl\":\"https://login.sys.tas.example.io/logout.do\",\"metricsUrl\":\"https://metrics.sys.tas.example.io\",\"metricStoreUrl\":\"https://metric-store.sys.tas.example.io\",\"uaaUrl\":\"https://login.sys.tas.example.io\",\"usageServiceUrl\":\"https://app-usage.sys.tas.example.io\",\"systemDomain\":\"sys.tas.example.io\"}}",
+                    "GLOBAL_WRAPPER_BG_COLOR": "#D6D6D6",
+                    "GLOBAL_WRAPPER_FOOTER_CONTENT": "",
+                    "GLOBAL_WRAPPER_HEADER_CONTENT": "",
+                    "GLOBAL_WRAPPER_TEXT_COLOR": "#333",
+                    "HOME_FOUNDATION": "home",
+                    "LOGO_SRC": "/vmw-bug.svg",
+                    "MARKETPLACE_NAME": "Marketplace",
+                    "MARKETPLACE_URL": "/marketplace",
+                    "METRIC_REGISTRAR_ENABLED": "true",
+                    "NETWORKING_SELF_SERVICE": "false",
+                    "POLL_INTERVAL": "30",
+                    "PRODUCT_NAME": "Apps Manager",
+                    "SEARCH_SERVICE_URL": "https://search-server.sys.tas.example.io",
+                    "SECONDARY_NAVIGATION_LINKS": "[{\"guid\":\"b7a25b37-9a4c-4b32-957b-04d9e6848661\",\"href\":\"https://docs.pivotal.io/pivotalcf/2-13/pas/intro.html\",\"name\":\"Docs\"},{\"guid\":\"265b8105-2025-4c4b-8d9e-89db9f0e5c94\",\"href\":\"/tools\",\"name\":\"Tools\"}]",
+                    "SKIP_SSL_VALIDATION": "false",
+                    "UAA_SAML_PROVIDER_NAME": ""
+                },
+                "health_check_http_endpoint": "",
+                "health_check_type": "port",
+                "instances": 6,
+                "memory": 128,
+                "name": "apps-manager-js-green",
+                "routes": null,
+                "routes_url": "/v2/apps/37f0e972-fa88-4473-a90c-6ddb8dc1b228/routes",
+                "service_bindings_url": "/v2/apps/37f0e972-fa88-4473-a90c-6ddb8dc1b228/service_bindings",
+                "ServiceInstances": null,
+                "space_guid": "df9049fc-4e41-48b7-989d-95eb5a3a7fe2",
+                "stack": "cflinuxfs3",
+                "stack_url": "/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369",
+                "state": "STOPPED"
+            },
+            "metadata": {
+                "guid": "37f0e972-fa88-4473-a90c-6ddb8dc1b228"
+            }
+        },
+        {
+            "entity": {
+                "buildpack": "",
+                "command": "",
+                "detected_buildpack": "java",
+                "detected_start_command": "JAVA_OPTS=\"-agentpath:$PWD/.java-buildpack/open_jdk_jre/bin/jvmkill-1.17.0_RELEASE=printHeapHistogram=1 -Djava.io.tmpdir=$TMPDIR -XX:ActiveProcessorCount=$(nproc) -Djava.ext.dirs=$PWD/.java-buildpack/container_security_provider:$PWD/.java-buildpack/open_jdk_jre/lib/ext -Djava.security.properties=$PWD/.java-buildpack/java_security/java.security $JAVA_OPTS\" \u0026\u0026 CALCULATED_MEMORY=$($PWD/.java-buildpack/open_jdk_jre/bin/java-buildpack-memory-calculator-3.13.0_RELEASE -totMemory=$MEMORY_LIMIT -loadedClasses=21397 -poolType=metaspace -stackThreads=250 -vmOptions=\"$JAVA_OPTS\") \u0026\u0026 echo JVM Memory Configuration: $CALCULATED_MEMORY \u0026\u0026 JAVA_OPTS=\"$JAVA_OPTS $CALCULATED_MEMORY\" \u0026\u0026 MALLOC_ARENA_MAX=2 SERVER_PORT=$PORT eval exec $PWD/.java-buildpack/open_jdk_jre/bin/java $JAVA_OPTS -cp $PWD/. org.springframework.boot.loader.JarLauncher",
+                "disk_quota": 1024,
+                "environment_json": {
+                    "JBP_CONFIG_SPRING_AUTO_RECONFIGURATION": "{enabled: false}",
+                    "SPRING_PROFILES_ACTIVE": "http2"
+                },
+                "health_check_http_endpoint": "",
+                "health_check_type": "port",
+                "instances": 1,
+                "memory": 1024,
+                "name": "spring-music-testing1",
+                "routes": [
+                    "spring-music-testing1-sleepy-hyena-kl.apps.tas.example.io"
+                ],
+                "routes_url": "/v2/apps/d001fd19-87e9-4095-bb84-4293a5144c76/routes",
+                "service_bindings_url": "/v2/apps/d001fd19-87e9-4095-bb84-4293a5144c76/service_bindings",
+                "ServiceInstances": null,
+                "space_guid": "a879dd1c-0c6d-483a-9ea0-9ca7bd8632bd",
+                "stack": "cflinuxfs3",
+                "stack_url": "/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369",
+                "state": "STARTED"
+            },
+            "metadata": {
+                "guid": "d001fd19-87e9-4095-bb84-4293a5144c76"
+            }
+        },
+        {
+            "entity": {
+                "buildpack": "",
+                "command": "",
+                "detected_buildpack": "java",
+                "detected_start_command": "JAVA_OPTS=\"-agentpath:$PWD/.java-buildpack/open_jdk_jre/bin/jvmkill-1.17.0_RELEASE=printHeapHistogram=1 -Djava.io.tmpdir=$TMPDIR -XX:ActiveProcessorCount=$(nproc) -Djava.ext.dirs=$PWD/.java-buildpack/container_security_provider:$PWD/.java-buildpack/open_jdk_jre/lib/ext -Djava.security.properties=$PWD/.java-buildpack/java_security/java.security $JAVA_OPTS\" \u0026\u0026 CALCULATED_MEMORY=$($PWD/.java-buildpack/open_jdk_jre/bin/java-buildpack-memory-calculator-3.13.0_RELEASE -totMemory=$MEMORY_LIMIT -loadedClasses=21397 -poolType=metaspace -stackThreads=250 -vmOptions=\"$JAVA_OPTS\") \u0026\u0026 echo JVM Memory Configuration: $CALCULATED_MEMORY \u0026\u0026 JAVA_OPTS=\"$JAVA_OPTS $CALCULATED_MEMORY\" \u0026\u0026 MALLOC_ARENA_MAX=2 SERVER_PORT=$PORT eval exec $PWD/.java-buildpack/open_jdk_jre/bin/java $JAVA_OPTS -cp $PWD/. org.springframework.boot.loader.JarLauncher",
+                "disk_quota": 1024,
+                "environment_json": {
+                    "JBP_CONFIG_SPRING_AUTO_RECONFIGURATION": "{enabled: false}",
+                    "JBP_CONFIG_TOMCAT": "{ tomcat: { external_configuration_enabled: true }, external_configuration: { repository_root: \"http://repository...\" } }",
+                    "root": "\\\"helloworld\\\"",
+                    "SPRING_PROFILES_ACTIVE": "http2"
+                },
+                "health_check_http_endpoint": "",
+                "health_check_type": "port",
+                "instances": 1,
+                "memory": 1024,
+                "name": "testing",
+                "routes": [
+                    "testing-insightful-bandicoot-ow.apps.tas.example.io"
+                ],
+                "routes_url": "/v2/apps/32eca540-65d2-4351-b3a9-6e1d679136bd/routes",
+                "service_bindings_url": "/v2/apps/32eca540-65d2-4351-b3a9-6e1d679136bd/service_bindings",
+                "ServiceInstances": null,
+                "space_guid": "a879dd1c-0c6d-483a-9ea0-9ca7bd8632bd",
+                "stack": "cflinuxfs3",
+                "stack_url": "/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369",
+                "state": "STARTED"
+            },
+            "metadata": {
+                "guid": "32eca540-65d2-4351-b3a9-6e1d679136bd"
+            }
+        },
+        {
+            "entity": {
+                "buildpack": "",
+                "command": "",
+                "detected_buildpack": "java",
+                "detected_start_command": "JAVA_OPTS=\"-agentpath:$PWD/.java-buildpack/open_jdk_jre/bin/jvmkill-1.17.0_RELEASE=printHeapHistogram=1 -Djava.io.tmpdir=$TMPDIR -XX:ActiveProcessorCount=$(nproc) -Djava.ext.dirs= -Djava.security.properties=$PWD/.java-buildpack/java_security/java.security $JAVA_OPTS\" \u0026\u0026 CALCULATED_MEMORY=$($PWD/.java-buildpack/open_jdk_jre/bin/java-buildpack-memory-calculator-3.13.0_RELEASE -totMemory=$MEMORY_LIMIT -loadedClasses=16149 -poolType=metaspace -stackThreads=250 -vmOptions=\"$JAVA_OPTS\") \u0026\u0026 echo JVM Memory Configuration: $CALCULATED_MEMORY \u0026\u0026 JAVA_OPTS=\"$JAVA_OPTS $CALCULATED_MEMORY\" \u0026\u0026 MALLOC_ARENA_MAX=2 eval exec $PWD/.java-buildpack/open_jdk_jre/bin/java $JAVA_OPTS -cp $PWD/.:$PWD/.java-buildpack/client_certificate_mapper/client_certificate_mapper-1.11.0_RELEASE.jar:$PWD/.java-buildpack/container_security_provider/container_security_provider-1.19.0_RELEASE.jar com.vmware.App",
+                "disk_quota": 1024,
+                "environment_json": {
+                    "JBP_CONFIG_OPEN_JDK_JRE": "{ jre: { version: 17.+ } }"
+                },
+                "health_check_http_endpoint": "",
+                "health_check_type": "port",
+                "instances": 1,
+                "memory": 1024,
+                "name": "ra-java-metric",
+                "routes": [
+                    "ra-java-metric.apps.tas.example.io"
+                ],
+                "routes_url": "/v2/apps/e8682924-4f03-4713-bbe6-c091068d91d3/routes",
+                "service_bindings_url": "/v2/apps/e8682924-4f03-4713-bbe6-c091068d91d3/service_bindings",
+                "ServiceInstances": null,
+                "space_guid": "a879dd1c-0c6d-483a-9ea0-9ca7bd8632bd",
+                "stack": "cflinuxfs3",
+                "stack_url": "/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369",
+                "state": "STARTED"
+            },
+            "metadata": {
+                "guid": "e8682924-4f03-4713-bbe6-c091068d91d3"
+            }
+        },
+        {
+            "entity": {
+                "buildpack": "staticfile_buildpack",
+                "command": "ruby -e 'require \"json\"; env = {}; ENV[\"AMJS_ENV_VAR_KEYS\"].split(\" \").each do |k|; if ENV.key?(k); env[k] = ENV[k].gsub(\"\\r\", \"\\\\r\").gsub(\"\\n\", \"\\\\n\"); end; end; File.open(\"public/config.json\", \"w\") do |file|; file.write(JSON.generate(env)); end;' \u0026\u0026 $HOME/boot.sh",
+                "detected_buildpack": "staticfile",
+                "detected_start_command": "$HOME/boot.sh",
+                "disk_quota": 1024,
+                "environment_json": {
+                    "ACCENT_COLOR": "#00A79D",
+                    "ACCOUNT_URL": "https://login.sys.tas.example.io/profile",
+                    "AMJS_ENV_VAR_KEYS": "ACCENT_COLOR ACCOUNT_URL APP_POLL_INTERVAL APPS_DOMAIN COMPANY_NAME CREATE_UPS_ENABLED CURRENCY_LOOKUP ENABLE_OFFLINE_TOOLS CF_CLI_VERSION ENABLE_HTTP2 DISPLAY_PLAN_PRICES ENABLE_INVITING_USERS FAVICON_SRC FOOTER_LINKS FOOTER_TEXT FOUNDATIONS GLOBAL_WRAPPER_BG_COLOR GLOBAL_WRAPPER_FOOTER_CONTENT GLOBAL_WRAPPER_HEADER_CONTENT GLOBAL_WRAPPER_TEXT_COLOR HOME_FOUNDATION LOGO_SRC MARKETPLACE_NAME MARKETPLACE_URL METRIC_REGISTRAR_ENABLED NETWORKING_SELF_SERVICE POLL_INTERVAL PRODUCT_NAME SEARCH_SERVICE_URL SECONDARY_NAVIGATION_LINKS SKIP_SSL_VALIDATION UAA_SAML_PROVIDER_NAME",
+                    "APP_POLL_INTERVAL": "10",
+                    "APPS_DOMAIN": "apps.tas.example.io",
+                    "CF_CLI_VERSION": "v8",
+                    "COMPANY_NAME": "",
+                    "CREATE_UPS_ENABLED": "true",
+                    "CURRENCY_LOOKUP": "{ \"usd\": \"$\", \"eur\": \"€\" }",
+                    "DISPLAY_PLAN_PRICES": "false",
+                    "ENABLE_HTTP2": "true",
+                    "ENABLE_INVITING_USERS": "true",
+                    "ENABLE_OFFLINE_TOOLS": "false",
+                    "FAVICON_SRC": "/vmw-bug.png",
+                    "FOOTER_LINKS": "[]",
+                    "FOOTER_TEXT": "",
+                    "FOUNDATIONS": "{\"home\":{\"ccUrl\":\"https://api.sys.tas.example.io\",\"invitationsServiceUrl\":\"https://p-invitations.sys.tas.example.io\",\"logoutUrl\":\"https://login.sys.tas.example.io/logout.do\",\"metricsUrl\":\"https://metrics.sys.tas.example.io\",\"metricStoreUrl\":\"https://metric-store.sys.tas.example.io\",\"uaaUrl\":\"https://login.sys.tas.example.io\",\"usageServiceUrl\":\"https://app-usage.sys.tas.example.io\",\"systemDomain\":\"sys.tas.example.io\"}}",
+                    "GLOBAL_WRAPPER_BG_COLOR": "#D6D6D6",
+                    "GLOBAL_WRAPPER_FOOTER_CONTENT": "",
+                    "GLOBAL_WRAPPER_HEADER_CONTENT": "",
+                    "GLOBAL_WRAPPER_TEXT_COLOR": "#333",
+                    "HOME_FOUNDATION": "home",
+                    "LOGO_SRC": "/vmw-bug.svg",
+                    "MARKETPLACE_NAME": "Marketplace",
+                    "MARKETPLACE_URL": "/marketplace",
+                    "METRIC_REGISTRAR_ENABLED": "true",
+                    "NETWORKING_SELF_SERVICE": "false",
+                    "POLL_INTERVAL": "30",
+                    "PRODUCT_NAME": "Apps Manager",
+                    "SEARCH_SERVICE_URL": "https://search-server.sys.tas.example.io",
+                    "SECONDARY_NAVIGATION_LINKS": "[{\"guid\":\"b7a25b37-9a4c-4b32-957b-04d9e6848661\",\"href\":\"https://docs.pivotal.io/pivotalcf/2-13/pas/intro.html\",\"name\":\"Docs\"},{\"guid\":\"265b8105-2025-4c4b-8d9e-89db9f0e5c94\",\"href\":\"/tools\",\"name\":\"Tools\"}]",
+                    "SKIP_SSL_VALIDATION": "false",
+                    "UAA_SAML_PROVIDER_NAME": ""
+                },
+                "health_check_http_endpoint": "",
+                "health_check_type": "port",
+                "instances": 6,
+                "memory": 128,
+                "name": "apps-manager-js-blue",
+                "routes": [
+                    "apps.sys.tas.example.io"
+                ],
+                "routes_url": "/v2/apps/a892b35d-f054-4ffd-a10e-bd356e3ad9b8/routes",
+                "service_bindings_url": "/v2/apps/a892b35d-f054-4ffd-a10e-bd356e3ad9b8/service_bindings",
+                "ServiceInstances": null,
+                "space_guid": "df9049fc-4e41-48b7-989d-95eb5a3a7fe2",
+                "stack": "cflinuxfs3",
+                "stack_url": "/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369",
+                "state": "STARTED"
+            },
+            "metadata": {
+                "guid": "a892b35d-f054-4ffd-a10e-bd356e3ad9b8"
+            }
+        },
+        {
+            "entity": {
+                "buildpack": "binary_buildpack",
+                "command": "bin/cf-autoscaling",
+                "detected_buildpack": "binary",
+                "detected_start_command": "\u003e\u00262 echo Error: no start command specified during staging or launch \u0026\u0026 exit 1",
+                "disk_quota": 1024,
+                "environment_json": {
+                    "API_CLIENT_ID": "autoscaling_api",
+                    "BASIC_AUTH_PASSWORD": "YYYYYYYYYYYYYY",
+                    "BASIC_AUTH_USERNAME": "XXXXXXXXXXXX",
+                    "BROKER_NAME": "app-autoscaler",
+                    "CC_HOST": "https://api.sys.tas.example.io",
+                    "DATABASE_CA_CERT": "No database CA certificate provided",
+                    "DATABASE_SERVER_NAME": "",
+                    "DATABASE_SKIP_SSL_VALIDATION": "false",
+                    "DATABASE_URL": "mysql://ojTbLChadFqDINYfsLnr:izN8PrTMvzUOW0ztTS3ydVA34bpKP4@mysql.service.cf.internal:3306/autoscale",
+                    "ENABLE_DATABASE_TLS": "false",
+                    "GODEBUG": "x509sha1=1",
+                    "HOST": "autoscale.sys.tas.example.io",
+                    "LOG_LEVEL": "error",
+                    "LOG_VERBOSE": "false",
+                    "LOGCACHE_HOST": "https://log-cache.sys.tas.example.io",
+                    "MARKETPLACE_COMPANY_NAME": "VMware, Inc. or its affiliates",
+                    "MARKETPLACE_DOCUMENTATION_URL": "https://docs.pivotal.io/pivotalcf/3-0/appsman-services/autoscaler/using-autoscaler.html",
+                    "MARKETPLACE_IMAGE_URL": "data:image/png;base64,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",
+                    "METRIC_COLLECTION_INTERVAL": "120s",
+                    "NOTIFICATIONS_ENABLED": "true",
+                    "NOTIFICATIONS_HOST": "https://notifications.sys.tas.example.io",
+                    "PLAN_ID": "544ade5f-0479-49ce-bd36-082dbebfd504",
+                    "RABBIT_URL_CACHE_INTERVAL": "600s",
+                    "ROOT": "$HOME",
+                    "SCALING_INTERVAL": "35s",
+                    "SCHEME": "https",
+                    "SERVICE_ID": "6c1d35ca-b696-4e74-a9b9-4a45aab66e7d",
+                    "UAA_CLIENT_ID": "autoscaling_service",
+                    "UAA_CLIENT_SECRET": "XXXXXXXXXXXX",
+                    "UAA_HOST": "https://login.sys.tas.example.io",
+                    "VERIFY_SSL": "true"
+                },
+                "health_check_http_endpoint": "",
+                "health_check_type": "port",
+                "instances": 3,
+                "memory": 256,
+                "name": "autoscale",
+                "routes": [
+                    "autoscale.sys.tas.example.io"
+                ],
+                "routes_url": "/v2/apps/4f992685-9b51-4e00-a55a-74a733846f91/routes",
+                "service_bindings_url": "/v2/apps/4f992685-9b51-4e00-a55a-74a733846f91/service_bindings",
+                "ServiceInstances": null,
+                "space_guid": "462ecfdd-e63e-4472-a59d-ba767d8cb069",
+                "stack": "cflinuxfs3",
+                "stack_url": "/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369",
+                "state": "STARTED"
+            },
+            "metadata": {
+                "guid": "4f992685-9b51-4e00-a55a-74a733846f91"
+            }
+        },
+        {
+            "entity": {
+                "buildpack": "java_buildpack_offline",
+                "command": "",
+                "detected_buildpack": "java",
+                "detected_start_command": "JAVA_OPTS=\"-agentpath:$PWD/.java-buildpack/open_jdk_jre/bin/jvmkill-1.17.0_RELEASE=printHeapHistogram=1 -Djava.io.tmpdir=$TMPDIR -XX:ActiveProcessorCount=$(nproc) -Djava.ext.dirs= -Djava.security.properties=$PWD/.java-buildpack/java_security/java.security $JAVA_OPTS\" \u0026\u0026 CALCULATED_MEMORY=$($PWD/.java-buildpack/open_jdk_jre/bin/java-buildpack-memory-calculator-3.13.0_RELEASE -totMemory=$MEMORY_LIMIT -loadedClasses=25562 -poolType=metaspace -stackThreads=250 -vmOptions=\"$JAVA_OPTS\") \u0026\u0026 echo JVM Memory Configuration: $CALCULATED_MEMORY \u0026\u0026 JAVA_OPTS=\"$JAVA_OPTS $CALCULATED_MEMORY\" \u0026\u0026 MALLOC_ARENA_MAX=2 SERVER_PORT=$PORT eval exec $PWD/.java-buildpack/open_jdk_jre/bin/java $JAVA_OPTS -cp $PWD/.:$PWD/.java-buildpack/container_security_provider/container_security_provider-1.19.0_RELEASE.jar org.springframework.boot.loader.JarLauncher",
+                "disk_quota": 1024,
+                "environment_json": {
+                    "API_CLIENT": "autoscaling_api",
+                    "API_CLIENT_SECRET": "XXXXXXXXXXXX",
+                    "BROKER_HOST": "https://autoscale.sys.tas.example.io/v2",
+                    "CC_HOST": "https://api.sys.tas.example.io",
+                    "DATABASE_URL": "jdbc:mysql://mysql.service.cf.internal:3306/autoscale?user=ojTbLChadFqDINYfsLnr\u0026password=XXXXXXXXXXXX\u0026serverTimezone=UTC\u0026useLegacyDatetimeCode=false",
+                    "DISABLE_API_CONNECTION_POOLING": "false",
+                    "HOST_NAME": "https://autoscale.sys.tas.example.io/api/v2",
+                    "JAVA_OPTS": "-Dcloudfoundry.metrics.skipSslValidation=false",
+                    "JBP_CONFIG_OPEN_JDK_JRE": "{ \"jre\": { version: 11.+ } }",
+                    "LOG_VERBOSE": "false",
+                    "SKIP_CERT_VERIFY": "false",
+                    "UAA_HOST": "https://login.sys.tas.example.io"
+                },
+                "health_check_http_endpoint": "",
+                "health_check_type": "port",
+                "instances": 1,
+                "memory": 1024,
+                "name": "autoscale-api",
+                "routes": [
+                    "autoscale.sys.tas.example.io"
+                ],
+                "routes_url": "/v2/apps/988004e5-f76a-4b14-bedd-0dc7a40e4c6b/routes",
+                "service_bindings_url": "/v2/apps/988004e5-f76a-4b14-bedd-0dc7a40e4c6b/service_bindings",
+                "ServiceInstances": null,
+                "space_guid": "462ecfdd-e63e-4472-a59d-ba767d8cb069",
+                "stack": "cflinuxfs3",
+                "stack_url": "/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369",
+                "state": "STARTED"
+            },
+            "metadata": {
+                "guid": "988004e5-f76a-4b14-bedd-0dc7a40e4c6b"
+            }
+        },
+        {
+            "entity": {
+                "buildpack": "staticfile_buildpack",
+                "command": "",
+                "detected_buildpack": "staticfile",
+                "detected_start_command": "$HOME/boot.sh",
+                "disk_quota": 256,
+                "environment_json": {},
+                "health_check_http_endpoint": "",
+                "health_check_type": "port",
+                "instances": 1,
+                "memory": 64,
+                "name": "staticfile",
+                "routes": [
+                    "staticfile-appreciative-rhinocerous-ji.apps.tas.example.io"
+                ],
+                "routes_url": "/v2/apps/5e1c088a-c7f7-40d1-b13c-089df2d5e659/routes",
+                "service_bindings_url": "/v2/apps/5e1c088a-c7f7-40d1-b13c-089df2d5e659/service_bindings",
+                "ServiceInstances": null,
+                "space_guid": "a879dd1c-0c6d-483a-9ea0-9ca7bd8632bd",
+                "stack": "cflinuxfs3",
+                "stack_url": "/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369",
+                "state": "STARTED"
+            },
+            "metadata": {
+                "guid": "5e1c088a-c7f7-40d1-b13c-089df2d5e659"
+            }
+        },
+        {
+            "entity": {
+                "buildpack": "staticfile_buildpack",
+                "command": "",
+                "detected_buildpack": "staticfile",
+                "detected_start_command": "$HOME/boot.sh",
+                "disk_quota": 256,
+                "environment_json": {},
+                "health_check_http_endpoint": "",
+                "health_check_type": "port",
+                "instances": 1,
+                "memory": 64,
+                "name": "cf-example-staticfile",
+                "routes": [
+                    "cf-example-staticfile-shy-serval-yy.apps.tas.example.io"
+                ],
+                "routes_url": "/v2/apps/ef4890de-a450-4c0a-9768-48d803a90b5c/routes",
+                "service_bindings_url": "/v2/apps/ef4890de-a450-4c0a-9768-48d803a90b5c/service_bindings",
+                "ServiceInstances": null,
+                "space_guid": "a879dd1c-0c6d-483a-9ea0-9ca7bd8632bd",
+                "stack": "cflinuxfs3",
+                "stack_url": "/v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369",
+                "state": "STARTED"
+            },
+            "metadata": {
+                "guid": "ef4890de-a450-4c0a-9768-48d803a90b5c"
+            }
+        }
+    ],
+    "total_pages": 1,
+    "total_results": 20
+}
