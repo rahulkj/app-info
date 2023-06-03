@@ -1,0 +1,33 @@
+metadata:
+    appguid: b1e79c62-5ec9-43c7-897a-7f3517f8d553
+entity:
+    name: app-usage-server
+    instances: 2
+    state: STARTED
+    memory: 1024
+    diskquota: 1024
+    buildpack: ruby_buildpack
+    detectedbuildpack: ruby
+    spaceguid: df9049fc-4e41-48b7-989d-95eb5a3a7fe2
+    startcommand: bin/rails server -b 0.0.0.0 -p $PORT -e $RAILS_ENV
+    environment:
+        ALLOW_TEST_DATA_CREATION: "false"
+        ALLOW_VIEWING_LOGS: "false"
+        CLOUD_CONTROLLER_URL: https://api.sys.tas.example.io
+        CUTOFF_AGE_IN_DAYS: "365"
+        DATABASE_URL: mysql2://app_usage:GhrJzsLPdDavyyXUp39Qxw7OKzcXNj@mysql.service.cf.internal:3306/app_usage_service?reconnect=true
+        SECRET_KEY_BASE: MNcQEJG7PzoipwAalg900YLBkhrBdw
+        SKIP_SSL_VALIDATION: "false"
+        UAA_URL: https://login.sys.tas.example.io
+        USAGE_SERVICE_UAA_CLIENT_ID: usage_service
+        USAGE_SERVICE_UAA_CLIENT_SECRET: UiD7dtvEvqD7DxGaU5EIxhJwcZV-uoGN
+    command: bundle exec rake server:start
+    healthcheck: http
+    healthcheckendpoint: /heartbeat/server_status
+    routes:
+        - app-usage.sys.tas.example.io
+    routesurl: /v2/apps/b1e79c62-5ec9-43c7-897a-7f3517f8d553/routes
+    stack: cflinuxfs3
+    stackurl: /v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369
+    serviceinstances: []
+    serviceurl: /v2/apps/b1e79c62-5ec9-43c7-897a-7f3517f8d553/service_bindings

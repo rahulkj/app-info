@@ -29,29 +29,30 @@ OPTIONS:
 ```
 > cf app-info --csv
 
-Following is the csv output
+**** Gathering application metadata from all orgs and spaces ****
+**** Following is the csv output ****
 
-ORG,SPACE,APPLICATION,STATE,BUILDPACK,DETECTED_BUILDPACK
-system,system,app-usage-scheduler,STARTED,ruby_buildpack,ruby
-system,system,app-usage-worker,STARTED,ruby_buildpack,ruby
-system,system,app-usage-server,STARTED,ruby_buildpack,ruby
-system,system,search-server-green,STOPPED,nodejs_buildpack,nodejs
-system,system,p-invitations-green,STOPPED,nodejs_buildpack,
-system,app-metrics-v2,appmetrics,STARTED,java_buildpack_offline,java
-john,sandbox,hello-world,STARTED,,nodejs
-bob,dev,spring-music,STARTED,,java
-bob,dev,spring-music-testing,STARTED,,java
-system,system,search-server-blue,STARTED,nodejs_buildpack,nodejs
-system,system,p-invitations-blue,STARTED,nodejs_buildpack,nodejs
-system,system,apps-manager-js-green,STOPPED,staticfile_buildpack,staticfile
-bob,dev,spring-music-testing1,STARTED,,java
-bob,dev,testing,STARTED,,java
-bob,dev,ra-java-metric,STARTED,,java
-system,system,apps-manager-js-blue,STARTED,staticfile_buildpack,staticfile
-system,autoscaling,autoscale,STARTED,binary_buildpack,binary
-system,autoscaling,autoscale-api,STARTED,java_buildpack_offline,java
-bob,dev,staticfile,STARTED,staticfile_buildpack,staticfile
-bob,dev,cf-example-staticfile,STARTED,staticfile_buildpack,staticfile
+ORG,SPACE,APPLICATION,STATE,INSTANCES,MEMORY,DISK,BUILDPACK,DETECTED_BUILDPACK,HEALTH_CHECK
+system,system,app-usage-scheduler,STARTED,1,1024 MB,1024 MB,ruby_buildpack,ruby,process
+system,system,app-usage-worker,STARTED,1,2048 MB,1024 MB,ruby_buildpack,ruby,process
+system,system,app-usage-server,STARTED,2,1024 MB,1024 MB,ruby_buildpack,ruby,http
+system,system,search-server-green,STOPPED,2,256 MB,1024 MB,nodejs_buildpack,nodejs,port
+system,system,p-invitations-green,STOPPED,2,256 MB,1024 MB,nodejs_buildpack,,port
+system,app-metrics-v2,appmetrics,STARTED,1,4096 MB,1024 MB,java_buildpack_offline,java,port
+john,sandbox,hello-world,STARTED,5,1024 MB,1024 MB,,nodejs,port
+bob,dev,spring-music,STARTED,2,1024 MB,1024 MB,,java,port
+bob,dev,spring-music-testing,STARTED,1,1024 MB,1024 MB,,java,port
+system,system,search-server-blue,STARTED,2,256 MB,1024 MB,nodejs_buildpack,nodejs,port
+system,system,p-invitations-blue,STARTED,2,256 MB,1024 MB,nodejs_buildpack,nodejs,port
+system,system,apps-manager-js-green,STOPPED,6,128 MB,1024 MB,staticfile_buildpack,staticfile,port
+bob,dev,spring-music-testing1,STARTED,1,1024 MB,1024 MB,,java,port
+bob,dev,testing,STARTED,1,1024 MB,1024 MB,,java,port
+bob,dev,ra-java-metric,STARTED,1,1024 MB,1024 MB,,java,port
+system,system,apps-manager-js-blue,STARTED,6,128 MB,1024 MB,staticfile_buildpack,staticfile,port
+system,autoscaling,autoscale,STARTED,3,256 MB,1024 MB,binary_buildpack,binary,port
+system,autoscaling,autoscale-api,STARTED,1,1024 MB,1024 MB,java_buildpack_offline,java,port
+bob,dev,staticfile,STARTED,1,64 MB,256 MB,staticfile_buildpack,staticfile,port
+bob,dev,cf-example-staticfile,STARTED,1,64 MB,256 MB,staticfile_buildpack,staticfile,port
 ```
 
 ```

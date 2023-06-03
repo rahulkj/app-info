@@ -1,0 +1,35 @@
+metadata:
+    appguid: a2bcf91e-100d-47bb-bbde-4822023b2783
+entity:
+    name: spring-music
+    instances: 2
+    state: STARTED
+    memory: 1024
+    diskquota: 1024
+    buildpack: ""
+    detectedbuildpack: java
+    spaceguid: a879dd1c-0c6d-483a-9ea0-9ca7bd8632bd
+    startcommand: 'JAVA_OPTS="-agentpath:$PWD/.java-buildpack/open_jdk_jre/bin/jvmkill-1.17.0_RELEASE=printHeapHistogram=1 -Djava.io.tmpdir=$TMPDIR -XX:ActiveProcessorCount=$(nproc) -Djava.ext.dirs=$PWD/.java-buildpack/container_security_provider:$PWD/.java-buildpack/open_jdk_jre/lib/ext -Djava.security.properties=$PWD/.java-buildpack/java_security/java.security $JAVA_OPTS" && CALCULATED_MEMORY=$($PWD/.java-buildpack/open_jdk_jre/bin/java-buildpack-memory-calculator-3.13.0_RELEASE -totMemory=$MEMORY_LIMIT -loadedClasses=21397 -poolType=metaspace -stackThreads=250 -vmOptions="$JAVA_OPTS") && echo JVM Memory Configuration: $CALCULATED_MEMORY && JAVA_OPTS="$JAVA_OPTS $CALCULATED_MEMORY" && MALLOC_ARENA_MAX=2 SERVER_PORT=$PORT eval exec $PWD/.java-buildpack/open_jdk_jre/bin/java $JAVA_OPTS -cp $PWD/. org.springframework.boot.loader.JarLauncher'
+    environment:
+        JBP_CONFIG_SPRING_AUTO_RECONFIGURATION: '{enabled: false}'
+        SPRING_PROFILES_ACTIVE: http2
+    command: ""
+    healthcheck: port
+    healthcheckendpoint: ""
+    routes:
+        - spring-music-nice-tiger-si.apps.tas.example.io
+    routesurl: /v2/apps/a2bcf91e-100d-47bb-bbde-4822023b2783/routes
+    stack: cflinuxfs3
+    stackurl: /v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369
+    serviceinstances:
+        - name: dev_mysql_ha
+          type: managed_service_instance
+          maintenanceinfo:
+            version: 2.10.10-build.40
+            description: MySQL("2.10.10-build.40") for VMware Tanzu
+        - name: myqueue
+          type: managed_service_instance
+          maintenanceinfo:
+            version: 2.1.2-build.13
+            description: RabbitMQ tile version "2.1.2-build.13"
+    serviceurl: /v2/apps/a2bcf91e-100d-47bb-bbde-4822023b2783/service_bindings

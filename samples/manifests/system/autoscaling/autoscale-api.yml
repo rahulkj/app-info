@@ -1,0 +1,35 @@
+metadata:
+    appguid: 988004e5-f76a-4b14-bedd-0dc7a40e4c6b
+entity:
+    name: autoscale-api
+    instances: 1
+    state: STARTED
+    memory: 1024
+    diskquota: 1024
+    buildpack: java_buildpack_offline
+    detectedbuildpack: java
+    spaceguid: 462ecfdd-e63e-4472-a59d-ba767d8cb069
+    startcommand: 'JAVA_OPTS="-agentpath:$PWD/.java-buildpack/open_jdk_jre/bin/jvmkill-1.17.0_RELEASE=printHeapHistogram=1 -Djava.io.tmpdir=$TMPDIR -XX:ActiveProcessorCount=$(nproc) -Djava.ext.dirs= -Djava.security.properties=$PWD/.java-buildpack/java_security/java.security $JAVA_OPTS" && CALCULATED_MEMORY=$($PWD/.java-buildpack/open_jdk_jre/bin/java-buildpack-memory-calculator-3.13.0_RELEASE -totMemory=$MEMORY_LIMIT -loadedClasses=25562 -poolType=metaspace -stackThreads=250 -vmOptions="$JAVA_OPTS") && echo JVM Memory Configuration: $CALCULATED_MEMORY && JAVA_OPTS="$JAVA_OPTS $CALCULATED_MEMORY" && MALLOC_ARENA_MAX=2 SERVER_PORT=$PORT eval exec $PWD/.java-buildpack/open_jdk_jre/bin/java $JAVA_OPTS -cp $PWD/.:$PWD/.java-buildpack/container_security_provider/container_security_provider-1.19.0_RELEASE.jar org.springframework.boot.loader.JarLauncher'
+    environment:
+        API_CLIENT: autoscaling_api
+        API_CLIENT_SECRET: MCiDQX91UMyuvM-pribNr-mDMfYUn1vh
+        BROKER_HOST: https://autoscale.sys.tas.example.io/v2
+        CC_HOST: https://api.sys.tas.example.io
+        DATABASE_URL: jdbc:mysql://mysql.service.cf.internal:3306/autoscale?user=ojTbLChadFqDINYfsLnr&password=izN8PrTMvzUOW0ztTS3ydVA34bpKP4&serverTimezone=UTC&useLegacyDatetimeCode=false
+        DISABLE_API_CONNECTION_POOLING: "false"
+        HOST_NAME: https://autoscale.sys.tas.example.io/api/v2
+        JAVA_OPTS: -Dcloudfoundry.metrics.skipSslValidation=false
+        JBP_CONFIG_OPEN_JDK_JRE: '{ "jre": { version: 11.+ } }'
+        LOG_VERBOSE: "false"
+        SKIP_CERT_VERIFY: "false"
+        UAA_HOST: https://login.sys.tas.example.io
+    command: ""
+    healthcheck: port
+    healthcheckendpoint: ""
+    routes:
+        - autoscale.sys.tas.example.io
+    routesurl: /v2/apps/988004e5-f76a-4b14-bedd-0dc7a40e4c6b/routes
+    stack: cflinuxfs3
+    stackurl: /v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369
+    serviceinstances: []
+    serviceurl: /v2/apps/988004e5-f76a-4b14-bedd-0dc7a40e4c6b/service_bindings

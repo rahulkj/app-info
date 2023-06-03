@@ -11,11 +11,6 @@ import (
 // AppInfo represents Buildpack Usage CLI interface
 type AppInfo struct{}
 
-// Metadata is the data retrived from the response json
-type Metadata struct {
-	GUID string `json:"guid"`
-}
-
 // GetMetadata provides the Cloud Foundry CLI with metadata to provide user about how to use buildpack-usage command
 func (c *AppInfo) GetMetadata() plugin.PluginMetadata {
 	return plugin.PluginMetadata{
@@ -68,56 +63,42 @@ func (c AppInfo) Run(cli plugin.CliConnection, args []string) {
 
 // PrintInCSVFormat prints the app and buildpack used info on the console
 func (c AppInfo) printInCSVFormat(cli plugin.CliConnection) {
-	fmt.Println("")
+	fmt.Println("**** Gathering application metadata from all orgs and spaces ****")
 
 	orgs, spaces, apps := c.GatherData(cli)
 
-	fmt.Printf("Following is the csv output \n\n")
+	fmt.Println("**** Following is the csv output ****")
 
-	fmt.Printf("%s,%s,%s,%s,%s,%s\n", "ORG", "SPACE", "APPLICATION", "STATE", "BUILDPACK", "DETECTED_BUILDPACK")
-
+	fmt.Printf("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", "ORG", "SPACE", "APPLICATION", "STATE", "INSTANCES", "MEMORY", "DISK", "BUILDPACK", "DETECTED_BUILDPACK", "HEALTH_CHECK")
 	for _, val := range apps.Resources {
-		bp := val.Entity.Buildpack
-		dbp := val.Entity.DetectedBuildPack
 
 		space := spaces[val.Entity.SpaceGUID]
 		spaceName := space.Name
 		orgName := orgs[space.Relationships.RelationshipsOrg.OrgData.OrgGUID]
 
-		fmt.Printf("%s,%s,%s,%s,%s,%s\n", orgName, spaceName, val.Entity.Name, val.Entity.State, bp, dbp)
-
+		fmt.Printf("%s,%s,%s,%s,%v,%v MB,%v MB,%s,%s,%s\n", orgName, spaceName, val.Entity.Name, val.Entity.State, val.Entity.Instances, val.Entity.Memory, val.Entity.DiskQuota, val.Entity.Buildpack, val.Entity.DetectedBuildPack, val.Entity.HealthCheck)
 	}
 }
 
 // PrintVerboseOutputInJsonFormat prints the app state, instances, memroy and disk data to console
 func (c AppInfo) printVerboseOutputInJsonFormat(cli plugin.CliConnection) {
-	fmt.Println("")
+	fmt.Println("**** Gathering application metadata from all orgs and spaces ****")
 
-	orgs, spaces, apps := c.GatherData(cli)
+	_, _, apps := c.GatherData(cli)
 
 	b, err := json.Marshal(apps)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
+
+	fmt.Println("**** Following is the json output ****")
+
 	fmt.Println(string(b))
-
-	fmt.Printf("Following is the csv output \n\n")
-
-	fmt.Printf("%s,%s,%s,%s,%s,%s,%s,%s,%s\n", "ORG", "SPACE", "APPLICATION", "STATE", "INSTANCES", "MEMORY", "DISK", "STARTUP-COMMAND", "ENVIRONMENT-JSON")
-	for _, val := range apps.Resources {
-
-		space := spaces[val.Entity.SpaceGUID]
-		spaceName := space.Name
-		orgName := orgs[space.Relationships.RelationshipsOrg.OrgData.OrgGUID]
-
-		fmt.Printf("%s,%s,%s,%s,%v,%v MB,%v MB,%s,%s\n", orgName, spaceName, val.Entity.Name, val.Entity.State, val.Entity.Instances, val.Entity.Memory, val.Entity.DiskQuota, val.Entity.StartCommand, val.Entity.Environment)
-	}
 }
 
 func (c AppInfo) downloadApplicationManifests(cli plugin.CliConnection) {
-
-	fmt.Println("Gathering pplication metadata from all orgs and spaces")
+	fmt.Println("**** Gathering application metadata from all orgs and spaces ****")
 
 	currentDir, err := os.Getwd()
 	if err != nil {

@@ -1,0 +1,25 @@
+metadata:
+    appguid: 383b9878-b175-406b-88a3-1e7455134bca
+entity:
+    name: search-server-blue
+    instances: 2
+    state: STARTED
+    memory: 256
+    diskquota: 1024
+    buildpack: nodejs_buildpack
+    detectedbuildpack: nodejs
+    spaceguid: df9049fc-4e41-48b7-989d-95eb5a3a7fe2
+    startcommand: npm start
+    environment:
+        FOUNDATIONS: '{"home":{"ccUrl":"https://api.sys.tas.example.io","invitationsServiceUrl":"https://p-invitations.sys.tas.example.io","logoutUrl":"https://login.sys.tas.example.io/logout.do","metricsUrl":"https://metrics.sys.tas.example.io","metricStoreUrl":"https://metric-store.sys.tas.example.io","uaaUrl":"https://login.sys.tas.example.io","usageServiceUrl":"https://app-usage.sys.tas.example.io","systemDomain":"sys.tas.example.io"}}'
+        NODE_TLS_REJECT_UNAUTHORIZED: "1"
+    command: ""
+    healthcheck: port
+    healthcheckendpoint: ""
+    routes:
+        - search-server.sys.tas.example.io
+    routesurl: /v2/apps/383b9878-b175-406b-88a3-1e7455134bca/routes
+    stack: cflinuxfs3
+    stackurl: /v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369
+    serviceinstances: []
+    serviceurl: /v2/apps/383b9878-b175-406b-88a3-1e7455134bca/service_bindings

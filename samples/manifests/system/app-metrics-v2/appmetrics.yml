@@ -1,0 +1,121 @@
+metadata:
+    appguid: d638acd7-d659-4c3d-ba41-70e21216e778
+entity:
+    name: appmetrics
+    instances: 1
+    state: STARTED
+    memory: 4096
+    diskquota: 1024
+    buildpack: java_buildpack_offline
+    detectedbuildpack: java
+    spaceguid: b777a228-b497-40b3-9657-4119ba9e6750
+    startcommand: 'JAVA_OPTS="-agentpath:$PWD/.java-buildpack/open_jdk_jre/bin/jvmkill-1.16.0_RELEASE=printHeapHistogram=1 -Djava.io.tmpdir=$TMPDIR -XX:ActiveProcessorCount=$(nproc) -Djava.ext.dirs= -Djava.security.properties=$PWD/.java-buildpack/java_security/java.security $JAVA_OPTS" && CALCULATED_MEMORY=$($PWD/.java-buildpack/open_jdk_jre/bin/java-buildpack-memory-calculator-3.13.0_RELEASE -totMemory=$MEMORY_LIMIT -loadedClasses=23718 -poolType=metaspace -stackThreads=25 -vmOptions="$JAVA_OPTS") && echo JVM Memory Configuration: $CALCULATED_MEMORY && JAVA_OPTS="$JAVA_OPTS $CALCULATED_MEMORY" && MALLOC_ARENA_MAX=2 eval exec $PWD/.java-buildpack/open_jdk_jre/bin/java $JAVA_OPTS -cp $PWD/.:$PWD/.java-buildpack/client_certificate_mapper/client_certificate_mapper-1.11.0_RELEASE.jar:$PWD/.java-buildpack/container_security_provider/container_security_provider-1.19.0_RELEASE.jar io.pivotal.catalyst.MetricsApplicationKt'
+    environment:
+        ADMIN_CLIENT_ID: apps_metrics_processing
+        ADMIN_CLIENT_SECRET: i0sYb-PEl8EGvgcks8iwEv5dITB_wAf9
+        APPMETRICS_DOMAIN: metrics.sys.tas.example.io
+        CLIENT_ID: catalyst
+        CLIENT_SECRET: AQc-HHWC7u8zWXjBdX_oYHcAGUEB-OlN
+        CLOUD_CONTROLLER_URL: https://api.sys.tas.example.io
+        DOCS_URL: https://docs.pivotal.io/app-metrics/2-1/
+        ENABLE_GOOGLE_ANALYTICS: "false"
+        ENABLE_LOGS: "true"
+        ENCRYPTION_KEY: A9MpJgwhfSnxaqTb
+        JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 11.+ }, memory_calculator: { stack_threads: 25 } }'
+        JBP_CONFIG_SPRING_AUTO_RECONFIGURATION: '{ enabled: false }'
+        LOG_STORE_URL: https://log-store.sys.tas.example.io
+        METRIC_DATA_URL: https://metric-store.sys.tas.example.io
+        METRIC_REDIRECT_URL: https://metrics.sys.tas.example.io/auth/code
+        POSTGRES_CA_CERT: |+
+            -----BEGIN CERTIFICATE-----
+            MIIDUTCCAjmgAwIBAgIVAPMSMAM/c6/3B+lkMT+ieMrarX+pMA0GCSqGSIb3DQEB
+            CwUAMB8xCzAJBgNVBAYTAlVTMRAwDgYDVQQKDAdQaXZvdGFsMB4XDTIzMDEzMTIz
+            MTgzM1oXDTI3MDEzMTIzMTgzM1owHzELMAkGA1UEBhMCVVMxEDAOBgNVBAoMB1Bp
+            dm90YWwwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQD6lENb6i5Ly3v5
+            jC68hapQkZjjKQ3Cv44BhkpTuAohKzhYGej6uOZREuqN01eHYvlXCXUfFgAp761T
+            OAJV+tMsv2sYwL1bO2sAWsDX+pQKrVk1cIWCuWG2ocv5Ho8acZ0PyR4DZT6vDKYB
+            pHxqIYiugcCiZiro0F6cX7iAv3ATmxywdBBIWj5Xk2XgW8or/IJm53YX+kxCU0YL
+            r1S5AhBpCwHYute5l1q6IKWr9bXhcnqzF0jXwHKNBTypJmiQpmsTRjHhm6x8wWPt
+            PSBlWpTj+8uuBWIIJyl19YwCBuI2p7bmtPUaTs2bFs9LuRS7QIQa7HLkGWx6NgHT
+            2t0i4qbrAgMBAAGjgYMwgYAwHQYDVR0OBBYEFAUu5lF3l0IF/Kxyk2csTvFRlNuz
+            MB8GA1UdIwQYMBaAFAUu5lF3l0IF/Kxyk2csTvFRlNuzMB0GA1UdJQQWMBQGCCsG
+            AQUFBwMCBggrBgEFBQcDATAPBgNVHRMBAf8EBTADAQH/MA4GA1UdDwEB/wQEAwIB
+            BjANBgkqhkiG9w0BAQsFAAOCAQEAtuMwjUXxpuVKETcZBuZ8s926BCpztJ7eQi1o
+            2VTd9QqwBPxtWIOUYfEU74Fi34GFt7Gp6azk+MlDddGXk+L6yEqBPQ24Nx+dSOeB
+            jqsWlMLrsf6gb2GmEl8ZctaALLlzu1B6Hoh5zAjsuvltJYA0S92sNx+5tf17G33j
+            vRrji/A8ulo0EpjxBiWzrLHpV3gY34zv6VKI3/BSbh6Iz+sfPdWd3YdZph74g7we
+            WuaUXShTU1c7cknYdK/4KXg0XyBv206FbbhjykpzNM9moVu9D+SgWkVkk5/OG1GG
+            McXIyaJlL08v2bBEUtIsm19F9AcsKrhdwq4xGA2nR4ZeU8eqWA==
+            -----END CERTIFICATE-----
+
+        POSTGRES_CLIENT_CERT: |+
+            -----BEGIN CERTIFICATE-----
+            MIIDhzCCAm+gAwIBAgIUSdjO0kIY+sdoUrqSthlHzFwLs60wDQYJKoZIhvcNAQEL
+            BQAwHzELMAkGA1UEBhMCVVMxEDAOBgNVBAoMB1Bpdm90YWwwHhcNMjMwMjA3MTgz
+            MzQ2WhcNMjUwMjA3MTgzMzQ2WjBCMQswCQYDVQQGEwJVUzEQMA4GA1UECgwHUGl2
+            b3RhbDEhMB8GA1UEAwwYcG9zdGdyZXNfYXBwbWV0cmljc19tdGxzMIIBIjANBgkq
+            hkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA7Qy9tHDGYxp3v/e6X5OJdAahDxLEdolq
+            wbD3UMagf3vXmHWSCMfs57mdP6HT9IiE5q7tJwGjrZ3ajHvlmgaeOAcLDMRANYZ7
+            mUvWbxsEmR8UE1Lj7Hp2CSiY9fH9U1R3Xiq8Y2igaNoJPrl1eY+AmqAwsgh5/SM1
+            uzlLEiWjmMdamwS3ejBE2Zng1YAHC2zF8hLxrhe5ZzMGpMVWM/HVgaVzH78ezQh5
+            fLcvTjF1oo5wcJhVyWb5a8xDRWeH6tk5YCxj+hbLjzt+N/wjpcPtwowEc0JXbt3n
+            TlbcsNrubrm8y0iSUMycWOJ5yqEyXGBAlkvR5XOo/QjfV0iXmkBuywIDAQABo4GX
+            MIGUMB0GA1UdDgQWBBT5/r4yn9QB+L8I/9+uD8bCBDRdlTAfBgNVHSMEGDAWgBQF
+            LuZRd5dCBfyscpNnLE7xUZTbszAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUH
+            AwEwDgYDVR0PAQH/BAQDAgWgMCMGA1UdEQQcMBqCGHBvc3RncmVzX2FwcG1ldHJp
+            Y3NfbXRsczANBgkqhkiG9w0BAQsFAAOCAQEA8prMzIZi25/3Ddfv+BOl53WWWUui
+            s9hc91A+CVVIwuaJ62PLMyMtE1Lz18lP+UfJ1LAF6XNTCFqiX7ICehhyLPZxwFSR
+            gXYcJ1yDmL/4tdbHQQBFsU+iGgI1bOz3giUjyWopSJ0m2u9MVpWtb3YvopbNs41h
+            71O3HFGF3MV3fy5lu0v1LNVIQSGc66Od7b20oUtzI6yBg7yGzis7v374nzplmBop
+            OQ+6KjX7R5ZtOBLHDPbD7FcsQ1S9SA7TpMSLRz8lLBbZGZHLVgKKkx4OtO5+HP/Y
+            2surdTyntHY9bsC4waaw3CHRUBLdNFybabdE0ZBY3F3KprwQYRKdkdGbvQ==
+            -----END CERTIFICATE-----
+
+        POSTGRES_CLIENT_KEY: |+
+            -----BEGIN RSA PRIVATE KEY-----
+            MIIEpQIBAAKCAQEA7Qy9tHDGYxp3v/e6X5OJdAahDxLEdolqwbD3UMagf3vXmHWS
+            CMfs57mdP6HT9IiE5q7tJwGjrZ3ajHvlmgaeOAcLDMRANYZ7mUvWbxsEmR8UE1Lj
+            7Hp2CSiY9fH9U1R3Xiq8Y2igaNoJPrl1eY+AmqAwsgh5/SM1uzlLEiWjmMdamwS3
+            ejBE2Zng1YAHC2zF8hLxrhe5ZzMGpMVWM/HVgaVzH78ezQh5fLcvTjF1oo5wcJhV
+            yWb5a8xDRWeH6tk5YCxj+hbLjzt+N/wjpcPtwowEc0JXbt3nTlbcsNrubrm8y0iS
+            UMycWOJ5yqEyXGBAlkvR5XOo/QjfV0iXmkBuywIDAQABAoIBADvhSw6IqmSga/2P
+            K4I3N7Kadhbjq8MxxUj2VhMOib6KXxTBJkmXjy2eAq3vSCZuUfwf1gJTdLBHvsxc
+            A8zbvR30EYOBE6MxvIkl0h4w2gGAC0cyWicDbEu1+KWwIkjpflnIO9x0soiqA0nX
+            +Wfiqx7kNkjSwVYDjfAkceU8os3VmYBFFtl3gxi4K8K/GxwC+zvs64n9PspVPvMd
+            VfqtdYiMk9LhiiTv1Ir0ziFIR5Rf8Bmv11RMbz/yhQc3wt8Bx+TnJAJbD2nJxnvA
+            MbAmgzNrS9Pt4SGJl6FVcjOhBXYw0Cxx4Kv2fbQ7ke36hIWi7oNtGej52zCu9q3T
+            hcgAO4ECgYEA+u/Kqu3TCZL8UbHRkSmB8PvfpJ4XEtJm/zWqj8c7rlkezZ0e2nqL
+            yNDgUSekhD+oj6fPd/4zfhgJC07H6Us2JRs/f5Kpudne8oWMhxCI1btZ5hodaFbk
+            Fod60vCbyGTqX+b6f3FBISeW++ikKgsWSB74Z/GkeYvL9VKTNckq+EECgYEA8dU3
+            fuSf9rjbQGJvUyY/5LSCNGJNndHkpInmCvGVYd+dBD+puu+o2MWMx8IH4XbSkneK
+            LTpnTqmS3UIG/hGMHgQl1J+asL0POTS8wLdPPM03DDDCAyiyP1PHNz5lM/+pYOx/
+            +RUXwbnxSj3GAVdQD5gZY6RcZXqzBQFxTUnWxAsCgYEAks0dv4mKYJuAyTpB465o
+            ulZfq6pgzT4Ry1PWCG8B1ymD/73fgukWRdEMqe2LLWMgdYoysXwhG69r+xWHlk/N
+            yT97kmJ2sKdo6nB+mbVul7sXCKpWcegDX7q6fBUOzdlb0+cIvO3AsGi8x3p+L6p0
+            ypRztjuDgSfrlgVM4bZiUQECgYEAuIbgNKQQ5zrAmc1Ccujxwfp2i7Ai13SsCVzr
+            upgCS09MSUymn2x1owqCVH5acxCutnIebkptP5mm5cuW+FC9YL37e9VZPNjV/+mc
+            yVRWUuenxFaEA9MOx8GOdjnXESlYvgtXzuDoYrsWQXcHWkicX3nIjb6BfjF03jHu
+            mXHpPWcCgYEAsVnWuHaHcGFNNAQJcicWOaUSH+yFhi82qOSO/9tAi8Er0IuPMJjD
+            iiSSnf9/ubPwNIRVuNZKwV1Yr7CHsP86wGl0KtbHdEy9leTzo1R7+gAtHTW2e+Ze
+            ISqt7z8rkZiSPD951ZCfnjFWHNwM2meytydpc1edkUKt3+OrCbJEzEo=
+            -----END RSA PRIVATE KEY-----
+
+        POSTGRES_JDBC_URL: jdbc:postgresql://postgres_appmetrics_mtls:5432/indicators?ssl=true&sslfactory=io.pivotal.catalyst.ssl.PostgresInMemorySSLFactory&user=pgadmin
+        RUN_DB_MIGRATIONS: "true"
+        SKIP_SSL_VERIFY: "false"
+        SYSTEM_DOMAIN: sys.tas.example.io
+        TLS_VERSION: TLSv1.2
+        UAA_URL: https://login.sys.tas.example.io
+        USE_SOCKS_PROXY: "false"
+        VERSION: 2.1.5-build.10
+    command: ""
+    healthcheck: port
+    healthcheckendpoint: ""
+    routes:
+        - metrics.sys.tas.example.io
+        - appmetrics.sys.tas.example.io
+    routesurl: /v2/apps/d638acd7-d659-4c3d-ba41-70e21216e778/routes
+    stack: cflinuxfs3
+    stackurl: /v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369
+    serviceinstances: []
+    serviceurl: /v2/apps/d638acd7-d659-4c3d-ba41-70e21216e778/service_bindings
