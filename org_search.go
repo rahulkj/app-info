@@ -38,8 +38,8 @@ func (c AppInfo) GetOrgs(cli plugin.CliConnection) map[string]string {
 func (c AppInfo) GetOrgData(cli plugin.CliConnection) OrgSearchResults {
 	var res OrgSearchResults = c.UnmarshallOrgSearchResults("/v3/organizations", cli)
 
-	if res.TotalPages > 0 {
-		for i := 0; i <= res.TotalPages; i++ {
+	if res.TotalPages > 1 {
+		for i := 2; i <= res.TotalPages; i++ {
 			apiUrl := fmt.Sprintf("/v3/organizations", strconv.Itoa(i))
 			tRes := c.UnmarshallOrgSearchResults(apiUrl, cli)
 			res.Resources = append(res.Resources, tRes.Resources...)
