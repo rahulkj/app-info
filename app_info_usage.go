@@ -18,7 +18,7 @@ func (c *AppInfo) GetMetadata() plugin.PluginMetadata {
 		Version: plugin.VersionType{
 			Major: 2,
 			Minor: 1,
-			Build: 0,
+			Build: 1,
 		},
 		Commands: []plugin.Command{
 			{
@@ -66,9 +66,10 @@ func (c AppInfo) Run(cli plugin.CliConnection, args []string) {
 
 // PrintInCSVFormat prints the app and buildpack used info on the console
 func (c AppInfo) printInCSVFormat(cli plugin.CliConnection) {
-	orgs, spaces, apps := c.GatherData(cli)
+	orgs, spaces, apps := c.GatherMinimalData(cli)
 
 	fmt.Println("**** Following is the csv output ****")
+	fmt.Println()
 
 	fmt.Printf("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", "ORG", "SPACE", "APPLICATION", "STATE", "INSTANCES", "MEMORY", "DISK", "BUILDPACK", "DETECTED_BUILDPACK", "HEALTH_CHECK")
 	for _, val := range apps.Resources {
@@ -92,7 +93,6 @@ func (c AppInfo) printVerboseOutputInJsonFormat(cli plugin.CliConnection) {
 	}
 
 	fmt.Println("**** Following is the json output ****")
-
 	fmt.Println(string(b))
 }
 

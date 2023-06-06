@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"strconv"
 	"strings"
 
 	"github.com/cloudfoundry/cli/plugin"
@@ -53,7 +52,7 @@ func (c AppInfo) GetSpaceData(cli plugin.CliConnection) SpaceSearchResults {
 
 	if res.TotalPages > 1 {
 		for i := 2; i <= res.TotalPages; i++ {
-			apiUrl := fmt.Sprintf("/v3/spaces", strconv.Itoa(i))
+			apiUrl := fmt.Sprintf("/v3/spaces?page=%d&per_page=50", i)
 			tRes := c.UnmarshallSpaceSearchResults(apiUrl, cli)
 			res.Resources = append(res.Resources, tRes.Resources...)
 		}

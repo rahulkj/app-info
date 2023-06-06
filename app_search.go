@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"strconv"
 	"strings"
 
 	"gopkg.in/yaml.v3"
@@ -18,6 +17,7 @@ import (
 type AppSearchResults struct {
 	TotalResults int                  `json:"total_results"`
 	TotalPages   int                  `json:"total_pages"`
+	NextUrl      string               `json:"next_url"`
 	Resources    []AppSearchResources `json:"resources"`
 }
 
@@ -117,20 +117,11 @@ func (c AppInfo) GetAppData(cli plugin.CliConnection) AppSearchResults {
 
 	if res.TotalPages > 1 {
 		for i := 2; i <= res.TotalPages; i++ {
-			apiUrl := fmt.Sprintf("/v2/apps", strconv.Itoa(i))
+			apiUrl := fmt.Sprintf("/v2/apps?order-direction=asc&page=%d&results-per-page=50", i)
+
 			tRes := c.UnmarshallAppSearchResults(apiUrl, cli)
 			res.Resources = append(res.Resources, tRes.Resources...)
 		}
-	}
-
-	for i, app := range res.Resources {
-		c.getRoutes(&app, cli)
-
-		c.getStacks(&app, cli)
-
-		c.getServices(&app, cli)
-
-		res.Resources[i] = app
 	}
 
 	return res
@@ -140,6 +131,7 @@ func (c AppInfo) UnmarshallAppSearchResults(apiUrl string, cli plugin.CliConnect
 	var tRes AppSearchResults
 	cmd := []string{"curl", apiUrl}
 	output, _ := cli.CliCommandWithoutTerminalOutput(cmd...)
+
 	json.Unmarshal([]byte(strings.Join(output, "")), &tRes)
 
 	return tRes
@@ -194,10 +186,28 @@ func (c AppInfo) getServices(app *AppSearchResources, cli plugin.CliConnection) 
 	app.Entity.ServiceInstances = serviceInstances
 }
 
+func (c AppInfo) GatherMinimalData(cli plugin.CliConnection) (map[string]string, map[string]SpaceSearchResources, AppSearchResults) {
+	orgs := c.GetOrgs(cli)
+	spaces := c.GetSpaces(cli)
+	apps := c.GetAppData(cli)
+
+	return orgs, spaces, apps
+}
+
 func (c AppInfo) GatherData(cli plugin.CliConnection) (map[string]string, map[string]SpaceSearchResources, AppSearchResults) {
 	orgs := c.GetOrgs(cli)
 	spaces := c.GetSpaces(cli)
 	apps := c.GetAppData(cli)
+
+	for i, app := range apps.Resources {
+		c.getRoutes(&app, cli)
+
+		c.getStacks(&app, cli)
+
+		c.getServices(&app, cli)
+
+		apps.Resources[i] = app
+	}
 
 	return orgs, spaces, apps
 }
