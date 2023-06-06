@@ -28,5 +28,5 @@ jobs:
       uses: actions/upload-artifact@v3.1.2
       with:
         # Artifact name
-        name: plugins.zip
+        name: plugins
         path: releases/
