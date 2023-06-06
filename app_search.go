@@ -101,10 +101,19 @@ type MaintenanceInfo struct {
 	Description string `json:"description"`
 }
 
+type AppPackages struct {
+	Resources []AppPackageResource `json:"resources"`
+}
+
+type AppPackageResource struct {
+	GUID string `json:"guid"`
+}
+
 // GetAppData requests all of the Application data from Cloud Foundry
 func (c AppInfo) GetAppData(cli plugin.CliConnection) AppSearchResults {
-	var res AppSearchResults
-	res = c.UnmarshallAppSearchResults("/v2/apps", cli)
+	fmt.Println("**** Gathering application metadata from all orgs and spaces ****")
+
+	res := c.UnmarshallAppSearchResults("/v2/apps", cli)
 
 	if res.TotalPages > 1 {
 		for i := 2; i <= res.TotalPages; i++ {
@@ -193,36 +202,6 @@ func (c AppInfo) GatherData(cli plugin.CliConnection) (map[string]string, map[st
 	return orgs, spaces, apps
 }
 
-func (c AppInfo) DownloadApplicationManifest(currentDir string, cli plugin.CliConnection) {
-	orgs, spaces, apps := c.GatherData(cli)
-
-	for _, app := range apps.Resources {
-
-		space := spaces[app.Entity.SpaceGUID]
-		spaceName := space.Name
-		orgName := orgs[space.Relationships.RelationshipsOrg.OrgData.OrgGUID]
-
-		cmd := []string{"curl", "/v3/apps/" + app.Metadata.AppGUID + "/manifest"}
-		appManifest, _ := cli.CliCommandWithoutTerminalOutput(cmd...)
-
-		yamlData := strings.Join(appManifest, "\n")
-
-		fileName := app.Entity.Name + ".yml"
-
-		orgDir := currentDir + "/" + orgName + "/" + spaceName
-
-		os.MkdirAll(orgDir, os.ModePerm)
-
-		filePath := filepath.Join(orgDir, fileName)
-
-		if err := ioutil.WriteFile(filePath, []byte(yamlData), 0644); err != nil {
-			fmt.Printf("Failed to write file '%s': %s\n", fileName, err)
-			return
-		}
-		fmt.Printf("File '%s' created successfully.\n", fileName)
-	}
-}
-
 func (c AppInfo) GenerateAppManifests(currentDir string, cli plugin.CliConnection) {
 	orgs, spaces, apps := c.GatherData(cli)
 
@@ -234,7 +213,7 @@ func (c AppInfo) GenerateAppManifests(currentDir string, cli plugin.CliConnectio
 
 		yamlData, err := yaml.Marshal(app)
 		if err != nil {
-			fmt.Printf("Failed to marshal YAML: %s\n", err)
+			fmt.Println("Failed to marshal YAML: %s", err)
 			return
 		}
 
@@ -247,9 +226,41 @@ func (c AppInfo) GenerateAppManifests(currentDir string, cli plugin.CliConnectio
 		filePath := filepath.Join(orgDir, fileName)
 
 		if err := ioutil.WriteFile(filePath, []byte(yamlData), 0644); err != nil {
-			fmt.Printf("Failed to write file '%s': %s\n", fileName, err)
+			fmt.Println("Failed to write file '%s': %s", fileName, err)
 			return
 		}
-		fmt.Printf("File '%s' created successfully.\n", fileName)
+		fmt.Println("File '%s' created successfully.", fileName)
+	}
+}
+
+func (c AppInfo) DownloadApplicationPackages(currentDir string, cli plugin.CliConnection) {
+	orgs, spaces, apps := c.GatherData(cli)
+
+	for _, app := range apps.Resources {
+
+		space := spaces[app.Entity.SpaceGUID]
+		spaceName := space.Name
+		orgName := orgs[space.Relationships.RelationshipsOrg.OrgData.OrgGUID]
+
+		cmd := []string{"curl", "/v3/apps/" + app.Metadata.AppGUID + "/packages"}
+		output, _ := cli.CliCommandWithoutTerminalOutput(cmd...)
+
+		var appPackages AppPackages
+		json.Unmarshal([]byte(strings.Join(output, "")), &appPackages)
+
+		orgDir := currentDir + "/" + orgName + "/" + spaceName
+
+		os.MkdirAll(orgDir, os.ModePerm)
+
+		for _, appPackageResource := range appPackages.Resources {
+			fileName := app.Entity.Name + "-" + appPackageResource.GUID + ".zip"
+
+			filePath := filepath.Join(orgDir, fileName)
+
+			cmd := []string{"curl", "/v3/packages/" + appPackageResource.GUID + "/download", "--output", filePath}
+			cli.CliCommandWithoutTerminalOutput(cmd...)
+
+			fmt.Println("Package download successfully in '%s'", fileName)
+		}
 	}
 }

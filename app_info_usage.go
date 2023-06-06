@@ -30,6 +30,7 @@ func (c *AppInfo) GetMetadata() plugin.PluginMetadata {
 						"--csv or -c":       "Minimal application details",
 						"--json or -j":      "All application details in json format",
 						"--manifests or -m": "Generate application mainfests in current working directory",
+						"--packages or -p":  "Download applications packages in current working directory",
 					},
 				},
 			},
@@ -55,6 +56,8 @@ func (c AppInfo) Run(cli plugin.CliConnection, args []string) {
 			c.downloadApplicationManifests(cli)
 		} else if args[1] == "--csv" || args[1] == "-c" {
 			c.printInCSVFormat(cli)
+		} else if args[1] == "--packages" || args[1] == "-p" {
+			c.downloadApplicationPackages(cli)
 		} else {
 			fmt.Printf("Invalid flags, please run help to see the valid options")
 		}
@@ -63,8 +66,6 @@ func (c AppInfo) Run(cli plugin.CliConnection, args []string) {
 
 // PrintInCSVFormat prints the app and buildpack used info on the console
 func (c AppInfo) printInCSVFormat(cli plugin.CliConnection) {
-	fmt.Println("**** Gathering application metadata from all orgs and spaces ****")
-
 	orgs, spaces, apps := c.GatherData(cli)
 
 	fmt.Println("**** Following is the csv output ****")
@@ -82,8 +83,6 @@ func (c AppInfo) printInCSVFormat(cli plugin.CliConnection) {
 
 // PrintVerboseOutputInJsonFormat prints the app state, instances, memroy and disk data to console
 func (c AppInfo) printVerboseOutputInJsonFormat(cli plugin.CliConnection) {
-	fmt.Println("**** Gathering application metadata from all orgs and spaces ****")
-
 	_, _, apps := c.GatherData(cli)
 
 	b, err := json.Marshal(apps)
@@ -98,8 +97,6 @@ func (c AppInfo) printVerboseOutputInJsonFormat(cli plugin.CliConnection) {
 }
 
 func (c AppInfo) downloadApplicationManifests(cli plugin.CliConnection) {
-	fmt.Println("**** Gathering application metadata from all orgs and spaces ****")
-
 	currentDir, err := os.Getwd()
 	if err != nil {
 		fmt.Printf("Failed to access current directory: %s\n", err)
@@ -115,4 +112,22 @@ func (c AppInfo) downloadApplicationManifests(cli plugin.CliConnection) {
 	c.GenerateAppManifests(currentDir, cli)
 
 	fmt.Println("Generate application manifests are located in: ", currentDir)
+}
+
+func (c AppInfo) downloadApplicationPackages(cli plugin.CliConnection) {
+	currentDir, err := os.Getwd()
+	if err != nil {
+		fmt.Printf("Failed to access current directory: %s\n", err)
+		return
+	}
+
+	currentDir = currentDir + "/output"
+
+	fmt.Println("Packages will be downloaded into: ", currentDir)
+
+	os.MkdirAll(currentDir, os.ModePerm)
+
+	c.DownloadApplicationPackages(currentDir, cli)
+
+	fmt.Println("Application packages are located in: ", currentDir)
 }
