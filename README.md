@@ -22,6 +22,7 @@ OPTIONS:
    --csv or -c            Minimal application details
    --json or -j           All application details in json format
    --manifests or -m      Generate application mainfests in current working directory
+   --packages or -p       Download applications packages in current working directory
 ```
 
 **SAMPLE OUTPUT**
