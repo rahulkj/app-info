@@ -10,19 +10,19 @@ import (
 
 // SpaceSearchResults represents top level attributes of JSON response from Cloud Foundry API
 type SpaceSearchResults struct {
-	TotalResults int                    `json:"total_results"`
-	TotalPages   int                    `json:"total_pages"`
-	Resources    []SpaceSearchResources `json:"resources"`
+	TotalResults int                   `json:"total_results"`
+	TotalPages   int                   `json:"total_pages"`
+	Resources    []SpaceSearchResource `json:"resources"`
 }
 
-// SpaceSearchResources represents resources attribute of JSON response from Cloud Foundry API
-type SpaceSearchResources struct {
-	Name          string             `json:"name"`
-	SpaceGUID     string             `json:"guid"`
-	Relationships SpaceRelationships `json:"relationships"`
+// SpaceSearchResource represents resources attribute of JSON response from Cloud Foundry API
+type SpaceSearchResource struct {
+	Name          string            `json:"name"`
+	SpaceGUID     string            `json:"guid"`
+	Relationships SpaceRelationship `json:"relationships"`
 }
 
-type SpaceRelationships struct {
+type SpaceRelationship struct {
 	RelationshipsOrg RelationshipsOrg `json:"organization"`
 }
 
@@ -35,8 +35,8 @@ type OrgData struct {
 }
 
 // GetSpaceData requests all of the Application data from Cloud Foundry
-func (c AppInfo) GetSpaces(cli plugin.CliConnection) map[string]SpaceSearchResources {
-	var data map[string]SpaceSearchResources = make(map[string]SpaceSearchResources)
+func (c AppInfo) GetSpaces(cli plugin.CliConnection) map[string]SpaceSearchResource {
+	var data map[string]SpaceSearchResource = make(map[string]SpaceSearchResource)
 	spaces := c.GetSpaceData(cli)
 
 	for _, val := range spaces.Resources {

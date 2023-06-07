@@ -66,19 +66,19 @@ func (c AppInfo) Run(cli plugin.CliConnection, args []string) {
 
 // PrintInCSVFormat prints the app and buildpack used info on the console
 func (c AppInfo) printInCSVFormat(cli plugin.CliConnection) {
-	orgs, spaces, apps := c.GatherMinimalData(cli)
+	orgs, spaces, apps := c.GatherData(cli)
 
 	fmt.Println("**** Following is the csv output ****")
 	fmt.Println()
 
-	fmt.Printf("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", "ORG", "SPACE", "APPLICATION", "STATE", "INSTANCES", "MEMORY", "DISK", "BUILDPACK", "DETECTED_BUILDPACK", "HEALTH_CHECK")
+	fmt.Printf("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", "ORG", "SPACE", "APPLICATION", "STATE", "INSTANCES", "MEMORY", "DISK", "BUILDPACK", "DETECTED_BUILDPACK", "HEALTH_CHECK", "STACK")
 	for _, val := range apps.Resources {
 
 		space := spaces[val.Entity.SpaceGUID]
 		spaceName := space.Name
 		orgName := orgs[space.Relationships.RelationshipsOrg.OrgData.OrgGUID]
 
-		fmt.Printf("%s,%s,%s,%s,%v,%v MB,%v MB,%s,%s,%s\n", orgName, spaceName, val.Entity.Name, val.Entity.State, val.Entity.Instances, val.Entity.Memory, val.Entity.DiskQuota, val.Entity.Buildpack, val.Entity.DetectedBuildPack, val.Entity.HealthCheck)
+		fmt.Printf("%s,%s,%s,%s,%v,%v MB,%v MB,%s,%s,%s,%s\n", orgName, spaceName, val.Entity.Name, val.Entity.State, val.Entity.Instances, val.Entity.Memory, val.Entity.DiskQuota, val.Entity.Buildpack, val.Entity.DetectedBuildPack, val.Entity.HealthCheck, val.Entity.Stack)
 	}
 }
 

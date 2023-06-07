@@ -15,14 +15,14 @@ import (
 
 // AppSearchResults represents top level attributes of JSON response from Cloud Foundry API
 type AppSearchResults struct {
-	TotalResults int                  `json:"total_results"`
-	TotalPages   int                  `json:"total_pages"`
-	NextUrl      string               `json:"next_url"`
-	Resources    []AppSearchResources `json:"resources"`
+	TotalResults int                 `json:"total_results"`
+	TotalPages   int                 `json:"total_pages"`
+	NextUrl      string              `json:"next_url"`
+	Resources    []AppSearchResource `json:"resources"`
 }
 
-// AppSearchResources represents resources attribute of JSON response from Cloud Foundry API
-type AppSearchResources struct {
+// AppSearchResource represents resources attribute of JSON response from Cloud Foundry API
+type AppSearchResource struct {
 	Metadata AppMetadata `json:"metadata"`
 	Entity   AppEntity   `json:"entity"`
 }
@@ -54,10 +54,10 @@ type AppEntity struct {
 }
 
 type Services struct {
-	Resources []ServiceResources `json:"resources"`
+	Resources []ServiceResource `json:"resources"`
 }
 
-type ServiceResources struct {
+type ServiceResource struct {
 	Entity ServiceEntity `json:"entity"`
 }
 
@@ -66,10 +66,10 @@ type ServiceEntity struct {
 }
 
 type Routes struct {
-	Resources []RouteResources `json:"resources"`
+	Resources []RouteResource `json:"resources"`
 }
 
-type RouteResources struct {
+type RouteResource struct {
 	Entity RouteEntity `json:"entity"`
 }
 
@@ -137,7 +137,7 @@ func (c AppInfo) UnmarshallAppSearchResults(apiUrl string, cli plugin.CliConnect
 	return tRes
 }
 
-func (c AppInfo) getRoutes(app *AppSearchResources, cli plugin.CliConnection) {
+func (c AppInfo) getRoutes(app *AppSearchResource, cli plugin.CliConnection) {
 	var routeURLs []string
 	var routes Routes
 	cmd := []string{"curl", app.Entity.RoutesUrl}
@@ -158,7 +158,7 @@ func (c AppInfo) getRoutes(app *AppSearchResources, cli plugin.CliConnection) {
 	app.Entity.Routes = routeURLs
 }
 
-func (c AppInfo) getStacks(app *AppSearchResources, cli plugin.CliConnection) {
+func (c AppInfo) getStacks(app *AppSearchResource, cli plugin.CliConnection) {
 	var stack Entity
 	cmd := []string{"curl", app.Entity.StackUrl}
 	output, _ := cli.CliCommandWithoutTerminalOutput(cmd...)
@@ -167,7 +167,7 @@ func (c AppInfo) getStacks(app *AppSearchResources, cli plugin.CliConnection) {
 	app.Entity.Stack = stack.Entity.Name
 }
 
-func (c AppInfo) getServices(app *AppSearchResources, cli plugin.CliConnection) {
+func (c AppInfo) getServices(app *AppSearchResource, cli plugin.CliConnection) {
 	var services Services
 	var serviceInstances []ServiceInstanceEntity
 
@@ -186,24 +186,14 @@ func (c AppInfo) getServices(app *AppSearchResources, cli plugin.CliConnection) 
 	app.Entity.ServiceInstances = serviceInstances
 }
 
-func (c AppInfo) GatherMinimalData(cli plugin.CliConnection) (map[string]string, map[string]SpaceSearchResources, AppSearchResults) {
-	orgs := c.GetOrgs(cli)
-	spaces := c.GetSpaces(cli)
-	apps := c.GetAppData(cli)
-
-	return orgs, spaces, apps
-}
-
-func (c AppInfo) GatherData(cli plugin.CliConnection) (map[string]string, map[string]SpaceSearchResources, AppSearchResults) {
+func (c AppInfo) GatherData(cli plugin.CliConnection) (map[string]string, map[string]SpaceSearchResource, AppSearchResults) {
 	orgs := c.GetOrgs(cli)
 	spaces := c.GetSpaces(cli)
 	apps := c.GetAppData(cli)
 
 	for i, app := range apps.Resources {
 		c.getRoutes(&app, cli)
-
 		c.getStacks(&app, cli)
-
 		c.getServices(&app, cli)
 
 		apps.Resources[i] = app
@@ -223,7 +213,7 @@ func (c AppInfo) GenerateAppManifests(currentDir string, cli plugin.CliConnectio
 
 		yamlData, err := yaml.Marshal(app)
 		if err != nil {
-			fmt.Println("Failed to marshal YAML: %s", err)
+			fmt.Printf("Failed to marshal YAML: %s\n", err)
 			return
 		}
 
@@ -236,10 +226,10 @@ func (c AppInfo) GenerateAppManifests(currentDir string, cli plugin.CliConnectio
 		filePath := filepath.Join(orgDir, fileName)
 
 		if err := ioutil.WriteFile(filePath, []byte(yamlData), 0644); err != nil {
-			fmt.Println("Failed to write file '%s': %s", fileName, err)
+			fmt.Printf("Failed to write file '%s': %s\n", fileName, err)
 			return
 		}
-		fmt.Println("File '%s' created successfully.", fileName)
+		fmt.Printf("File '%s' created successfully.\n", fileName)
 	}
 }
 
@@ -270,7 +260,7 @@ func (c AppInfo) DownloadApplicationPackages(currentDir string, cli plugin.CliCo
 			cmd := []string{"curl", "/v3/packages/" + appPackageResource.GUID + "/download", "--output", filePath}
 			cli.CliCommandWithoutTerminalOutput(cmd...)
 
-			fmt.Println("Package download successfully in '%s'", fileName)
+			fmt.Printf("Package download successfully in '%s'\n", fileName)
 		}
 	}
 }

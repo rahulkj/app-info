@@ -10,13 +10,13 @@ import (
 
 // OrgSearchResults represents top level attributes of JSON response from Cloud Foundry API
 type OrgSearchResults struct {
-	TotalResults int                  `json:"total_results"`
-	TotalPages   int                  `json:"total_pages"`
-	Resources    []OrgSearchResources `json:"resources"`
+	TotalResults int                 `json:"total_results"`
+	TotalPages   int                 `json:"total_pages"`
+	Resources    []OrgSearchResource `json:"resources"`
 }
 
-// OrgSearchResources represents resources attribute of JSON response from Cloud Foundry API
-type OrgSearchResources struct {
+// OrgSearchResource represents resources attribute of JSON response from Cloud Foundry API
+type OrgSearchResource struct {
 	GUID string `json:"guid"`
 	Name string `json:"name"`
 }
