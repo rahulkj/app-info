@@ -33,27 +33,28 @@ OPTIONS:
 **** Gathering application metadata from all orgs and spaces ****
 **** Following is the csv output ****
 
-ORG,SPACE,APPLICATION,STATE,INSTANCES,MEMORY,DISK,BUILDPACK,DETECTED_BUILDPACK,HEALTH_CHECK
-system,system,app-usage-scheduler,STARTED,1,1024 MB,1024 MB,ruby_buildpack,ruby,process
-system,system,app-usage-worker,STARTED,1,2048 MB,1024 MB,ruby_buildpack,ruby,process
-system,system,app-usage-server,STARTED,2,1024 MB,1024 MB,ruby_buildpack,ruby,http
-system,system,search-server-green,STOPPED,2,256 MB,1024 MB,nodejs_buildpack,nodejs,port
-system,system,p-invitations-green,STOPPED,2,256 MB,1024 MB,nodejs_buildpack,,port
-system,app-metrics-v2,appmetrics,STARTED,1,4096 MB,1024 MB,java_buildpack_offline,java,port
-john,sandbox,hello-world,STARTED,5,1024 MB,1024 MB,,nodejs,port
-bob,dev,spring-music,STARTED,2,1024 MB,1024 MB,,java,port
-bob,dev,spring-music-testing,STARTED,1,1024 MB,1024 MB,,java,port
-system,system,search-server-blue,STARTED,2,256 MB,1024 MB,nodejs_buildpack,nodejs,port
-system,system,p-invitations-blue,STARTED,2,256 MB,1024 MB,nodejs_buildpack,nodejs,port
-system,system,apps-manager-js-green,STOPPED,6,128 MB,1024 MB,staticfile_buildpack,staticfile,port
-bob,dev,spring-music-testing1,STARTED,1,1024 MB,1024 MB,,java,port
-bob,dev,testing,STARTED,1,1024 MB,1024 MB,,java,port
-bob,dev,ra-java-metric,STARTED,1,1024 MB,1024 MB,,java,port
-system,system,apps-manager-js-blue,STARTED,6,128 MB,1024 MB,staticfile_buildpack,staticfile,port
-system,autoscaling,autoscale,STARTED,3,256 MB,1024 MB,binary_buildpack,binary,port
-system,autoscaling,autoscale-api,STARTED,1,1024 MB,1024 MB,java_buildpack_offline,java,port
-bob,dev,staticfile,STARTED,1,64 MB,256 MB,staticfile_buildpack,staticfile,port
-bob,dev,cf-example-staticfile,STARTED,1,64 MB,256 MB,staticfile_buildpack,staticfile,port
+ORG,SPACE,APPLICATION,STATE,INSTANCES,MEMORY,DISK,BUILDPACK,DETECTED_BUILDPACK,HEALTH_CHECK,STACK
+system,system,app-usage-scheduler,STARTED,1,1024 MB,1024 MB,ruby_buildpack,ruby,process,cflinuxfs3
+system,system,app-usage-worker,STARTED,1,2048 MB,1024 MB,ruby_buildpack,ruby,process,cflinuxfs3
+system,system,app-usage-server,STARTED,2,1024 MB,1024 MB,ruby_buildpack,ruby,http,cflinuxfs3
+system,system,search-server-green,STOPPED,2,256 MB,1024 MB,nodejs_buildpack,nodejs,port,cflinuxfs3
+system,system,p-invitations-green,STOPPED,2,256 MB,1024 MB,nodejs_buildpack,,port,cflinuxfs3
+system,app-metrics-v2,appmetrics,STARTED,1,4096 MB,1024 MB,java_buildpack_offline,java,port,cflinuxfs3
+john,sandbox,hello-world,STARTED,5,1024 MB,1024 MB,,nodejs,port,cflinuxfs3
+bob,dev,spring-music,STARTED,2,1024 MB,1024 MB,,java,port,cflinuxfs3
+rehan,dev,spring-music-testing,STARTED,1,1024 MB,1024 MB,,java,port,cflinuxfs3
+system,system,search-server-blue,STARTED,2,256 MB,1024 MB,nodejs_buildpack,nodejs,port,cflinuxfs3
+system,system,p-invitations-blue,STARTED,2,256 MB,1024 MB,nodejs_buildpack,nodejs,port,cflinuxfs3
+system,system,apps-manager-js-green,STOPPED,6,128 MB,1024 MB,staticfile_buildpack,staticfile,port,cflinuxfs3
+bob,dev,spring-music-testing1,STARTED,1,1024 MB,1024 MB,,java,port,cflinuxfs3
+bob,dev,testing,STARTED,1,1024 MB,1024 MB,,java,port,cflinuxfs3
+bob,dev,ra-java-metric,STARTED,1,1024 MB,1024 MB,,java,port,cflinuxfs3
+system,system,apps-manager-js-blue,STARTED,6,128 MB,1024 MB,staticfile_buildpack,staticfile,port,cflinuxfs3
+system,autoscaling,autoscale,STARTED,3,256 MB,1024 MB,binary_buildpack,binary,port,cflinuxfs3
+system,autoscaling,autoscale-api,STARTED,1,1024 MB,1024 MB,java_buildpack_offline,java,port,cflinuxfs3
+bob,dev,staticfile,STARTED,1,64 MB,256 MB,staticfile_buildpack,staticfile,port,cflinuxfs3
+bob,dev,cf-example-staticfile,STARTED,1,64 MB,256 MB,staticfile_buildpack,staticfile,port,cflinuxfs3
+system,wavefront-apps-space,tas-sli-test-app,STARTED,1,1024 MB,256 MB,java_buildpack_offline,java,process,cflinuxfs3
 ```
 
 ```
