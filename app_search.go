@@ -50,7 +50,7 @@ type AppEntity struct {
 	RoutesUrl           string                  `json:"routes_url"`
 	Stack               string                  `json:"stack"`
 	StackUrl            string                  `json:"stack_url"`
-	ServiceInstances    []ServiceInstanceEntity `json:"service_instances`
+	ServiceInstances    []ServiceInstanceEntity `json:"service_instances"`
 	ServiceUrl          string                  `json:"service_bindings_url"`
 }
 
@@ -92,9 +92,12 @@ type ServiceInstance struct {
 }
 
 type ServiceInstanceEntity struct {
-	Name            string          `json:"name"`
-	Type            string          `json:"type"`
-	MaintenanceInfo MaintenanceInfo `json:"maintenance_info"`
+	Name                   string            `json:"name"`
+	Type                   string            `json:"type"`
+	MaintenanceInfo        MaintenanceInfo   `json:"maintenance_info"`
+	ServicePlanUrl         string            `json:"service_plan_url"`
+	ServiceInstanceKeysUrl string            `json:"service_keys_url"`
+	ServicePlanEntity      ServicePlanEntity `json:"service_plan_entity"`
 }
 
 type MaintenanceInfo struct {
@@ -110,17 +113,29 @@ type AppPackageResource struct {
 	GUID string `json:"guid"`
 }
 
+type ServicePlanEntity struct {
+	ServicePlanEntityData ServicePlanEntityData `json:"entity"`
+}
+
+type ServicePlanEntityData struct {
+	Name        string `json:"name"`
+	Free        bool   `json:"free"`
+	Description string `json:"description"`
+	Public      string `json:"public"`
+	Active      bool   `json:"active"`
+}
+
 // GetAppData requests all of the Application data from Cloud Foundry
-func (c AppInfo) GetAppData(cli plugin.CliConnection) AppSearchResults {
+func getAppData(cli plugin.CliConnection) AppSearchResults {
 	fmt.Println("**** Gathering application metadata from all orgs and spaces ****")
 
-	res := c.UnmarshallAppSearchResults("/v2/apps", cli)
+	res := unmarshallAppSearchResults("/v2/apps", cli)
 
 	if res.TotalPages > 1 {
 		for i := 2; i <= res.TotalPages; i++ {
 			apiUrl := fmt.Sprintf("/v2/apps?order-direction=asc&page=%d&results-per-page=50", i)
 
-			tRes := c.UnmarshallAppSearchResults(apiUrl, cli)
+			tRes := unmarshallAppSearchResults(apiUrl, cli)
 			res.Resources = append(res.Resources, tRes.Resources...)
 		}
 	}
@@ -128,7 +143,7 @@ func (c AppInfo) GetAppData(cli plugin.CliConnection) AppSearchResults {
 	return res
 }
 
-func (c AppInfo) UnmarshallAppSearchResults(apiUrl string, cli plugin.CliConnection) AppSearchResults {
+func unmarshallAppSearchResults(apiUrl string, cli plugin.CliConnection) AppSearchResults {
 	var tRes AppSearchResults
 	cmd := []string{"curl", apiUrl}
 	output, _ := cli.CliCommandWithoutTerminalOutput(cmd...)
@@ -138,7 +153,7 @@ func (c AppInfo) UnmarshallAppSearchResults(apiUrl string, cli plugin.CliConnect
 	return tRes
 }
 
-func (c AppInfo) getRoutes(app *AppSearchResource, cli plugin.CliConnection) {
+func getRoutes(app *AppSearchResource, cli plugin.CliConnection) {
 	var routeURLs []string
 	var routes Routes
 	cmd := []string{"curl", app.Entity.RoutesUrl}
@@ -159,7 +174,7 @@ func (c AppInfo) getRoutes(app *AppSearchResource, cli plugin.CliConnection) {
 	app.Entity.Routes = routeURLs
 }
 
-func (c AppInfo) getStacks(app *AppSearchResource, cli plugin.CliConnection) {
+func getStacks(app *AppSearchResource, cli plugin.CliConnection) {
 	var stack Entity
 	cmd := []string{"curl", app.Entity.StackUrl}
 	output, _ := cli.CliCommandWithoutTerminalOutput(cmd...)
@@ -168,7 +183,7 @@ func (c AppInfo) getStacks(app *AppSearchResource, cli plugin.CliConnection) {
 	app.Entity.Stack = stack.Entity.Name
 }
 
-func (c AppInfo) getServices(app *AppSearchResource, cli plugin.CliConnection) {
+func getServices(app *AppSearchResource, cli plugin.CliConnection) {
 	var services Services
 	var serviceInstances []ServiceInstanceEntity
 
@@ -181,37 +196,39 @@ func (c AppInfo) getServices(app *AppSearchResource, cli plugin.CliConnection) {
 		cmd := []string{"curl", service.Entity.ServiceInstanceUrl}
 		output, _ := cli.CliCommandWithoutTerminalOutput(cmd...)
 		json.Unmarshal([]byte(strings.Join(output, "")), &serviceInstance)
+		serviceInstance.Entity.ServicePlanEntity = getServicePlanDetails(serviceInstance.Entity, cli)
+
 		serviceInstances = append(serviceInstances, serviceInstance.Entity)
 	}
 
 	app.Entity.ServiceInstances = serviceInstances
 }
 
-func (c AppInfo) GatherData(cli plugin.CliConnection) (map[string]string, map[string]SpaceSearchResource, AppSearchResults) {
-	orgs := c.GetOrgs(cli)
-	spaces := c.GetSpaces(cli)
-	apps := c.GetAppData(cli)
+func getServicePlanDetails(serviceInstanceEntity ServiceInstanceEntity, cli plugin.CliConnection) ServicePlanEntity {
+	var servicePlanEntity ServicePlanEntity
+	cmd := []string{"curl", serviceInstanceEntity.ServicePlanUrl}
+	output, _ := cli.CliCommandWithoutTerminalOutput(cmd...)
+	json.Unmarshal([]byte(strings.Join(output, "")), &servicePlanEntity)
+	return servicePlanEntity
+}
 
-	var wg sync.WaitGroup
+func gatherData(cli plugin.CliConnection) (map[string]string, map[string]SpaceSearchResource, AppSearchResults) {
+	orgs := getOrgs(cli)
+	spaces := getSpaces(cli)
+	apps := getAppData(cli)
 
 	for i, app := range apps.Resources {
-		wg.Add(1)
-		go func(n int, app AppSearchResource, cli plugin.CliConnection) {
-			defer wg.Done()
-			c.getRoutes(&app, cli)
-			c.getStacks(&app, cli)
-			c.getServices(&app, cli)
-		}(i, app, cli)
+		getRoutes(&app, cli)
+		getStacks(&app, cli)
+		getServices(&app, cli)
 		apps.Resources[i] = app
 	}
-
-	wg.Wait()
 
 	return orgs, spaces, apps
 }
 
-func (c AppInfo) GenerateAppManifests(currentDir string, cli plugin.CliConnection) {
-	orgs, spaces, apps := c.GatherData(cli)
+func generateAppManifests(currentDir string, cli plugin.CliConnection) {
+	orgs, spaces, apps := gatherData(cli)
 
 	var wg sync.WaitGroup
 	for _, app := range apps.Resources {
@@ -251,8 +268,8 @@ func createAppManifest(orgs map[string]string, spaces map[string]SpaceSearchReso
 	fmt.Printf("File '%s' created successfully.\n", fileName)
 }
 
-func (c AppInfo) DownloadApplicationPackages(currentDir string, cli plugin.CliConnection) {
-	orgs, spaces, apps := c.GatherData(cli)
+func downloadApplicationPackages(currentDir string, cli plugin.CliConnection) {
+	orgs, spaces, apps := gatherData(cli)
 
 	for _, app := range apps.Resources {
 		downloadAppPackages(orgs, spaces, app, currentDir, cli)

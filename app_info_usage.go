@@ -18,7 +18,7 @@ func (c *AppInfo) GetMetadata() plugin.PluginMetadata {
 		Version: plugin.VersionType{
 			Major: 2,
 			Minor: 1,
-			Build: 3,
+			Build: 4,
 		},
 		Commands: []plugin.Command{
 			{
@@ -66,7 +66,7 @@ func (c AppInfo) Run(cli plugin.CliConnection, args []string) {
 
 // PrintInCSVFormat prints the app and buildpack used info on the console
 func (c AppInfo) printInCSVFormat(cli plugin.CliConnection) {
-	orgs, spaces, apps := c.GatherData(cli)
+	orgs, spaces, apps := gatherData(cli)
 
 	fmt.Println("**** Following is the csv output ****")
 	fmt.Println()
@@ -84,7 +84,7 @@ func (c AppInfo) printInCSVFormat(cli plugin.CliConnection) {
 
 // PrintVerboseOutputInJsonFormat prints the app state, instances, memroy and disk data to console
 func (c AppInfo) printVerboseOutputInJsonFormat(cli plugin.CliConnection) {
-	_, _, apps := c.GatherData(cli)
+	_, _, apps := gatherData(cli)
 
 	b, err := json.Marshal(apps)
 	if err != nil {
@@ -109,7 +109,7 @@ func (c AppInfo) downloadApplicationManifests(cli plugin.CliConnection) {
 
 	os.MkdirAll(currentDir, os.ModePerm)
 
-	c.GenerateAppManifests(currentDir, cli)
+	generateAppManifests(currentDir, cli)
 
 	fmt.Println("Generate application manifests are located in: ", currentDir)
 }
@@ -127,7 +127,7 @@ func (c AppInfo) downloadApplicationPackages(cli plugin.CliConnection) {
 
 	os.MkdirAll(currentDir, os.ModePerm)
 
-	c.DownloadApplicationPackages(currentDir, cli)
+	downloadApplicationPackages(currentDir, cli)
 
 	fmt.Println("Application packages are located in: ", currentDir)
 }

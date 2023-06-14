@@ -21,10 +21,10 @@ type OrgSearchResource struct {
 	Name string `json:"name"`
 }
 
-func (c AppInfo) GetOrgs(cli plugin.CliConnection) map[string]string {
+func getOrgs(cli plugin.CliConnection) map[string]string {
 	var data map[string]string
 	data = make(map[string]string)
-	orgs := c.GetOrgData(cli)
+	orgs := getOrgData(cli)
 
 	for _, val := range orgs.Resources {
 		data[val.GUID] = val.Name
@@ -34,13 +34,13 @@ func (c AppInfo) GetOrgs(cli plugin.CliConnection) map[string]string {
 }
 
 // GetOrgData requests all of the Application data from Cloud Foundry
-func (c AppInfo) GetOrgData(cli plugin.CliConnection) OrgSearchResults {
-	var res OrgSearchResults = c.UnmarshallOrgSearchResults("/v3/organizations", cli)
+func getOrgData(cli plugin.CliConnection) OrgSearchResults {
+	var res OrgSearchResults = unmarshallOrgSearchResults("/v3/organizations", cli)
 
 	if res.TotalPages > 1 {
 		for i := 2; i <= res.TotalPages; i++ {
 			apiUrl := fmt.Sprintf("/v3/organizations?page=%d&per_page=50", i)
-			tRes := c.UnmarshallOrgSearchResults(apiUrl, cli)
+			tRes := unmarshallOrgSearchResults(apiUrl, cli)
 			res.Resources = append(res.Resources, tRes.Resources...)
 		}
 	}
@@ -48,7 +48,7 @@ func (c AppInfo) GetOrgData(cli plugin.CliConnection) OrgSearchResults {
 	return res
 }
 
-func (c AppInfo) UnmarshallOrgSearchResults(apiUrl string, cli plugin.CliConnection) OrgSearchResults {
+func unmarshallOrgSearchResults(apiUrl string, cli plugin.CliConnection) OrgSearchResults {
 	var tRes OrgSearchResults
 	cmd := []string{"curl", apiUrl}
 	output, _ := cli.CliCommandWithoutTerminalOutput(cmd...)
