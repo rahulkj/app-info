@@ -16,8 +16,8 @@ type RouteResource struct {
 }
 
 type RouteResourceEntity struct {
-	Host      string `json:"host"`
-	DomainUrl string `json:"domain_url"`
+	Host       string `json:"host"`
+	DomainGuid string `json:"domain_guid"`
 }
 
 type Route struct {
@@ -28,7 +28,7 @@ type RouteEntity struct {
 	Name string `json:"name"`
 }
 
-func getRoutes(app *AppSearchResource, cli plugin.CliConnection) {
+func getRoutes(app *AppSearchResource, domains map[string]string, cli plugin.CliConnection) {
 	var routeURLs []string
 	var routes Routes
 	cmd := []string{"curl", app.Entity.RoutesUrl}
@@ -36,13 +36,8 @@ func getRoutes(app *AppSearchResource, cli plugin.CliConnection) {
 	json.Unmarshal([]byte(strings.Join(output, "")), &routes)
 
 	for _, route := range routes.Resources {
-		var domain Route
-		cmd := []string{"curl", route.Entity.DomainUrl}
-		output, _ := cli.CliCommandWithoutTerminalOutput(cmd...)
-		json.Unmarshal([]byte(strings.Join(output, "")), &domain)
-
-		var routeURL = route.Entity.Host + "." + domain.Entity.Name
-
+		domain := domains[route.Entity.DomainGuid]
+		var routeURL = route.Entity.Host + "." + domain
 		routeURLs = append(routeURLs, routeURL)
 	}
 

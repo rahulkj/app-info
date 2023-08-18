@@ -10,10 +10,10 @@ import (
 
 type Buildpacks struct {
 	Resources  []BuildpackResources `json:"resources"`
-	Pagination Pagination           `json:"pagination"`
+	Pagination BuildpacksPagination `json:"pagination"`
 }
 
-type Pagination struct {
+type BuildpacksPagination struct {
 	TotalPages int `json:"total_pages"`
 }
 

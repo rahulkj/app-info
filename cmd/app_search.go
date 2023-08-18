@@ -50,7 +50,7 @@ type AppEntity struct {
 	Routes                    []string                `json:"routes"`
 	RoutesUrl                 string                  `json:"routes_url"`
 	Stack                     string                  `json:"stack"`
-	StackUrl                  string                  `json:"stack_url"`
+	StackGUID                 string                  `json:"stack_guid"`
 	ServiceInstances          []ServiceInstanceEntity `json:"service_instances"`
 	ServiceUrl                string                  `json:"service_bindings_url"`
 }
@@ -102,10 +102,12 @@ func GatherData(cli plugin.CliConnection) (map[string]string, map[string]SpaceSe
 	spaces := getSpaces(cli)
 	apps := getAppData(cli)
 	buildpacks := getBuildpacks(cli)
+	domains := getDomains(cli)
+	stacks := getStacks(cli)
 
 	for i, app := range apps.Resources {
-		getRoutes(&app, cli)
-		getStacks(&app, cli)
+		getRoutes(&app, domains, cli)
+		getAppStack(&app, stacks)
 		getServices(&app, cli)
 		getBuildpackDetails(&app, buildpacks)
 		apps.Resources[i] = app
