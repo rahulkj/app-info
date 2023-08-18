@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/rahulkj/app-info/cmd"
+
 	"code.cloudfoundry.org/cli/plugin"
 )
 
@@ -66,25 +68,25 @@ func (c AppInfo) Run(cli plugin.CliConnection, args []string) {
 
 // PrintInCSVFormat prints the app and buildpack used info on the console
 func (c AppInfo) printInCSVFormat(cli plugin.CliConnection) {
-	orgs, spaces, apps := gatherData(cli)
+	orgs, spaces, apps := cmd.GatherData(cli)
 
 	fmt.Println("**** Following is the csv output ****")
 	fmt.Println()
 
-	fmt.Printf("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", "ORG", "SPACE", "APPLICATION", "STATE", "INSTANCES", "MEMORY", "DISK", "BUILDPACK", "DETECTED_BUILDPACK", "HEALTH_CHECK", "STACK")
+	fmt.Printf("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", "ORG", "SPACE", "APPLICATION", "STATE", "INSTANCES", "MEMORY", "DISK", "BUILDPACK", "DETECTED_BUILDPACK", "DETECTED_BUILDPACK_FILENAME", "HEALTH_CHECK", "STACK")
 	for _, val := range apps.Resources {
 
 		space := spaces[val.Entity.SpaceGUID]
 		spaceName := space.Name
 		orgName := orgs[space.Relationships.RelationshipsOrg.OrgData.OrgGUID]
 
-		fmt.Printf("%s,%s,%s,%s,%v,%v MB,%v MB,%s,%s,%s,%s\n", orgName, spaceName, val.Entity.Name, val.Entity.State, val.Entity.Instances, val.Entity.Memory, val.Entity.DiskQuota, val.Entity.Buildpack, val.Entity.DetectedBuildPack, val.Entity.HealthCheck, val.Entity.Stack)
+		fmt.Printf("%s,%s,%s,%s,%v,%v MB,%v MB,%s,%s,%s,%s,%s\n", orgName, spaceName, val.Entity.Name, val.Entity.State, val.Entity.Instances, val.Entity.Memory, val.Entity.DiskQuota, val.Entity.Buildpack, val.Entity.DetectedBuildPack, val.Entity.DetectedBuildPackFileName, val.Entity.HealthCheck, val.Entity.Stack)
 	}
 }
 
 // PrintVerboseOutputInJsonFormat prints the app state, instances, memroy and disk data to console
 func (c AppInfo) printVerboseOutputInJsonFormat(cli plugin.CliConnection) {
-	_, _, apps := gatherData(cli)
+	_, _, apps := cmd.GatherData(cli)
 
 	b, err := json.Marshal(apps)
 	if err != nil {
@@ -109,7 +111,7 @@ func (c AppInfo) downloadApplicationManifests(cli plugin.CliConnection) {
 
 	os.MkdirAll(currentDir, os.ModePerm)
 
-	generateAppManifests(currentDir, cli)
+	cmd.GenerateAppManifests(currentDir, cli)
 
 	fmt.Println("Generate application manifests are located in: ", currentDir)
 }
@@ -127,7 +129,7 @@ func (c AppInfo) downloadApplicationPackages(cli plugin.CliConnection) {
 
 	os.MkdirAll(currentDir, os.ModePerm)
 
-	downloadApplicationPackages(currentDir, cli)
+	cmd.DownloadApplicationPackages(currentDir, cli)
 
 	fmt.Println("Application packages are located in: ", currentDir)
 }

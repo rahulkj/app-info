@@ -97,7 +97,7 @@ func getBuildpackDetails(app *AppSearchResource, buildpacks map[string]Buildpack
 	app.Entity.DetectedBuildPackFileName = buildpack.Filename
 }
 
-func gatherData(cli plugin.CliConnection) (map[string]string, map[string]SpaceSearchResource, AppSearchResults) {
+func GatherData(cli plugin.CliConnection) (map[string]string, map[string]SpaceSearchResource, AppSearchResults) {
 	orgs := getOrgs(cli)
 	spaces := getSpaces(cli)
 	apps := getAppData(cli)
@@ -114,8 +114,8 @@ func gatherData(cli plugin.CliConnection) (map[string]string, map[string]SpaceSe
 	return orgs, spaces, apps
 }
 
-func generateAppManifests(currentDir string, cli plugin.CliConnection) {
-	orgs, spaces, apps := gatherData(cli)
+func GenerateAppManifests(currentDir string, cli plugin.CliConnection) {
+	orgs, spaces, apps := GatherData(cli)
 
 	var wg sync.WaitGroup
 	for _, app := range apps.Resources {
@@ -155,8 +155,8 @@ func createAppManifest(orgs map[string]string, spaces map[string]SpaceSearchReso
 	fmt.Printf("File '%s' created successfully.\n", fileName)
 }
 
-func downloadApplicationPackages(currentDir string, cli plugin.CliConnection) {
-	orgs, spaces, apps := gatherData(cli)
+func DownloadApplicationPackages(currentDir string, cli plugin.CliConnection) {
+	orgs, spaces, apps := GatherData(cli)
 
 	for _, app := range apps.Resources {
 		downloadAppPackages(orgs, spaces, app, currentDir, cli)
