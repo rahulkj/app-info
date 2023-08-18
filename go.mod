@@ -1,6 +1,6 @@
 module github.com/rahulkj/app-info
 
-go 1.19
+go 1.21
 
 require (
 	code.cloudfoundry.org/cli v7.1.0+incompatible

@@ -1,5 +1,8 @@
 #!/bin/bash -e
 
+go get -u
+go mod tidy
+
 if [[ -d releases ]]; then
   rm -rf releases
 fi
