@@ -3,75 +3,83 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
-	"os"
-	"path/filepath"
 	"strings"
-	"sync"
-
-	"gopkg.in/yaml.v3"
 
 	"github.com/cloudfoundry/cli/plugin"
 )
 
-// AppSearchResults represents top level attributes of JSON response from Cloud Foundry API
-type AppSearchResults struct {
-	TotalResults int                 `json:"total_results"`
-	TotalPages   int                 `json:"total_pages"`
-	NextUrl      string              `json:"next_url"`
-	Resources    []AppSearchResource `json:"resources"`
+type Apps struct {
+	Resources  []AppResource  `json:"resources"`
+	Pagination AppsPagination `json:"pagination"`
 }
 
-// AppSearchResource represents resources attribute of JSON response from Cloud Foundry API
-type AppSearchResource struct {
-	Metadata AppMetadata `json:"metadata"`
-	Entity   AppEntity   `json:"entity"`
+type AppsPagination struct {
+	TotalPages int `json:"total_pages"`
 }
 
-type AppMetadata struct {
-	AppGUID string `json:"guid"`
+type AppResource struct {
+	GUID          string           `json:"guid"`
+	Name          string           `json:"name"`
+	State         string           `json:"state"`
+	Lifecycle     Lifecycle        `json:"lifecycle"`
+	RelationShips AppRelationShips `json:"relationships"`
 }
 
-type AppEntity struct {
-	Name                      string                  `json:"name"`
-	Instances                 int                     `json:"instances"`
-	State                     string                  `json:"state"`
-	Memory                    int                     `json:"memory"`
-	DiskQuota                 int                     `json:"disk_quota"`
-	Buildpack                 string                  `json:"buildpack"`
-	DetectedBuildPack         string                  `json:"detected_buildpack"`
-	DetectedBuildPackGUID     string                  `json:"detected_buildpack_guid"`
-	DetectedBuildPackFileName string                  `json:"detected_buildpack_filename"`
-	SpaceGUID                 string                  `json:"space_guid"`
-	StartCommand              string                  `json:"detected_start_command"`
-	Environment               map[string]string       `json:"environment_json"`
-	Command                   string                  `json:"command"`
-	HealthCheck               string                  `json:"health_check_type"`
-	HealthCheckEndpoint       string                  `json:"health_check_http_endpoint"`
-	Routes                    []string                `json:"routes"`
-	RoutesUrl                 string                  `json:"routes_url"`
-	Stack                     string                  `json:"stack"`
-	StackGUID                 string                  `json:"stack_guid"`
-	ServiceInstances          []ServiceInstanceEntity `json:"service_instances"`
-	ServiceUrl                string                  `json:"service_bindings_url"`
+type Lifecycle struct {
+	Type string        `json:"type"`
+	Data LifecycleData `json:"data"`
 }
 
-type AppPackages struct {
-	Resources []AppPackageResource `json:"resources"`
+type LifecycleData struct {
+	Buildpacks []string `json:"buildpacks"`
+	Stack      string   `json:"stack"`
 }
 
-type AppPackageResource struct {
-	GUID string `json:"guid"`
+type AppRelationShips struct {
+	Space AppSpace `json:"space"`
+}
+
+type AppSpace struct {
+	Data AppSpaceData `json:"data"`
+}
+
+type AppSpaceData struct {
+	SpaceGUID string `json:"guid"`
+}
+
+type DisplayApp struct {
+	Name                       string               `json:"name"`
+	AppGUID                    string               `json:"guid"`
+	Instances                  int                  `json:"instances"`
+	State                      string               `json:"state"`
+	Memory                     int                  `json:"memory_in_mb"`
+	Disk                       int                  `json:"disk_in_mb"`
+	LogRate                    int                  `json:"log_rate_limit_in_bytes_per_second"`
+	Buildpacks                 []string             `json:"buildpacks"`
+	DetectedBuildPack          string               `json:"detected_buildpack"`
+	DetectedBuildPackFileNames []string             `json:"detected_buildpack_filenames"`
+	SpaceGUID                  string               `json:"space_guid"`
+	StartCommand               string               `json:"detected_start_command"`
+	Environment                map[string]string    `json:"environment_json"`
+	Command                    string               `json:"command"`
+	HealthCheck                string               `json:"health_check_type"`
+	HealthCheckEndpoint        string               `json:"health_check_http_endpoint"`
+	Routes                     []string             `json:"routes"`
+	Stack                      string               `json:"stack"`
+	Services                   []Service            `json:"services"`
+	Features                   []AppFeatureResource `json:"resources"`
+	StackGUID                  string               `json:"stackguid"`
 }
 
 // GetAppData requests all of the Application data from Cloud Foundry
-func getAppData(cli plugin.CliConnection) AppSearchResults {
+func getAppData(cli plugin.CliConnection) Apps {
 	fmt.Println("**** Gathering application metadata from all orgs and spaces ****")
 
-	res := unmarshallAppSearchResults("/v2/apps", cli)
+	res := unmarshallAppSearchResults("/v3/apps", cli)
 
-	if res.TotalPages > 1 {
-		for i := 2; i <= res.TotalPages; i++ {
-			apiUrl := fmt.Sprintf("/v2/apps?order-direction=asc&page=%d&results-per-page=50", i)
+	if res.Pagination.TotalPages > 1 {
+		for i := 2; i <= res.Pagination.TotalPages; i++ {
+			apiUrl := fmt.Sprintf("/v3/apps?page=%d&per_page=50", i)
 
 			tRes := unmarshallAppSearchResults(apiUrl, cli)
 			res.Resources = append(res.Resources, tRes.Resources...)
@@ -81,8 +89,8 @@ func getAppData(cli plugin.CliConnection) AppSearchResults {
 	return res
 }
 
-func unmarshallAppSearchResults(apiUrl string, cli plugin.CliConnection) AppSearchResults {
-	var tRes AppSearchResults
+func unmarshallAppSearchResults(apiUrl string, cli plugin.CliConnection) Apps {
+	var tRes Apps
 	cmd := []string{"curl", apiUrl}
 	output, _ := cli.CliCommandWithoutTerminalOutput(cmd...)
 
@@ -91,107 +99,35 @@ func unmarshallAppSearchResults(apiUrl string, cli plugin.CliConnection) AppSear
 	return tRes
 }
 
-func getBuildpackDetails(app *AppSearchResource, buildpacks map[string]BuildpackResources) {
-	buildpack := buildpacks[app.Entity.DetectedBuildPackGUID]
-
-	app.Entity.DetectedBuildPackFileName = buildpack.Filename
-}
-
-func GatherData(cli plugin.CliConnection) (map[string]string, map[string]SpaceSearchResource, AppSearchResults) {
+func GatherData(cli plugin.CliConnection) (map[string]string, map[string]SpaceSearchResource, []DisplayApp) {
 	orgs := getOrgs(cli)
 	spaces := getSpaces(cli)
 	apps := getAppData(cli)
 	buildpacks := getBuildpacks(cli)
-	domains := getDomains(cli)
-	stacks := getStacks(cli)
+	routes := getAllRoutes(cli)
+	services := getAllServices(cli)
 
-	for i, app := range apps.Resources {
-		getRoutes(&app, domains, cli)
-		getAppStack(&app, stacks)
-		getServices(&app, cli)
-		getBuildpackDetails(&app, buildpacks)
-		apps.Resources[i] = app
-	}
-
-	return orgs, spaces, apps
-}
-
-func GenerateAppManifests(currentDir string, cli plugin.CliConnection) {
-	orgs, spaces, apps := GatherData(cli)
-
-	var wg sync.WaitGroup
-	for _, app := range apps.Resources {
-		wg.Add(1)
-		go func(orgs map[string]string, spaces map[string]SpaceSearchResource, app AppSearchResource, currentDir string) {
-			defer wg.Done()
-			createAppManifest(orgs, spaces, app, currentDir)
-		}(orgs, spaces, app, currentDir)
-	}
-
-	wg.Wait()
-}
-
-func createAppManifest(orgs map[string]string, spaces map[string]SpaceSearchResource, app AppSearchResource, currentDir string) {
-	space := spaces[app.Entity.SpaceGUID]
-	spaceName := space.Name
-	orgName := orgs[space.Relationships.RelationshipsOrg.OrgData.OrgGUID]
-
-	yamlData, err := yaml.Marshal(app)
-	if err != nil {
-		fmt.Printf("Failed to marshal YAML: %s\n", err)
-		return
-	}
-
-	fileName := app.Entity.Name + ".yml"
-
-	orgDir := currentDir + "/" + orgName + "/" + spaceName
-
-	os.MkdirAll(orgDir, os.ModePerm)
-
-	filePath := filepath.Join(orgDir, fileName)
-
-	if err := os.WriteFile(filePath, []byte(yamlData), 0644); err != nil {
-		fmt.Printf("Failed to write file '%s': %s\n", fileName, err)
-		return
-	}
-	fmt.Printf("File '%s' created successfully.\n", fileName)
-}
-
-func DownloadApplicationPackages(currentDir string, cli plugin.CliConnection) {
-	orgs, spaces, apps := GatherData(cli)
+	var displayApps []DisplayApp
 
 	for _, app := range apps.Resources {
-		downloadAppPackages(orgs, spaces, app, currentDir, cli)
+		var displayApp DisplayApp
+
+		displayApp.Name = app.Name
+		displayApp.AppGUID = app.GUID
+		displayApp.Stack = app.Lifecycle.Data.Stack
+		displayApp.Buildpacks = app.Lifecycle.Data.Buildpacks
+		displayApp.State = app.State
+		displayApp.SpaceGUID = app.RelationShips.Space.Data.SpaceGUID
+
+		getAppFeatures(&displayApp, cli)
+		getBuildpackDetails(&displayApp, buildpacks)
+		getAppEnvironmentVariables(&displayApp, cli)
+		getAppProcesses(&displayApp, cli)
+		getAppRoutes(&displayApp, routes, cli)
+		getAppServices(&displayApp, services)
+
+		displayApps = append(displayApps, displayApp)
 	}
-}
 
-func downloadAppPackages(orgs map[string]string, spaces map[string]SpaceSearchResource, app AppSearchResource, currentDir string, cli plugin.CliConnection) {
-	space := spaces[app.Entity.SpaceGUID]
-	spaceName := space.Name
-	orgName := orgs[space.Relationships.RelationshipsOrg.OrgData.OrgGUID]
-
-	cmd := []string{"curl", "/v3/apps/" + app.Metadata.AppGUID + "/packages"}
-	output, _ := cli.CliCommandWithoutTerminalOutput(cmd...)
-
-	var appPackages AppPackages
-	json.Unmarshal([]byte(strings.Join(output, "")), &appPackages)
-
-	orgDir := currentDir + "/" + orgName + "/" + spaceName
-
-	os.MkdirAll(orgDir, os.ModePerm)
-
-	for _, appPackageResource := range appPackages.Resources {
-		downloadAppPackage(app, appPackageResource, orgDir, cli)
-	}
-}
-
-func downloadAppPackage(app AppSearchResource, appPackageResource AppPackageResource, orgDir string, cli plugin.CliConnection) {
-	fileName := app.Entity.Name + "-" + appPackageResource.GUID + ".zip"
-
-	filePath := filepath.Join(orgDir, fileName)
-
-	cmd := []string{"curl", "/v3/packages/" + appPackageResource.GUID + "/download", "--output", filePath}
-	cli.CliCommandWithoutTerminalOutput(cmd...)
-
-	fmt.Printf("Package download successfully in '%s'\n", fileName)
+	return orgs, spaces, displayApps
 }

@@ -1,40 +1,27 @@
 package cmd
 
 import (
-	"encoding/json"
-	"strings"
+	"fmt"
 
 	"code.cloudfoundry.org/cli/plugin"
 )
 
-type Services struct {
-	Resources []ServiceResource `json:"resources"`
+type Service struct {
+	GUID             string        `json:"guid"`
+	Name             string        `json:"name"`
+	ServicePlan      ServicePlan   `json:"service_plan"`
+	Service          ServiceFields `json:"service_fields"`
+	ApplicationNames []string      `json:"application_names"`
+	IsUserProvided   bool          `json:"isUserProvided"`
 }
 
-type ServiceResource struct {
-	Entity ServiceEntity `json:"entity"`
+type ServicePlan struct {
+	GUID string `json:"guid"`
+	Name string `json:"name"`
 }
 
-type ServiceEntity struct {
-	ServiceInstanceUrl string `json:"service_instance_url"`
-}
-
-type ServiceInstance struct {
-	Entity ServiceInstanceEntity `json:"entity"`
-}
-
-type ServiceInstanceEntity struct {
-	Name                   string            `json:"name"`
-	Type                   string            `json:"type"`
-	MaintenanceInfo        MaintenanceInfo   `json:"maintenance_info"`
-	ServicePlanUrl         string            `json:"service_plan_url"`
-	ServiceInstanceKeysUrl string            `json:"service_keys_url"`
-	ServicePlanEntity      ServicePlanEntity `json:"service_plan_entity"`
-}
-
-type MaintenanceInfo struct {
-	Version     string `json:"version"`
-	Description string `json:"description"`
+type ServiceFields struct {
+	Name string `json:"name"`
 }
 
 type ServicePlanEntity struct {
@@ -49,31 +36,34 @@ type ServicePlanEntityData struct {
 	Active      bool   `json:"active"`
 }
 
-func getServices(app *AppSearchResource, cli plugin.CliConnection) {
-	var services Services
-	var serviceInstances []ServiceInstanceEntity
+func getAllServices(cli plugin.CliConnection) []Service {
+	results, _ := cli.GetServices()
 
-	var serviceInstance ServiceInstance
-	cmd := []string{"curl", app.Entity.ServiceUrl}
-	output, _ := cli.CliCommandWithoutTerminalOutput(cmd...)
-	json.Unmarshal([]byte(strings.Join(output, "")), &services)
+	var services []Service
 
-	for _, service := range services.Resources {
-		cmd := []string{"curl", service.Entity.ServiceInstanceUrl}
-		output, _ := cli.CliCommandWithoutTerminalOutput(cmd...)
-		json.Unmarshal([]byte(strings.Join(output, "")), &serviceInstance)
-		serviceInstance.Entity.ServicePlanEntity = getServicePlanDetails(serviceInstance.Entity, cli)
+	for _, result := range results {
+		var service Service
+		service.ApplicationNames = result.ApplicationNames
+		service.GUID = result.Guid
+		service.Name = result.Name
+		service.ServicePlan.GUID = result.ServicePlan.Guid
+		service.ServicePlan.Name = result.ServicePlan.Name
+		service.IsUserProvided = result.IsUserProvided
+		service.Service.Name = result.Service.Name
 
-		serviceInstances = append(serviceInstances, serviceInstance.Entity)
+		services = append(services, service)
 	}
 
-	app.Entity.ServiceInstances = serviceInstances
+	return services
 }
 
-func getServicePlanDetails(serviceInstanceEntity ServiceInstanceEntity, cli plugin.CliConnection) ServicePlanEntity {
-	var servicePlanEntity ServicePlanEntity
-	cmd := []string{"curl", serviceInstanceEntity.ServicePlanUrl}
-	output, _ := cli.CliCommandWithoutTerminalOutput(cmd...)
-	json.Unmarshal([]byte(strings.Join(output, "")), &servicePlanEntity)
-	return servicePlanEntity
+func getAppServices(app *DisplayApp, services []Service) {
+	for _, service := range services {
+		for _, serviceApp := range service.ApplicationNames {
+			if serviceApp == app.Name {
+				fmt.Println("MATCHED " + app.Name)
+				app.Services = append(app.Services, service)
+			}
+		}
+	}
 }
