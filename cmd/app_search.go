@@ -41,6 +41,7 @@ type AppEntity struct {
 	DetectedBuildPack         string                  `json:"detected_buildpack"`
 	DetectedBuildPackGUID     string                  `json:"detected_buildpack_guid"`
 	DetectedBuildPackFileName string                  `json:"detected_buildpack_filename"`
+	SpaceName                 string                  `json:"space_name"`
 	SpaceGUID                 string                  `json:"space_guid"`
 	StartCommand              string                  `json:"detected_start_command"`
 	Environment               map[string]string       `json:"environment_json"`
@@ -53,6 +54,8 @@ type AppEntity struct {
 	StackGUID                 string                  `json:"stack_guid"`
 	ServiceInstances          []ServiceInstanceEntity `json:"service_instances"`
 	ServiceUrl                string                  `json:"service_bindings_url"`
+	OrgGUID                   string                  `json:"org_guid"`
+	OrgName                   string                  `json:"org_name"`
 }
 
 type AppPackages struct {
@@ -106,6 +109,14 @@ func GatherData(cli plugin.CliConnection) (map[string]string, map[string]SpaceSe
 	stacks := getStacks(cli)
 
 	for i, app := range apps.Resources {
+		space := spaces[app.Entity.SpaceGUID]
+		spaceName := space.Name
+		orgName := orgs[space.Relationships.RelationshipsOrg.OrgData.OrgGUID]
+
+		app.Entity.OrgName = orgName
+		app.Entity.OrgGUID = space.Relationships.RelationshipsOrg.OrgData.OrgGUID
+		app.Entity.SpaceName = spaceName
+
 		getRoutes(&app, domains, cli)
 		getAppStack(&app, stacks)
 		getServices(&app, cli)
@@ -132,9 +143,6 @@ func GenerateAppManifests(currentDir string, cli plugin.CliConnection) {
 }
 
 func createAppManifest(orgs map[string]string, spaces map[string]SpaceSearchResource, app AppSearchResource, currentDir string) {
-	space := spaces[app.Entity.SpaceGUID]
-	spaceName := space.Name
-	orgName := orgs[space.Relationships.RelationshipsOrg.OrgData.OrgGUID]
 
 	yamlData, err := yaml.Marshal(app)
 	if err != nil {
@@ -144,7 +152,7 @@ func createAppManifest(orgs map[string]string, spaces map[string]SpaceSearchReso
 
 	fileName := app.Entity.Name + ".yml"
 
-	orgDir := currentDir + "/" + orgName + "/" + spaceName
+	orgDir := currentDir + "/" + app.Entity.OrgName + "/" + app.Entity.SpaceName
 
 	os.MkdirAll(orgDir, os.ModePerm)
 
