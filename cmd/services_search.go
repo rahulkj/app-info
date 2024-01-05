@@ -42,11 +42,24 @@ type ServicePlanEntity struct {
 }
 
 type ServicePlanEntityData struct {
-	Name        string `json:"name"`
-	Free        bool   `json:"free"`
-	Description string `json:"description"`
-	Public      string `json:"public"`
-	Active      bool   `json:"active"`
+	Name              string `json:"name"`
+	Free              bool   `json:"free"`
+	Description       string `json:"description"`
+	Active            bool   `json:"active"`
+	Bindbale          bool   `json:"bindable"`
+	ServiceURL        string `json:"service_url"`
+	Label             string `json:"label"`
+	ServiceBrokerName string `json:"service_broker_name"`
+}
+
+type ServiceData struct {
+	Service ServiceDataEntity `json:"entity"`
+}
+
+type ServiceDataEntity struct {
+	Label             string `json:"label"`
+	Description       string `json:"description"`
+	ServiceBrokerName string `json:"service_broker_name"`
 }
 
 func getServices(app *AppSearchResource, cli plugin.CliConnection) {
@@ -75,5 +88,19 @@ func getServicePlanDetails(serviceInstanceEntity ServiceInstanceEntity, cli plug
 	cmd := []string{"curl", serviceInstanceEntity.ServicePlanUrl}
 	output, _ := cli.CliCommandWithoutTerminalOutput(cmd...)
 	json.Unmarshal([]byte(strings.Join(output, "")), &servicePlanEntity)
+
+	serviceData := getServiceDetails(servicePlanEntity, cli)
+
+	servicePlanEntity.ServicePlanEntityData.Label = serviceData.Service.Label
+	servicePlanEntity.ServicePlanEntityData.ServiceBrokerName = serviceData.Service.ServiceBrokerName
+
 	return servicePlanEntity
+}
+
+func getServiceDetails(servicePlanEntity ServicePlanEntity, cli plugin.CliConnection) ServiceData {
+	var serviceData ServiceData
+	cmd := []string{"curl", servicePlanEntity.ServicePlanEntityData.ServiceURL}
+	output, _ := cli.CliCommandWithoutTerminalOutput(cmd...)
+	json.Unmarshal([]byte(strings.Join(output, "")), &serviceData)
+	return serviceData
 }
