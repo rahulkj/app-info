@@ -359,14 +359,15 @@
                         },
                         "service_plan_url": "/v2/service_plans/63f764bf-6a25-4e1a-85c1-2813420f76b3",
                         "service_keys_url": "/v2/service_instances/857ae772-8def-41c9-a44f-e2ca9021f4d3/service_keys",
-                        "service_plan_entity": {
-                            "entity": {
-                                "name": "standard",
-                                "free": true,
-                                "description": "This plan monitors and scales applications based on scaling rules every 30 seconds.",
-                                "public": "",
-                                "active": true
-                            }
+                        "service_plan_details": {
+                            "name": "standard",
+                            "free": true,
+                            "description": "This plan monitors and scales applications based on scaling rules every 30 seconds.",
+                            "active": true,
+                            "bindable": true,
+                            "service_url": "/v2/services/8b525f1c-5e9a-4a43-96ad-e37129c7b1b7",
+                            "label": "app-autoscaler",
+                            "service_broker_name": "app-autoscaler"
                         }
                     }
                 ],
@@ -551,14 +552,35 @@
                         },
                         "service_plan_url": "/v2/service_plans/48baeb78-d0b3-4607-80fa-a2b14bcc3c0f",
                         "service_keys_url": "/v2/service_instances/e721d305-6bca-4645-9dc3-b9db71372dd0/service_keys",
-                        "service_plan_entity": {
-                            "entity": {
-                                "name": "db-small",
-                                "free": true,
-                                "description": "This plan provides a small dedicated MySQL instance.",
-                                "public": "",
-                                "active": true
-                            }
+                        "service_plan_details": {
+                            "name": "db-small",
+                            "free": true,
+                            "description": "This plan provides a small dedicated MySQL instance.",
+                            "active": true,
+                            "bindable": true,
+                            "service_url": "/v2/services/3187c097-d3a6-4415-9eb8-e06861d1f88b",
+                            "label": "p.mysql",
+                            "service_broker_name": "dedicated-mysql-broker"
+                        }
+                    },
+                    {
+                        "name": "java-app-autoscaler",
+                        "type": "managed_service_instance",
+                        "maintenance_info": {
+                            "version": "",
+                            "description": ""
+                        },
+                        "service_plan_url": "/v2/service_plans/63f764bf-6a25-4e1a-85c1-2813420f76b3",
+                        "service_keys_url": "/v2/service_instances/857ae772-8def-41c9-a44f-e2ca9021f4d3/service_keys",
+                        "service_plan_details": {
+                            "name": "standard",
+                            "free": true,
+                            "description": "This plan monitors and scales applications based on scaling rules every 30 seconds.",
+                            "active": true,
+                            "bindable": true,
+                            "service_url": "/v2/services/8b525f1c-5e9a-4a43-96ad-e37129c7b1b7",
+                            "label": "app-autoscaler",
+                            "service_broker_name": "app-autoscaler"
                         }
                     }
                 ],
@@ -732,14 +754,15 @@
                         },
                         "service_plan_url": "",
                         "service_keys_url": "",
-                        "service_plan_entity": {
-                            "entity": {
-                                "name": "",
-                                "free": false,
-                                "description": "",
-                                "public": "",
-                                "active": false
-                            }
+                        "service_plan_details": {
+                            "name": "",
+                            "free": false,
+                            "description": "",
+                            "active": false,
+                            "bindable": false,
+                            "service_url": "",
+                            "label": "",
+                            "service_broker_name": ""
                         }
                     }
                 ],
