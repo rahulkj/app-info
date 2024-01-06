@@ -1,5 +1,5 @@
 metadata:
-    appguid: b1e79c62-5ec9-43c7-897a-7f3517f8d553
+    appguid: 3b18cbc7-3f43-4f52-ba7a-75440bffef3e
 entity:
     name: app-usage-server
     instances: 2
@@ -8,26 +8,31 @@ entity:
     diskquota: 1024
     buildpack: ruby_buildpack
     detectedbuildpack: ruby
-    spaceguid: df9049fc-4e41-48b7-989d-95eb5a3a7fe2
+    detectedbuildpackguid: f503056a-0c13-4e31-86f3-495f1ebb96a7
+    detectedbuildpackfilename: ruby_buildpack-cached-cflinuxfs4-v1.10.6.zip
+    spacename: system
+    spaceguid: 84d46f5e-9711-4aa4-94c8-930b03be27b2
     startcommand: bin/rails server -b 0.0.0.0 -p $PORT -e $RAILS_ENV
     environment:
         ALLOW_TEST_DATA_CREATION: "false"
         ALLOW_VIEWING_LOGS: "false"
-        CLOUD_CONTROLLER_URL: https://api.sys.tas.example.io
+        CLOUD_CONTROLLER_URL: https://api.sys.example.com
         CUTOFF_AGE_IN_DAYS: "365"
-        DATABASE_URL: mysql2://app_usage:GhrJzsLPdDavyyXUp39Qxw7OKzcXNj@mysql.service.cf.internal:3306/app_usage_service?reconnect=true
-        SECRET_KEY_BASE: MNcQEJG7PzoipwAalg900YLBkhrBdw
+        DATABASE_URL: mysql2://app_usage:7PvPSXXeGB9r2hSnRl7CfGVwkLiusv@mysql.service.cf.internal:3306/app_usage_service?reconnect=true
+        SECRET_KEY_BASE: ck5wmCp68WHCHlxWfgsOKN0njlQkGj
         SKIP_SSL_VALIDATION: "false"
-        UAA_URL: https://login.sys.tas.example.io
+        UAA_URL: https://login.sys.example.com
         USAGE_SERVICE_UAA_CLIENT_ID: usage_service
-        USAGE_SERVICE_UAA_CLIENT_SECRET: UiD7dtvEvqD7DxGaU5EIxhJwcZV-uoGN
+        USAGE_SERVICE_UAA_CLIENT_SECRET: CJxP4WvqKKKqMNMb3KeRs8dQTxfOy-kd
     command: bundle exec rake server:start
     healthcheck: http
     healthcheckendpoint: /heartbeat/server_status
     routes:
-        - app-usage.sys.tas.example.io
-    routesurl: /v2/apps/b1e79c62-5ec9-43c7-897a-7f3517f8d553/routes
-    stack: cflinuxfs3
-    stackurl: /v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369
+        - app-usage.sys.example.com
+    routesurl: /v2/apps/3b18cbc7-3f43-4f52-ba7a-75440bffef3e/routes
+    stack: cflinuxfs4
+    stackguid: 8e5e9961-9dea-4e32-aa9a-28123de0e212
     serviceinstances: []
-    serviceurl: /v2/apps/b1e79c62-5ec9-43c7-897a-7f3517f8d553/service_bindings
+    servicebindingsurl: /v2/apps/3b18cbc7-3f43-4f52-ba7a-75440bffef3e/service_bindings
+    orgguid: 1b9faba6-a7a8-42a5-9dc7-4f627d649590
+    orgname: system

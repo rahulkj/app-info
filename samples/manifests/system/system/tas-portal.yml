@@ -1,0 +1,58 @@
+metadata:
+    appguid: 40e4ab67-20ff-45f4-9d9d-2b4707c05a77
+entity:
+    name: tas-portal
+    instances: 1
+    state: STARTED
+    memory: 2048
+    diskquota: 2048
+    buildpack: nodejs_buildpack
+    detectedbuildpack: nodejs
+    detectedbuildpackguid: 017f5f72-23cb-451b-aced-e728d8e0cc83
+    detectedbuildpackfilename: nodejs_buildpack-cached-cflinuxfs4-v1.8.15.zip
+    spacename: system
+    spaceguid: 84d46f5e-9711-4aa4-94c8-930b03be27b2
+    startcommand: npm start
+    environment:
+        APP_ACCELERATOR_ACTIVATE: "true"
+        APP_ACCELERATOR_APP_NAME: app-accelerator-server
+        APP_ACCELERATOR_BUILDPACK: java_buildpack_offline
+        APP_ACCELERATOR_DISK: "1024"
+        APP_ACCELERATOR_HOSTNAME: app-accelerator-server
+        APP_ACCELERATOR_INSTANCES: "1"
+        APP_ACCELERATOR_MEMORY: "1024"
+        APPS_DOMAIN: apps.example.com
+        CLOUD_CONTROLLER_URL: https://api.sys.example.com
+        DB_HOST: mysql.service.cf.internal
+        DB_PASSWORD: 5RtGd38g5REQBdXnPhRiQeyrDNjR5g
+        DB_PORT: "3306"
+        DB_USER: backstage
+        SKIP_SSL_VALIDATION: "false"
+        SYSTEM_DOMAIN: sys.example.com
+        TARGET_ORG: system
+        TARGET_ORG_QUOTA_NAME: runaway
+        TARGET_SPACE: system
+        TAS_PORTAL_APP_NAME: tas-portal
+        TAS_PORTAL_BUILDPACK: nodejs_buildpack
+        TAS_PORTAL_CLIENT_ID: tas_portal
+        TAS_PORTAL_CLIENT_SECRET: MmOrkjzzUfmQs1-p9hhwf755kc2bm262
+        TAS_PORTAL_DISK: "2048"
+        TAS_PORTAL_ENV_VAR_KEYS: APPS_DOMAIN CLOUD_CONTROLLER_URL SKIP_SSL_VALIDATION UAA_URL SYSTEM_DOMAIN TARGET_ORG TARGET_ORG_QUOTA_NAME TARGET_SPACE DB_HOST DB_PORT DB_USER DB_PASSWORD TAS_PORTAL_APP_NAME TAS_PORTAL_BUILDPACK TAS_PORTAL_DISK TAS_PORTAL_HOSTNAME TAS_PORTAL_INSTANCES TAS_PORTAL_MEMORY TAS_PORTAL_FOUNDATION TAS_PORTAL_CLIENT_ID TAS_PORTAL_CLIENT_SECRET APP_ACCELERATOR_ACTIVATE APP_ACCELERATOR_APP_NAME APP_ACCELERATOR_BUILDPACK APP_ACCELERATOR_DISK APP_ACCELERATOR_HOSTNAME APP_ACCELERATOR_INSTANCES APP_ACCELERATOR_MEMORY
+        TAS_PORTAL_FOUNDATION: h2o-4-15402
+        TAS_PORTAL_HOSTNAME: tas-portal
+        TAS_PORTAL_INSTANCES: "1"
+        TAS_PORTAL_MEMORY: "2048"
+        UAA_URL: https://login.sys.example.com
+    command: node packages/backend --config app-config.yaml --config app-config.user.yaml
+    healthcheck: port
+    healthcheckendpoint: ""
+    routes:
+        - tas-portal.apps.example.com
+        - tas-portal.sys.example.com
+    routesurl: /v2/apps/40e4ab67-20ff-45f4-9d9d-2b4707c05a77/routes
+    stack: cflinuxfs4
+    stackguid: 8e5e9961-9dea-4e32-aa9a-28123de0e212
+    serviceinstances: []
+    servicebindingsurl: /v2/apps/40e4ab67-20ff-45f4-9d9d-2b4707c05a77/service_bindings
+    orgguid: 1b9faba6-a7a8-42a5-9dc7-4f627d649590
+    orgname: system

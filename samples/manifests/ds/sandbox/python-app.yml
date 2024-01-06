@@ -1,0 +1,28 @@
+metadata:
+    appguid: 5c7d6cbf-f25d-43ca-b757-9a90991c7e10
+entity:
+    name: python-app
+    instances: 1
+    state: STARTED
+    memory: 1024
+    diskquota: 1024
+    buildpack: python_buildpack
+    detectedbuildpack: python
+    detectedbuildpackguid: 4444e4f3-d8f6-4bb6-824f-70b2a6dab678
+    detectedbuildpackfilename: python_buildpack-cached-cflinuxfs4-v1.8.15.zip
+    spacename: sandbox
+    spaceguid: f40d5887-d151-4b20-a1c3-4f93186e9505
+    startcommand: waitress-serve --call tas_app:create_app
+    environment: {}
+    command: ""
+    healthcheck: port
+    healthcheckendpoint: ""
+    routes:
+        - python-app.apps.example.com
+    routesurl: /v2/apps/5c7d6cbf-f25d-43ca-b757-9a90991c7e10/routes
+    stack: cflinuxfs4
+    stackguid: 8e5e9961-9dea-4e32-aa9a-28123de0e212
+    serviceinstances: []
+    servicebindingsurl: /v2/apps/5c7d6cbf-f25d-43ca-b757-9a90991c7e10/service_bindings
+    orgguid: 4a5cf673-7cdc-4c3b-aa4b-698811cd657e
+    orgname: ds

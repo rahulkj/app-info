@@ -53,7 +53,7 @@ type AppEntity struct {
 	Stack                     string                  `json:"stack"`
 	StackGUID                 string                  `json:"stack_guid"`
 	ServiceInstances          []ServiceInstanceEntity `json:"service_instances"`
-	ServiceUrl                string                  `json:"service_bindings_url"`
+	ServiceBindingsUrl        string                  `json:"service_bindings_url"`
 	OrgGUID                   string                  `json:"org_guid"`
 	OrgName                   string                  `json:"org_name"`
 }

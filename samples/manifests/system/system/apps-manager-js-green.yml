@@ -1,23 +1,26 @@
 metadata:
-    appguid: 37f0e972-fa88-4473-a90c-6ddb8dc1b228
+    appguid: f08d4e4a-8b02-4994-8425-a98c2771f296
 entity:
     name: apps-manager-js-green
-    instances: 6
-    state: STOPPED
+    instances: 2
+    state: STARTED
     memory: 128
     diskquota: 1024
-    buildpack: staticfile_buildpack
+    buildpack: ruby_buildpack
     detectedbuildpack: staticfile
-    spaceguid: df9049fc-4e41-48b7-989d-95eb5a3a7fe2
+    detectedbuildpackguid: 608400e3-ddc6-44e9-a1c9-91a0ae637564
+    detectedbuildpackfilename: staticfile_buildpack-cached-cflinuxfs4-v1.6.8.zip
+    spacename: system
+    spaceguid: 84d46f5e-9711-4aa4-94c8-930b03be27b2
     startcommand: $HOME/boot.sh
     environment:
         ACCENT_COLOR: '#00A79D'
-        ACCOUNT_URL: https://login.sys.tas.example.io/profile
+        ACCOUNT_URL: https://login.sys.example.com/profile
         AMJS_ENV_VAR_KEYS: ACCENT_COLOR ACCOUNT_URL APP_POLL_INTERVAL APPS_DOMAIN COMPANY_NAME CREATE_UPS_ENABLED CURRENCY_LOOKUP ENABLE_OFFLINE_TOOLS CF_CLI_VERSION ENABLE_HTTP2 DISPLAY_PLAN_PRICES ENABLE_INVITING_USERS FAVICON_SRC FOOTER_LINKS FOOTER_TEXT FOUNDATIONS GLOBAL_WRAPPER_BG_COLOR GLOBAL_WRAPPER_FOOTER_CONTENT GLOBAL_WRAPPER_HEADER_CONTENT GLOBAL_WRAPPER_TEXT_COLOR HOME_FOUNDATION LOGO_SRC MARKETPLACE_NAME MARKETPLACE_URL METRIC_REGISTRAR_ENABLED NETWORKING_SELF_SERVICE POLL_INTERVAL PRODUCT_NAME SEARCH_SERVICE_URL SECONDARY_NAVIGATION_LINKS SKIP_SSL_VALIDATION UAA_SAML_PROVIDER_NAME
         APP_POLL_INTERVAL: "10"
-        APPS_DOMAIN: apps.tas.example.io
+        APPS_DOMAIN: apps.example.com
         CF_CLI_VERSION: v8
-        COMPANY_NAME: ""
+        COMPANY_NAME: VMware RPM
         CREATE_UPS_ENABLED: "true"
         CURRENCY_LOOKUP: '{ "usd": "$", "eur": "€" }'
         DISPLAY_PLAN_PRICES: "false"
@@ -26,11 +29,8 @@ entity:
         ENABLE_OFFLINE_TOOLS: "false"
         FAVICON_SRC: /vmw-bug.png
         FOOTER_LINKS: '[]'
-        FOOTER_TEXT: ""
-        FOUNDATIONS: '{"home":{"ccUrl":"https://api.sys.tas.example.io","invitationsServiceUrl":"https://p-invitations.sys.tas.example.io","logoutUrl":"https://login.sys.tas.example.io/logout.do","metricsUrl":"https://metrics.sys.tas.example.io","metricStoreUrl":"https://metric-store.sys.tas.example.io","uaaUrl":"https://login.sys.tas.example.io","usageServiceUrl":"https://app-usage.sys.tas.example.io","systemDomain":"sys.tas.example.io"}}'
+        FOUNDATIONS: '{"home":{"ccUrl":"https://api.sys.example.com","invitationsServiceUrl":"https://p-invitations.sys.example.com","logoutUrl":"https://login.sys.example.com/logout.do","metricsUrl":"https://metrics.sys.example.com","metricStoreUrl":"https://metric-store.sys.example.com","uaaUrl":"https://login.sys.example.com","usageServiceUrl":"https://app-usage.sys.example.com","systemDomain":"sys.example.com"}}'
         GLOBAL_WRAPPER_BG_COLOR: '#D6D6D6'
-        GLOBAL_WRAPPER_FOOTER_CONTENT: ""
-        GLOBAL_WRAPPER_HEADER_CONTENT: ""
         GLOBAL_WRAPPER_TEXT_COLOR: '#333'
         HOME_FOUNDATION: home
         LOGO_SRC: /vmw-bug.svg
@@ -40,16 +40,18 @@ entity:
         NETWORKING_SELF_SERVICE: "false"
         POLL_INTERVAL: "30"
         PRODUCT_NAME: Apps Manager
-        SEARCH_SERVICE_URL: https://search-server.sys.tas.example.io
-        SECONDARY_NAVIGATION_LINKS: '[{"guid":"b7a25b37-9a4c-4b32-957b-04d9e6848661","href":"https://docs.pivotal.io/pivotalcf/2-13/pas/intro.html","name":"Docs"},{"guid":"265b8105-2025-4c4b-8d9e-89db9f0e5c94","href":"/tools","name":"Tools"}]'
+        SEARCH_SERVICE_URL: https://search-server.sys.example.com
+        SECONDARY_NAVIGATION_LINKS: '[{"guid":"83b777a7-f1e7-4b34-88fe-a99cd19370bc","href":"https://docs.vmware.com/en/VMware-Tanzu-Application-Service/index.html","name":"Docs"},{"guid":"e28fb357-530b-4c11-bdff-31a2fee6626a","href":"/tools","name":"Tools"}]'
         SKIP_SSL_VALIDATION: "false"
-        UAA_SAML_PROVIDER_NAME: ""
     command: ruby -e 'require "json"; env = {}; ENV["AMJS_ENV_VAR_KEYS"].split(" ").each do |k|; if ENV.key?(k); env[k] = ENV[k].gsub("\r", "\\r").gsub("\n", "\\n"); end; end; File.open("public/config.json", "w") do |file|; file.write(JSON.generate(env)); end;' && $HOME/boot.sh
     healthcheck: port
     healthcheckendpoint: ""
-    routes: []
-    routesurl: /v2/apps/37f0e972-fa88-4473-a90c-6ddb8dc1b228/routes
-    stack: cflinuxfs3
-    stackurl: /v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369
+    routes:
+        - apps.sys.example.com
+    routesurl: /v2/apps/f08d4e4a-8b02-4994-8425-a98c2771f296/routes
+    stack: cflinuxfs4
+    stackguid: 8e5e9961-9dea-4e32-aa9a-28123de0e212
     serviceinstances: []
-    serviceurl: /v2/apps/37f0e972-fa88-4473-a90c-6ddb8dc1b228/service_bindings
+    servicebindingsurl: /v2/apps/f08d4e4a-8b02-4994-8425-a98c2771f296/service_bindings
+    orgguid: 1b9faba6-a7a8-42a5-9dc7-4f627d649590
+    orgname: system

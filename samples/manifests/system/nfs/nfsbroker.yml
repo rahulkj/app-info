@@ -1,0 +1,32 @@
+metadata:
+    appguid: 3d6dfeda-fbd1-475c-be99-b9b41cf0ec6d
+entity:
+    name: nfsbroker
+    instances: 1
+    state: STARTED
+    memory: 256
+    diskquota: 1024
+    buildpack: binary_buildpack
+    detectedbuildpack: binary
+    detectedbuildpackguid: 8f07b126-d327-4815-ad6a-1c82ded9059c
+    detectedbuildpackfilename: binary_buildpack-cached-cflinuxfs4-v1.1.8.zip
+    spacename: nfs
+    spaceguid: 13014d2a-fbde-41f3-9e8b-f67f5fecc182
+    startcommand: ./start.sh
+    environment:
+        PASSWORD: 0nsq5GmJODTY8mDFDsmn7oGDkhfHQ2
+        UAA_CLIENT_ID: nfs-broker-credhub
+        UAA_CLIENT_SECRET: QltJumbyp-YiaFMWJC2URscEV7S-9o8K
+        USERNAME: ISYhjJkHARTNCKJrVkpY
+    command: ""
+    healthcheck: port
+    healthcheckendpoint: ""
+    routes:
+        - nfsbroker.sys.example.com
+    routesurl: /v2/apps/3d6dfeda-fbd1-475c-be99-b9b41cf0ec6d/routes
+    stack: cflinuxfs4
+    stackguid: 8e5e9961-9dea-4e32-aa9a-28123de0e212
+    serviceinstances: []
+    servicebindingsurl: /v2/apps/3d6dfeda-fbd1-475c-be99-b9b41cf0ec6d/service_bindings
+    orgguid: 1b9faba6-a7a8-42a5-9dc7-4f627d649590
+    orgname: system

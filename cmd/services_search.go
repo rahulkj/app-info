@@ -24,12 +24,12 @@ type ServiceInstance struct {
 }
 
 type ServiceInstanceEntity struct {
-	Name                   string            `json:"name"`
-	Type                   string            `json:"type"`
-	MaintenanceInfo        MaintenanceInfo   `json:"maintenance_info"`
-	ServicePlanUrl         string            `json:"service_plan_url"`
-	ServiceInstanceKeysUrl string            `json:"service_keys_url"`
-	ServicePlanEntity      ServicePlanEntity `json:"service_plan_entity"`
+	Name                       string                `json:"name"`
+	Type                       string                `json:"type"`
+	MaintenanceInfo            MaintenanceInfo       `json:"maintenance_info"`
+	ServicePlanUrl             string                `json:"service_plan_url"`
+	ServiceInstanceKeysUrl     string                `json:"service_keys_url"`
+	ServiceInstancePlanDetails ServicePlanEntityData `json:"service_plan_details"`
 }
 
 type MaintenanceInfo struct {
@@ -46,7 +46,7 @@ type ServicePlanEntityData struct {
 	Free              bool   `json:"free"`
 	Description       string `json:"description"`
 	Active            bool   `json:"active"`
-	Bindbale          bool   `json:"bindable"`
+	Bindable          bool   `json:"bindable"`
 	ServiceURL        string `json:"service_url"`
 	Label             string `json:"label"`
 	ServiceBrokerName string `json:"service_broker_name"`
@@ -66,16 +66,16 @@ func getServices(app *AppSearchResource, cli plugin.CliConnection) {
 	var services Services
 	var serviceInstances []ServiceInstanceEntity
 
-	var serviceInstance ServiceInstance
-	cmd := []string{"curl", app.Entity.ServiceUrl}
+	cmd := []string{"curl", app.Entity.ServiceBindingsUrl}
 	output, _ := cli.CliCommandWithoutTerminalOutput(cmd...)
 	json.Unmarshal([]byte(strings.Join(output, "")), &services)
 
 	for _, service := range services.Resources {
+		var serviceInstance ServiceInstance
 		cmd := []string{"curl", service.Entity.ServiceInstanceUrl}
 		output, _ := cli.CliCommandWithoutTerminalOutput(cmd...)
 		json.Unmarshal([]byte(strings.Join(output, "")), &serviceInstance)
-		serviceInstance.Entity.ServicePlanEntity = getServicePlanDetails(serviceInstance.Entity, cli)
+		serviceInstance.Entity.ServiceInstancePlanDetails = getServicePlanDetails(serviceInstance.Entity, cli).ServicePlanEntityData
 
 		serviceInstances = append(serviceInstances, serviceInstance.Entity)
 	}

@@ -1,0 +1,31 @@
+metadata:
+    appguid: e6319fbb-e266-4873-a038-65cfb8f00fcb
+entity:
+    name: app-accelerator-server
+    instances: 1
+    state: STARTED
+    memory: 1024
+    diskquota: 1024
+    buildpack: java_buildpack_offline
+    detectedbuildpack: java
+    detectedbuildpackguid: dd470123-6a41-41a1-8f49-dfeb1561b683
+    detectedbuildpackfilename: java-buildpack-offline-cflinuxfs4-v4.63.1.zip
+    spacename: system
+    spaceguid: 84d46f5e-9711-4aa4-94c8-930b03be27b2
+    startcommand: 'JAVA_OPTS="-agentpath:$PWD/.java-buildpack/open_jdk_jre/bin/jvmkill-1.17.0_RELEASE=printHeapHistogram=1 -Djava.io.tmpdir=$TMPDIR -XX:ActiveProcessorCount=$(nproc) -Djava.ext.dirs= -Djava.security.properties=$PWD/.java-buildpack/java_security/java.security $JAVA_OPTS" && CALCULATED_MEMORY=$($PWD/.java-buildpack/open_jdk_jre/bin/java-buildpack-memory-calculator-3.13.0_RELEASE -totMemory=$MEMORY_LIMIT -loadedClasses=25619 -poolType=metaspace -stackThreads=250 -vmOptions="$JAVA_OPTS") && echo JVM Memory Configuration: $CALCULATED_MEMORY && JAVA_OPTS="$JAVA_OPTS $CALCULATED_MEMORY" && MALLOC_ARENA_MAX=2 SERVER_PORT=$PORT eval exec $PWD/.java-buildpack/open_jdk_jre/bin/java $JAVA_OPTS -cp $PWD/.:$PWD/.java-buildpack/container_security_provider/container_security_provider-1.20.0_RELEASE.jar org.springframework.boot.loader.JarLauncher'
+    environment:
+        JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 17.+ } }'
+        JBP_CONFIG_SPRING_AUTO_RECONFIGURATION: '{enabled: false}'
+    command: ""
+    healthcheck: port
+    healthcheckendpoint: ""
+    routes:
+        - app-accelerator-server.apps.example.com
+        - app-accelerator-server.sys.example.com
+    routesurl: /v2/apps/e6319fbb-e266-4873-a038-65cfb8f00fcb/routes
+    stack: cflinuxfs4
+    stackguid: 8e5e9961-9dea-4e32-aa9a-28123de0e212
+    serviceinstances: []
+    servicebindingsurl: /v2/apps/e6319fbb-e266-4873-a038-65cfb8f00fcb/service_bindings
+    orgguid: 1b9faba6-a7a8-42a5-9dc7-4f627d649590
+    orgname: system

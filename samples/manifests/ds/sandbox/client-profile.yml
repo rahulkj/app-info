@@ -1,0 +1,63 @@
+metadata:
+    appguid: 892ebf50-0f65-462f-bd1d-c3ed654e0f71
+entity:
+    name: client-profile
+    instances: 1
+    state: STARTED
+    memory: 1024
+    diskquota: 1024
+    buildpack: ""
+    detectedbuildpack: java
+    detectedbuildpackguid: dd470123-6a41-41a1-8f49-dfeb1561b683
+    detectedbuildpackfilename: java-buildpack-offline-cflinuxfs4-v4.63.1.zip
+    spacename: sandbox
+    spaceguid: f40d5887-d151-4b20-a1c3-4f93186e9505
+    startcommand: 'JAVA_OPTS="-agentpath:$PWD/.java-buildpack/open_jdk_jre/bin/jvmkill-1.17.0_RELEASE=printHeapHistogram=1 -Djava.io.tmpdir=$TMPDIR -XX:ActiveProcessorCount=$(nproc) -Djava.ext.dirs= -Djava.security.properties=$PWD/.java-buildpack/java_security/java.security $JAVA_OPTS" && CALCULATED_MEMORY=$($PWD/.java-buildpack/open_jdk_jre/bin/java-buildpack-memory-calculator-3.13.0_RELEASE -totMemory=$MEMORY_LIMIT -loadedClasses=26311 -poolType=metaspace -stackThreads=250 -vmOptions="$JAVA_OPTS") && echo JVM Memory Configuration: $CALCULATED_MEMORY && JAVA_OPTS="$JAVA_OPTS $CALCULATED_MEMORY" && MALLOC_ARENA_MAX=2 SERVER_PORT=$PORT eval exec $PWD/.java-buildpack/open_jdk_jre/bin/java $JAVA_OPTS -cp $PWD/.:$PWD/.java-buildpack/container_security_provider/container_security_provider-1.20.0_RELEASE.jar org.springframework.boot.loader.JarLauncher'
+    environment:
+        JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 17.+ } }'
+        JBP_CONFIG_SPRING_AUTO_RECONFIGURATION: '{ enabled: false }'
+        SPRING_PROFILES_ACTIVE: cloud
+    command: ""
+    healthcheck: port
+    healthcheckendpoint: ""
+    routes:
+        - client-profile.apps.example.com
+    routesurl: /v2/apps/892ebf50-0f65-462f-bd1d-c3ed654e0f71/routes
+    stack: cflinuxfs4
+    stackguid: 8e5e9961-9dea-4e32-aa9a-28123de0e212
+    serviceinstances:
+        - name: client-profile-db
+          type: managed_service_instance
+          maintenanceinfo:
+            version: 3.0.1-build.53
+            description: MySQL("3.0.1-build.53") for VMware Tanzu
+          serviceplanurl: /v2/service_plans/48baeb78-d0b3-4607-80fa-a2b14bcc3c0f
+          serviceinstancekeysurl: /v2/service_instances/e721d305-6bca-4645-9dc3-b9db71372dd0/service_keys
+          serviceinstanceplandetails:
+            name: db-small
+            free: true
+            description: This plan provides a small dedicated MySQL instance.
+            active: true
+            bindbale: true
+            serviceurl: /v2/services/3187c097-d3a6-4415-9eb8-e06861d1f88b
+            label: p.mysql
+            servicebrokername: dedicated-mysql-broker
+        - name: java-app-autoscaler
+          type: managed_service_instance
+          maintenanceinfo:
+            version: ""
+            description: ""
+          serviceplanurl: /v2/service_plans/63f764bf-6a25-4e1a-85c1-2813420f76b3
+          serviceinstancekeysurl: /v2/service_instances/857ae772-8def-41c9-a44f-e2ca9021f4d3/service_keys
+          serviceinstanceplandetails:
+            name: standard
+            free: true
+            description: This plan monitors and scales applications based on scaling rules every 30 seconds.
+            active: true
+            bindbale: true
+            serviceurl: /v2/services/8b525f1c-5e9a-4a43-96ad-e37129c7b1b7
+            label: app-autoscaler
+            servicebrokername: app-autoscaler
+    servicebindingsurl: /v2/apps/892ebf50-0f65-462f-bd1d-c3ed654e0f71/service_bindings
+    orgguid: 4a5cf673-7cdc-4c3b-aa4b-698811cd657e
+    orgname: ds

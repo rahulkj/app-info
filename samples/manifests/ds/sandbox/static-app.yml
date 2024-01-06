@@ -1,0 +1,28 @@
+metadata:
+    appguid: e63fbf16-9556-4895-b13e-8ee998e96e50
+entity:
+    name: static-app
+    instances: 3
+    state: STARTED
+    memory: 16
+    diskquota: 1024
+    buildpack: staticfile_buildpack
+    detectedbuildpack: staticfile
+    detectedbuildpackguid: 608400e3-ddc6-44e9-a1c9-91a0ae637564
+    detectedbuildpackfilename: staticfile_buildpack-cached-cflinuxfs4-v1.6.8.zip
+    spacename: sandbox
+    spaceguid: f40d5887-d151-4b20-a1c3-4f93186e9505
+    startcommand: $HOME/boot.sh
+    environment: {}
+    command: ""
+    healthcheck: port
+    healthcheckendpoint: ""
+    routes:
+        - static-app.apps.example.com
+    routesurl: /v2/apps/e63fbf16-9556-4895-b13e-8ee998e96e50/routes
+    stack: cflinuxfs4
+    stackguid: 8e5e9961-9dea-4e32-aa9a-28123de0e212
+    serviceinstances: []
+    servicebindingsurl: /v2/apps/e63fbf16-9556-4895-b13e-8ee998e96e50/service_bindings
+    orgguid: 4a5cf673-7cdc-4c3b-aa4b-698811cd657e
+    orgname: ds

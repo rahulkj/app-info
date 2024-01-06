@@ -1,32 +1,36 @@
 metadata:
-    appguid: 1f8cd4c8-b829-47d9-a998-e2ed0f484e37
+    appguid: 86f56317-956c-448e-906f-244e0bc8d22f
 entity:
     name: p-invitations-green
-    instances: 2
-    state: STOPPED
+    instances: 1
+    state: STARTED
     memory: 256
-    diskquota: 1024
+    diskquota: 512
     buildpack: nodejs_buildpack
-    detectedbuildpack: ""
-    spaceguid: df9049fc-4e41-48b7-989d-95eb5a3a7fe2
-    startcommand: ""
+    detectedbuildpack: nodejs
+    detectedbuildpackguid: 017f5f72-23cb-451b-aced-e728d8e0cc83
+    detectedbuildpackfilename: nodejs_buildpack-cached-cflinuxfs4-v1.8.15.zip
+    spacename: system
+    spaceguid: 84d46f5e-9711-4aa4-94c8-930b03be27b2
+    startcommand: npm start
     environment:
-        CLOUD_CONTROLLER_URL: https://api.sys.tas.example.io
-        COMPANY_NAME: ""
+        CLOUD_CONTROLLER_URL: https://api.sys.example.com
+        COMPANY_NAME: VMware RPM
         INVITATIONS_CLIENT_ID: invitations
-        INVITATIONS_CLIENT_SECRET: yL1TYI8gY90vdgIgJ7XaKwfIPdbXSc_0
+        INVITATIONS_CLIENT_SECRET: utKebQQNAqyR84H_MYkxMFbN_e1aWnXF
         NODE_TLS_REJECT_UNAUTHORIZED: "1"
-        NOTIFICATIONS_URL: https://notifications.sys.tas.example.io
+        NOTIFICATIONS_URL: https://notifications.sys.example.com
         PRODUCT_NAME: Apps Manager
-        SUCCESS_CALLBACK_URL: ""
-        SUPPORT_EMAIL: ""
-        UAA_URL: https://login.sys.tas.example.io
+        UAA_URL: https://login.sys.example.com
     command: ""
     healthcheck: port
     healthcheckendpoint: ""
-    routes: []
-    routesurl: /v2/apps/1f8cd4c8-b829-47d9-a998-e2ed0f484e37/routes
-    stack: cflinuxfs3
-    stackurl: /v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369
+    routes:
+        - p-invitations.sys.example.com
+    routesurl: /v2/apps/86f56317-956c-448e-906f-244e0bc8d22f/routes
+    stack: cflinuxfs4
+    stackguid: 8e5e9961-9dea-4e32-aa9a-28123de0e212
     serviceinstances: []
-    serviceurl: /v2/apps/1f8cd4c8-b829-47d9-a998-e2ed0f484e37/service_bindings
+    servicebindingsurl: /v2/apps/86f56317-956c-448e-906f-244e0bc8d22f/service_bindings
+    orgguid: 1b9faba6-a7a8-42a5-9dc7-4f627d649590
+    orgname: system

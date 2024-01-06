@@ -1,33 +1,35 @@
 metadata:
-    appguid: f2304e82-653f-4dd6-9038-6812b112a4d3
+    appguid: 0b89a284-6ecc-4c2f-a5d1-84086762fd22
 entity:
     name: p-invitations-blue
-    instances: 2
-    state: STARTED
+    instances: 1
+    state: STOPPED
     memory: 256
-    diskquota: 1024
+    diskquota: 512
     buildpack: nodejs_buildpack
-    detectedbuildpack: nodejs
-    spaceguid: df9049fc-4e41-48b7-989d-95eb5a3a7fe2
-    startcommand: npm start
+    detectedbuildpack: ""
+    detectedbuildpackguid: ""
+    detectedbuildpackfilename: ""
+    spacename: system
+    spaceguid: 84d46f5e-9711-4aa4-94c8-930b03be27b2
+    startcommand: ""
     environment:
-        CLOUD_CONTROLLER_URL: https://api.sys.tas.example.io
-        COMPANY_NAME: ""
+        CLOUD_CONTROLLER_URL: https://api.sys.example.com
+        COMPANY_NAME: VMware RPM
         INVITATIONS_CLIENT_ID: invitations
-        INVITATIONS_CLIENT_SECRET: yL1TYI8gY90vdgIgJ7XaKwfIPdbXSc_0
+        INVITATIONS_CLIENT_SECRET: utKebQQNAqyR84H_MYkxMFbN_e1aWnXF
         NODE_TLS_REJECT_UNAUTHORIZED: "1"
-        NOTIFICATIONS_URL: https://notifications.sys.tas.example.io
+        NOTIFICATIONS_URL: https://notifications.sys.example.com
         PRODUCT_NAME: Apps Manager
-        SUCCESS_CALLBACK_URL: ""
-        SUPPORT_EMAIL: ""
-        UAA_URL: https://login.sys.tas.example.io
+        UAA_URL: https://login.sys.example.com
     command: ""
     healthcheck: port
     healthcheckendpoint: ""
-    routes:
-        - p-invitations.sys.tas.example.io
-    routesurl: /v2/apps/f2304e82-653f-4dd6-9038-6812b112a4d3/routes
-    stack: cflinuxfs3
-    stackurl: /v2/stacks/596b9919-dd6d-4bac-a7d9-08d52c9af369
+    routes: []
+    routesurl: /v2/apps/0b89a284-6ecc-4c2f-a5d1-84086762fd22/routes
+    stack: cflinuxfs4
+    stackguid: 8e5e9961-9dea-4e32-aa9a-28123de0e212
     serviceinstances: []
-    serviceurl: /v2/apps/f2304e82-653f-4dd6-9038-6812b112a4d3/service_bindings
+    servicebindingsurl: /v2/apps/0b89a284-6ecc-4c2f-a5d1-84086762fd22/service_bindings
+    orgguid: 1b9faba6-a7a8-42a5-9dc7-4f627d649590
+    orgname: system
