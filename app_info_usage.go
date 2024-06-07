@@ -29,10 +29,11 @@ func (c *AppInfo) GetMetadata() plugin.PluginMetadata {
 				UsageDetails: plugin.Usage{
 					Usage: "cf app-info [flags]",
 					Options: map[string]string{
-						"--csv or -c":       "Minimal application details",
-						"--json or -j":      "All application details in json format",
-						"--manifests or -m": "Generate application mainfests in current working directory",
-						"--packages or -p":  "Download applications packages in current working directory",
+						"--csv or -c":         "Minimal application details",
+						"--json or -j":        "All application details in json format",
+						"--manifests or -m":   "Generate application mainfests in current working directory",
+						"--packages or -p":    "Download applications packages in current working directory",
+						"--include-env or -e": "Optional flag to include environment variables in json / manifest output",
 					},
 				},
 			},
@@ -52,10 +53,18 @@ func (c AppInfo) Run(cli plugin.CliConnection, args []string) {
 			os.Exit(0)
 		}
 
+		include_env_variables := false
+
+		for _, arg := range args {
+			if arg == "--include-env" || arg == "-e" {
+				include_env_variables = true
+			}
+		}
+
 		if args[1] == "--json" || args[1] == "-j" {
-			c.printVerboseOutputInJsonFormat(cli)
+			c.printVerboseOutputInJsonFormat(cli, include_env_variables)
 		} else if args[1] == "--manifests" || args[1] == "-m" {
-			c.downloadApplicationManifests(cli)
+			c.downloadApplicationManifests(cli, include_env_variables)
 		} else if args[1] == "--csv" || args[1] == "-c" {
 			c.printInCSVFormat(cli)
 		} else if args[1] == "--packages" || args[1] == "-p" {
@@ -68,25 +77,25 @@ func (c AppInfo) Run(cli plugin.CliConnection, args []string) {
 
 // PrintInCSVFormat prints the app and buildpack used info on the console
 func (c AppInfo) printInCSVFormat(cli plugin.CliConnection) {
-	orgs, spaces, apps := cmd.GatherData(cli)
+	orgs, spaces, apps := cmd.GatherData(cli, false)
 
 	fmt.Println("**** Following is the csv output ****")
 	fmt.Println()
 
-	fmt.Printf("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", "ORG", "SPACE", "APPLICATION", "STATE", "INSTANCES", "MEMORY", "DISK", "HEALTH_CHECK", "STACK", "BUILDPACK", "DETECTED_BUILDPACK", "DETECTED_BUILDPACK_FILENAME")
+	fmt.Printf("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", "ORG", "SPACE", "APPLICATION", "CREATED_DATE", "UPDATED_DATE", "STATE", "INSTANCES", "MEMORY", "DISK", "HEALTH_CHECK", "STACK", "BUILDPACK", "DETECTED_BUILDPACK", "DETECTED_BUILDPACK_FILENAME")
 	for _, val := range apps.Resources {
 
 		space := spaces[val.Entity.SpaceGUID]
 		spaceName := space.Name
 		orgName := orgs[space.Relationships.RelationshipsOrg.OrgData.OrgGUID]
 
-		fmt.Printf("%s,%s,%s,%s,%v,%v MB,%v MB,%s,%s,%s,%s,%s\n", orgName, spaceName, val.Entity.Name, val.Entity.State, val.Entity.Instances, val.Entity.Memory, val.Entity.DiskQuota, val.Entity.HealthCheck, val.Entity.Stack, val.Entity.Buildpack, val.Entity.DetectedBuildPack, val.Entity.DetectedBuildPackFileName)
+		fmt.Printf("%s,%s,%s,%s,%s,%s,%v,%v MB,%v MB,%s,%s,%s,%s,%s\n", orgName, spaceName, val.Entity.Name, val.Metadata.CreateDate, val.Metadata.UpdatedDate, val.Entity.State, val.Entity.Instances, val.Entity.Memory, val.Entity.DiskQuota, val.Entity.HealthCheck, val.Entity.Stack, val.Entity.Buildpack, val.Entity.DetectedBuildPack, val.Entity.DetectedBuildPackFileName)
 	}
 }
 
 // PrintVerboseOutputInJsonFormat prints the app state, instances, memroy and disk data to console
-func (c AppInfo) printVerboseOutputInJsonFormat(cli plugin.CliConnection) {
-	_, _, apps := cmd.GatherData(cli)
+func (c AppInfo) printVerboseOutputInJsonFormat(cli plugin.CliConnection, include_env_variables bool) {
+	_, _, apps := cmd.GatherData(cli, include_env_variables)
 
 	b, err := json.Marshal(apps)
 	if err != nil {
@@ -98,7 +107,7 @@ func (c AppInfo) printVerboseOutputInJsonFormat(cli plugin.CliConnection) {
 	fmt.Println(string(b))
 }
 
-func (c AppInfo) downloadApplicationManifests(cli plugin.CliConnection) {
+func (c AppInfo) downloadApplicationManifests(cli plugin.CliConnection, include_env_variables bool) {
 	currentDir, err := os.Getwd()
 	if err != nil {
 		fmt.Printf("Failed to access current directory: %s\n", err)
@@ -111,7 +120,7 @@ func (c AppInfo) downloadApplicationManifests(cli plugin.CliConnection) {
 
 	os.MkdirAll(currentDir, os.ModePerm)
 
-	cmd.GenerateAppManifests(currentDir, cli)
+	cmd.GenerateAppManifests(currentDir, cli, include_env_variables)
 
 	fmt.Println("Generate application manifests are located in: ", currentDir)
 }

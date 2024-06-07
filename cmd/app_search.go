@@ -28,7 +28,9 @@ type AppSearchResource struct {
 }
 
 type AppMetadata struct {
-	AppGUID string `json:"guid"`
+	AppGUID     string `json:"guid"`
+	CreateDate  string `json:"created_at"`
+	UpdatedDate string `json:"updated_at"`
 }
 
 type AppEntity struct {
@@ -100,7 +102,7 @@ func getBuildpackDetails(app *AppSearchResource, buildpacks map[string]Buildpack
 	app.Entity.DetectedBuildPackFileName = buildpack.Filename
 }
 
-func GatherData(cli plugin.CliConnection) (map[string]string, map[string]SpaceSearchResource, AppSearchResults) {
+func GatherData(cli plugin.CliConnection, include_env_variables bool) (map[string]string, map[string]SpaceSearchResource, AppSearchResults) {
 	orgs := getOrgs(cli)
 	spaces := getSpaces(cli)
 	apps := getAppData(cli)
@@ -117,6 +119,10 @@ func GatherData(cli plugin.CliConnection) (map[string]string, map[string]SpaceSe
 		app.Entity.OrgGUID = space.Relationships.RelationshipsOrg.OrgData.OrgGUID
 		app.Entity.SpaceName = spaceName
 
+		if !include_env_variables {
+			app.Entity.Environment = nil
+		}
+
 		getRoutes(&app, domains, cli)
 		getAppStack(&app, stacks)
 		getServices(&app, cli)
@@ -127,8 +133,8 @@ func GatherData(cli plugin.CliConnection) (map[string]string, map[string]SpaceSe
 	return orgs, spaces, apps
 }
 
-func GenerateAppManifests(currentDir string, cli plugin.CliConnection) {
-	orgs, spaces, apps := GatherData(cli)
+func GenerateAppManifests(currentDir string, cli plugin.CliConnection, include_env_variables bool) {
+	orgs, spaces, apps := GatherData(cli, include_env_variables)
 
 	var wg sync.WaitGroup
 	for _, app := range apps.Resources {
@@ -166,7 +172,7 @@ func createAppManifest(orgs map[string]string, spaces map[string]SpaceSearchReso
 }
 
 func DownloadApplicationPackages(currentDir string, cli plugin.CliConnection) {
-	orgs, spaces, apps := GatherData(cli)
+	orgs, spaces, apps := GatherData(cli, false)
 
 	for _, app := range apps.Resources {
 		downloadAppPackages(orgs, spaces, app, currentDir, cli)
