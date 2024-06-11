@@ -11,6 +11,8 @@ import (
 	"gopkg.in/yaml.v3"
 
 	"github.com/cloudfoundry/cli/plugin"
+
+	"github.com/schollz/progressbar/v3"
 )
 
 // AppSearchResults represents top level attributes of JSON response from Cloud Foundry API
@@ -68,6 +70,11 @@ type AppPackageResource struct {
 	GUID string `json:"guid"`
 }
 
+type PackageDownloadStatus struct {
+	Downloaded bool
+	Message    string
+}
+
 // GetAppData requests all of the Application data from Cloud Foundry
 func getAppData(cli plugin.CliConnection) AppSearchResults {
 	fmt.Println("**** Gathering application metadata from all orgs and spaces ****")
@@ -110,27 +117,52 @@ func GatherData(cli plugin.CliConnection, include_env_variables bool) (map[strin
 	domains := getDomains(cli)
 	stacks := getStacks(cli)
 
-	for i, app := range apps.Resources {
-		space := spaces[app.Entity.SpaceGUID]
-		spaceName := space.Name
-		orgName := orgs[space.Relationships.RelationshipsOrg.OrgData.OrgGUID]
+	wg := new(sync.WaitGroup)
+	results := make(chan AppSearchResource)
 
-		app.Entity.OrgName = orgName
-		app.Entity.OrgGUID = space.Relationships.RelationshipsOrg.OrgData.OrgGUID
-		app.Entity.SpaceName = spaceName
-
-		if !include_env_variables {
-			app.Entity.Environment = nil
-		}
-
-		getRoutes(&app, domains, cli)
-		getAppStack(&app, stacks)
-		getServices(&app, cli)
-		getBuildpackDetails(&app, buildpacks)
-		apps.Resources[i] = app
+	bar := progressbar.Default(int64(len(apps.Resources)))
+	for _, app := range apps.Resources {
+		wg.Add(1)
+		go func(app AppSearchResource, spaces map[string]SpaceSearchResource, orgs map[string]string, include_env_variables bool, domains map[string]string, stacks map[string]StackResource, buildpacks map[string]BuildpackResources, cli plugin.CliConnection) {
+			defer wg.Done()
+			getAppResourceData(app, spaces, orgs, include_env_variables, domains, stacks, buildpacks, cli, results)
+		}(app, spaces, orgs, include_env_variables, domains, stacks, buildpacks, cli)
 	}
 
+	var newapps []AppSearchResource
+
+	for i := 0; i < len(apps.Resources); i++ {
+		bar.Add(1)
+		newapp := <-results
+		newapps = append(newapps, newapp)
+	}
+
+	wg.Wait()
+
+	apps.Resources = newapps
+
 	return orgs, spaces, apps
+}
+
+func getAppResourceData(app AppSearchResource, spaces map[string]SpaceSearchResource, orgs map[string]string, include_env_variables bool, domains map[string]string, stacks map[string]StackResource, buildpacks map[string]BuildpackResources, cli plugin.CliConnection, results chan AppSearchResource) {
+	space := spaces[app.Entity.SpaceGUID]
+	spaceName := space.Name
+	orgName := orgs[space.Relationships.RelationshipsOrg.OrgData.OrgGUID]
+
+	app.Entity.OrgName = orgName
+	app.Entity.OrgGUID = space.Relationships.RelationshipsOrg.OrgData.OrgGUID
+	app.Entity.SpaceName = spaceName
+
+	if !include_env_variables {
+		app.Entity.Environment = nil
+	}
+
+	getRoutes(&app, domains, cli)
+	getAppStack(&app, stacks)
+	getServices(&app, cli)
+	getBuildpackDetails(&app, buildpacks)
+
+	results <- app
 }
 
 func GenerateAppManifests(currentDir string, cli plugin.CliConnection, include_env_variables bool) {
@@ -207,5 +239,5 @@ func downloadAppPackage(app AppSearchResource, appPackageResource AppPackageReso
 	cmd := []string{"curl", "/v3/packages/" + appPackageResource.GUID + "/download", "--output", filePath}
 	cli.CliCommandWithoutTerminalOutput(cmd...)
 
-	fmt.Printf("Package download successfully in '%s'\n", fileName)
+	fmt.Printf("Package download successfully in '%s'\n", filePath)
 }

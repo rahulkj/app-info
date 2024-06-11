@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/rahulkj/app-info/cmd"
 
@@ -19,7 +20,7 @@ func (c *AppInfo) GetMetadata() plugin.PluginMetadata {
 		Name: "app-info",
 		Version: plugin.VersionType{
 			Major: 1,
-			Minor: 4,
+			Minor: 5,
 			Build: 0,
 		},
 		Commands: []plugin.Command{
@@ -32,7 +33,7 @@ func (c *AppInfo) GetMetadata() plugin.PluginMetadata {
 						"--csv or -c":         "Minimal application details",
 						"--json or -j":        "All application details in json format",
 						"--manifests or -m":   "Generate application mainfests in current working directory",
-						"--packages or -p":    "Download applications packages in current working directory",
+						"--packages or -p":    "Download applications packages in current working directory. NOTE: Time consuming activity",
 						"--include-env or -e": "Optional flag to include environment variables in json / manifest output",
 					},
 				},
@@ -47,6 +48,9 @@ func main() {
 
 // Run is what is executed by the Cloud Foundry CLI when the buildpack-usage command is specified
 func (c AppInfo) Run(cli plugin.CliConnection, args []string) {
+	startTime := time.Now()
+	fmt.Println()
+
 	if args[0] == "app-info" {
 		if len(args) < 2 {
 			fmt.Printf("Missing flags, please run help to see the valid options")
@@ -73,6 +77,9 @@ func (c AppInfo) Run(cli plugin.CliConnection, args []string) {
 			fmt.Printf("Invalid flags, please run help to see the valid options")
 		}
 	}
+
+	fmt.Println()
+	fmt.Println("***** Finished in", time.Since(startTime), " *****")
 }
 
 // PrintInCSVFormat prints the app and buildpack used info on the console
@@ -80,7 +87,6 @@ func (c AppInfo) printInCSVFormat(cli plugin.CliConnection) {
 	orgs, spaces, apps := cmd.GatherData(cli, false)
 
 	fmt.Println("**** Following is the csv output ****")
-	fmt.Println()
 
 	fmt.Printf("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", "ORG", "SPACE", "APPLICATION", "CREATED_DATE", "UPDATED_DATE", "STATE", "INSTANCES", "MEMORY", "DISK", "HEALTH_CHECK", "STACK", "BUILDPACK", "DETECTED_BUILDPACK", "DETECTED_BUILDPACK_FILENAME")
 	for _, val := range apps.Resources {
