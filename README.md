@@ -19,10 +19,11 @@ USAGE:
    cf app-info [flags]
 
 OPTIONS:
-   --csv or -c            Minimal application details
-   --json or -j           All application details in json format
-   --manifests or -m      Generate application mainfests in current working directory
-   --packages or -p       Download applications packages in current working directory
+   --csv or -c              Minimal application details
+   --include-env or -e      Optional flag to include environment variables in json / manifest output
+   --json or -j             All application details in json format
+   --manifests or -m        Generate application mainfests in current working directory
+   --packages or -p         Download applications packages in current working directory. NOTE: Time consuming activity
 ```
 
 **SAMPLE OUTPUT**
