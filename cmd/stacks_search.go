@@ -24,9 +24,9 @@ type StackResource struct {
 	Default     bool   `json:"default"`
 }
 
-func getAppStack(app *AppSearchResource, stacks map[string]StackResource) {
-	var stackResource StackResource = stacks[app.Entity.StackGUID]
-	app.Entity.Stack = stackResource.Name
+func getAppStack(app *DisplayApp, stacks map[string]StackResource) {
+	var stackResource StackResource = stacks[app.Stack]
+	app.StackGUID = stackResource.GUID
 }
 
 func getStacks(cli plugin.CliConnection) map[string]StackResource {
@@ -35,7 +35,7 @@ func getStacks(cli plugin.CliConnection) map[string]StackResource {
 	Stacks := getStacksData(cli)
 
 	for _, val := range Stacks.Resources {
-		data[val.GUID] = val
+		data[val.Name] = val
 	}
 
 	return data

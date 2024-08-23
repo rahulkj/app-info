@@ -22,8 +22,7 @@ type OrgSearchResource struct {
 }
 
 func getOrgs(cli plugin.CliConnection) map[string]string {
-	var data map[string]string
-	data = make(map[string]string)
+	data := make(map[string]string)
 	orgs := getOrgData(cli)
 
 	for _, val := range orgs.Resources {

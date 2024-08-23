@@ -87,15 +87,16 @@ func (c AppInfo) printInCSVFormat(cli plugin.CliConnection) {
 	orgs, spaces, apps := cmd.GatherData(cli, false)
 
 	fmt.Println("**** Following is the csv output ****")
+	fmt.Println()
 
-	fmt.Printf("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", "ORG", "SPACE", "APPLICATION", "CREATED_DATE", "UPDATED_DATE", "STATE", "INSTANCES", "MEMORY", "DISK", "HEALTH_CHECK", "STACK", "BUILDPACK", "DETECTED_BUILDPACK", "DETECTED_BUILDPACK_FILENAME")
-	for _, val := range apps.Resources {
+	fmt.Printf("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", "ORG", "SPACE", "APPLICATION", "STATE", "INSTANCES", "MEMORY", "DISK", "HEALTH_CHECK", "STACK", "BUILDPACK", "DETECTED_BUILDPACK", "DETECTED_BUILDPACK_FILENAME")
+	for _, val := range apps {
 
-		space := spaces[val.Entity.SpaceGUID]
+		space := spaces[val.SpaceGUID]
 		spaceName := space.Name
 		orgName := orgs[space.Relationships.RelationshipsOrg.OrgData.OrgGUID]
 
-		fmt.Printf("%s,%s,%s,%s,%s,%s,%v,%v MB,%v MB,%s,%s,%s,%s,%s\n", orgName, spaceName, val.Entity.Name, val.Metadata.CreateDate, val.Metadata.UpdatedDate, val.Entity.State, val.Entity.Instances, val.Entity.Memory, val.Entity.DiskQuota, val.Entity.HealthCheck, val.Entity.Stack, val.Entity.Buildpack, val.Entity.DetectedBuildPack, val.Entity.DetectedBuildPackFileName)
+		fmt.Printf("%s,%s,%s,%s,%v,%v MB,%v MB,%s,%s,%s,%s,%s\n", orgName, spaceName, val.Name, val.State, val.Instances, val.Memory, val.Disk, val.HealthCheck, val.Stack, val.Buildpacks, val.DetectedBuildPack, val.DetectedBuildPackFileNames)
 	}
 }
 

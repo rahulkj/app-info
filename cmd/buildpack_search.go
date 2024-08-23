@@ -29,12 +29,11 @@ type BuildpackResources struct {
 }
 
 func getBuildpacks(cli plugin.CliConnection) map[string]BuildpackResources {
-	var data map[string]BuildpackResources
-	data = make(map[string]BuildpackResources)
+	data := make(map[string]BuildpackResources)
 	buildpacks := getBuildPacksData(cli)
 
 	for _, val := range buildpacks.Resources {
-		data[val.GUID] = val
+		data[val.Name] = val
 	}
 
 	return data
@@ -62,4 +61,12 @@ func unmarshallBuildpackSearchResults(apiUrl string, cli plugin.CliConnection) B
 	json.Unmarshal([]byte(strings.Join(output, "")), &tRes)
 
 	return tRes
+}
+
+func getBuildpackDetails(app DisplayApp, buildpacks map[string]BuildpackResources) (displayApp DisplayApp) {
+	for _, buildpack := range app.Buildpacks {
+		app.DetectedBuildPackFileNames = append(app.DetectedBuildPackFileNames, buildpacks[buildpack].Filename)
+	}
+
+	return app
 }
