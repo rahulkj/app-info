@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/url"
 	"strings"
 
@@ -41,7 +40,7 @@ type Data struct {
 	GUID string `json:"guid"`
 }
 
-func getAppProcesses(app AppResource, cli plugin.CliConnection, displayAppChan chan DisplayApp) {
+func getAppProcesses(app AppResource, cli plugin.CliConnection, displayAppChan chan<- DisplayApp) {
 	var displayApp DisplayApp
 
 	var appProcesses AppProcesses
@@ -53,15 +52,17 @@ func getAppProcesses(app AppResource, cli plugin.CliConnection, displayAppChan c
 	output, _ := cli.CliCommandWithoutTerminalOutput(cmd...)
 	json.Unmarshal([]byte(strings.Join(output, "")), &appProcesses)
 
-	fmt.Println(appProcesses)
 	for _, appProcess := range appProcesses.Processes {
-		displayApp.Instances = appProcess.Instances
-		displayApp.Memory = appProcess.Memory
-		displayApp.Disk = appProcess.Disk
-		displayApp.LogRate = appProcess.LogRate
-		displayApp.HealthCheck = appProcess.HealthCheck.Type
-		displayApp.ReadinessHealthCheck = appProcess.ReadinessHealthCheck.Type
-		displayApp.Type = appProcess.Type
+		if appProcess.AppProcessRelationship.AppRelationShip.Data.GUID == app.GUID {
+			displayApp.Instances = appProcess.Instances
+			displayApp.Memory = appProcess.Memory
+			displayApp.Disk = appProcess.Disk
+			displayApp.LogRate = appProcess.LogRate
+			displayApp.HealthCheck = appProcess.HealthCheck.Type
+			displayApp.ReadinessHealthCheck = appProcess.ReadinessHealthCheck.Type
+			displayApp.Type = appProcess.Type
+			break
+		}
 	}
 
 	displayAppChan <- displayApp

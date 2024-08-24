@@ -70,26 +70,26 @@ type Link struct {
 	Href string `json:"href"`
 }
 type DisplayApp struct {
-	Name                       string               `json:"name"`
-	AppGUID                    string               `json:"guid"`
-	Instances                  int                  `json:"instances"`
-	State                      string               `json:"state"`
-	Memory                     int                  `json:"memory_in_mb"`
-	Disk                       int                  `json:"disk_in_mb"`
-	LogRate                    int                  `json:"log_rate_limit_in_bytes_per_second"`
-	Buildpacks                 []string             `json:"buildpacks"`
-	DetectedBuildPack          string               `json:"detected_buildpack"`
-	DetectedBuildPackFileNames []string             `json:"detected_buildpack_filenames"`
-	SpaceGUID                  string               `json:"space_guid"`
-	Environment                map[string]string    `json:"environment_json"`
-	HealthCheck                string               `json:"health_check_type"`
-	ReadinessHealthCheck       string               `json:"readiness_health_check_type"`
-	Type                       string               `json:"type"`
-	Routes                     []string             `json:"routes"`
-	Stack                      string               `json:"stack"`
-	Services                   []Service            `json:"services"`
-	Features                   []AppFeatureResource `json:"resources"`
-	StackGUID                  string               `json:"stackguid"`
+	Name                       string                 `json:"name"`
+	AppGUID                    string                 `json:"guid"`
+	Instances                  int                    `json:"instances"`
+	State                      string                 `json:"state"`
+	Memory                     int                    `json:"memory_in_mb"`
+	Disk                       int                    `json:"disk_in_mb"`
+	LogRate                    int                    `json:"log_rate_limit_in_bytes_per_second"`
+	Buildpacks                 []string               `json:"buildpacks"`
+	DetectedBuildPack          string                 `json:"detected_buildpack"`
+	DetectedBuildPackFileNames []string               `json:"detected_buildpack_filenames"`
+	SpaceGUID                  string                 `json:"space_guid"`
+	Environment                map[string]interface{} `json:"environment_json"`
+	HealthCheck                string                 `json:"health_check_type"`
+	ReadinessHealthCheck       string                 `json:"readiness_health_check_type"`
+	Type                       string                 `json:"type"`
+	Routes                     []string               `json:"routes"`
+	Stack                      string                 `json:"stack"`
+	Services                   []Service              `json:"services"`
+	Features                   []AppFeatureResource   `json:"resources"`
+	StackGUID                  string                 `json:"stackguid"`
 }
 
 // GetAppData requests all of the Application data from Cloud Foundry
@@ -145,7 +145,10 @@ func GatherData(cli plugin.CliConnection, include_env_variables bool) (map[strin
 		displayApps = append(displayApps, newapp)
 	}
 
-	wg.Wait()
+	go func() {
+		wg.Wait()
+		close(result) // Close results channel after all workers are done
+	}()
 
 	return orgs, spaces, displayApps
 }

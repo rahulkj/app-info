@@ -65,7 +65,7 @@ func unmarshallRoutesSearchResults(apiUrl string, cli plugin.CliConnection) Rout
 	return tRes
 }
 
-func getAppRoutes(app AppResource, routes Routes, displayAppChan chan DisplayApp) {
+func getAppRoutes(app AppResource, routes Routes, displayAppChan chan<- DisplayApp) {
 	var displayApp DisplayApp
 
 	var routeURLs []string

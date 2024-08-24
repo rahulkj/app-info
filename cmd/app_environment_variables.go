@@ -9,17 +9,17 @@ import (
 )
 
 type AppEnvironment struct {
-	Environment map[string]string `json:"var"`
+	Environment map[string]interface{} `json:"var"`
 }
 
-func getAppEnvironmentVariables(app AppResource, include_env_variables bool, cli plugin.CliConnection, displayAppChan chan DisplayApp) {
+func getAppEnvironmentVariables(app AppResource, include_env_variables bool, cli plugin.CliConnection, displayAppChan chan<- DisplayApp) {
 	var displayApp DisplayApp
 
 	if include_env_variables {
 
 		var appEnvironment AppEnvironment
 
-		envVarsUrl, _ := url.Parse(app.AppLinks.Features.Href)
+		envVarsUrl, _ := url.Parse(app.AppLinks.EnvironmentVars.Href)
 
 		cmd := []string{"curl", envVarsUrl.Path}
 

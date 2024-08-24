@@ -18,7 +18,7 @@ type AppFeatureResource struct {
 	Enabled     bool   `json:"enabled"`
 }
 
-func getAppFeatures(app AppResource, cli plugin.CliConnection, displayAppChan chan DisplayApp) {
+func getAppFeatures(app AppResource, cli plugin.CliConnection, displayAppChan chan<- DisplayApp) {
 	var displayApp DisplayApp
 
 	var appFeatures AppFeatures
