@@ -97,5 +97,5 @@ func downloadAppPackage(app DisplayApp, currentDroplet CurrentDroplet, orgDir st
 	cmd := []string{"curl", currentPackageUrl.Path + "/download", "--output", filePath}
 	cli.CliCommandWithoutTerminalOutput(cmd...)
 
-	result <- "Package download successfully in: " + fileName
+	result <- "Package download successfully in: " + filePath
 }
