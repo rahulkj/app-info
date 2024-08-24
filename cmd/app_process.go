@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"encoding/json"
+	"fmt"
+	"net/url"
 	"strings"
 
 	"code.cloudfoundry.org/cli/plugin"
@@ -19,6 +21,7 @@ type AppProcessResource struct {
 	Disk                   int                    `json:"disk_in_mb"`
 	LogRate                int                    `json:"log_rate_limit_in_bytes_per_second"`
 	HealthCheck            AppHealthCheck         `json:"health_check"`
+	ReadinessHealthCheck   AppHealthCheck         `json:"readiness_health_check"`
 	AppProcessRelationship AppProcessRelationship `json:"relationships"`
 }
 
@@ -31,29 +34,35 @@ type AppProcessRelationship struct {
 }
 
 type AppRelationShip struct {
-	AppRelationShipData AppRelationShipData `json:"data"`
+	Data Data `json:"data"`
 }
 
-type AppRelationShipData struct {
-	AppRelationShipGUID string `json:"guid"`
+type Data struct {
+	GUID string `json:"guid"`
 }
 
-func getAppProcesses(app DisplayApp, cli plugin.CliConnection) (displayApp DisplayApp) {
+func getAppProcesses(app AppResource, cli plugin.CliConnection, displayAppChan chan DisplayApp) {
+	var displayApp DisplayApp
+
 	var appProcesses AppProcesses
-	cmd := []string{"curl", "/v3/apps/" + app.AppGUID + "/processes"}
+
+	processUrl, _ := url.Parse(app.AppLinks.Processes.Href)
+
+	cmd := []string{"curl", processUrl.Path}
+
 	output, _ := cli.CliCommandWithoutTerminalOutput(cmd...)
 	json.Unmarshal([]byte(strings.Join(output, "")), &appProcesses)
 
+	fmt.Println(appProcesses)
 	for _, appProcess := range appProcesses.Processes {
-		if appProcess.GUID == app.AppGUID {
-			app.Instances = appProcess.Instances
-			app.Memory = appProcess.Memory
-			app.Disk = appProcess.Disk
-			app.LogRate = appProcess.LogRate
-			app.HealthCheck = appProcess.HealthCheck.Type
-			break
-		}
+		displayApp.Instances = appProcess.Instances
+		displayApp.Memory = appProcess.Memory
+		displayApp.Disk = appProcess.Disk
+		displayApp.LogRate = appProcess.LogRate
+		displayApp.HealthCheck = appProcess.HealthCheck.Type
+		displayApp.ReadinessHealthCheck = appProcess.ReadinessHealthCheck.Type
+		displayApp.Type = appProcess.Type
 	}
 
-	return app
+	displayAppChan <- displayApp
 }

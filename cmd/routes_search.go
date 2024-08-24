@@ -65,18 +65,20 @@ func unmarshallRoutesSearchResults(apiUrl string, cli plugin.CliConnection) Rout
 	return tRes
 }
 
-func getAppRoutes(app DisplayApp, routes Routes, cli plugin.CliConnection) (displayApp DisplayApp) {
+func getAppRoutes(app AppResource, routes Routes, displayAppChan chan DisplayApp) {
+	var displayApp DisplayApp
+
 	var routeURLs []string
 
 	for _, resource := range routes.Resources {
 		for _, destination := range resource.Destinations {
-			if destination.DestinationApp.GUID == app.AppGUID {
+			if destination.DestinationApp.GUID == app.GUID {
 				routeURLs = append(routeURLs, resource.URL)
 			}
 		}
 	}
 
-	app.Routes = routeURLs
+	displayApp.Routes = routeURLs
 
-	return app
+	displayAppChan <- displayApp
 }

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"strings"
 	"sync"
-	"time"
 
 	"github.com/cloudfoundry/cli/plugin"
 
@@ -28,6 +27,7 @@ type AppResource struct {
 	State         string           `json:"state"`
 	Lifecycle     Lifecycle        `json:"lifecycle"`
 	RelationShips AppRelationShips `json:"relationships"`
+	AppLinks      Links            `json:"links"`
 }
 
 type Lifecycle struct {
@@ -52,6 +52,23 @@ type AppSpaceData struct {
 	SpaceGUID string `json:"guid"`
 }
 
+type Links struct {
+	Self              Link `json:"self"`
+	EnvironmentVars   Link `json:"environment_variables"`
+	Space             Link `json:"space"`
+	Processes         Link `json:"processes"`
+	Packages          Link `json:"packages"`
+	CurrentDroplet    Link `json:"current_droplet"`
+	Droplets          Link `json:"droplets"`
+	Tasks             Link `json:"tasks"`
+	Revisions         Link `json:"revisions"`
+	DeployedRevisions Link `json:"deployed_revisions"`
+	Features          Link `json:"features"`
+}
+
+type Link struct {
+	Href string `json:"href"`
+}
 type DisplayApp struct {
 	Name                       string               `json:"name"`
 	AppGUID                    string               `json:"guid"`
@@ -64,11 +81,10 @@ type DisplayApp struct {
 	DetectedBuildPack          string               `json:"detected_buildpack"`
 	DetectedBuildPackFileNames []string             `json:"detected_buildpack_filenames"`
 	SpaceGUID                  string               `json:"space_guid"`
-	StartCommand               string               `json:"detected_start_command"`
 	Environment                map[string]string    `json:"environment_json"`
-	Command                    string               `json:"command"`
 	HealthCheck                string               `json:"health_check_type"`
-	HealthCheckEndpoint        string               `json:"health_check_http_endpoint"`
+	ReadinessHealthCheck       string               `json:"readiness_health_check_type"`
+	Type                       string               `json:"type"`
 	Routes                     []string             `json:"routes"`
 	Stack                      string               `json:"stack"`
 	Services                   []Service            `json:"services"`
@@ -115,17 +131,17 @@ func GatherData(cli plugin.CliConnection, include_env_variables bool) (map[strin
 	var displayApps []DisplayApp
 
 	var wg sync.WaitGroup
-	results := make(chan DisplayApp)
+	result := make(chan DisplayApp)
 
-	bar := progressbar.Default(int64(len(apps.Resources)))
+	bar := progressbar.Default(int64(len(apps.Resources)), "Gathering App Data")
 	for _, appResource := range apps.Resources {
 		wg.Add(1)
-		go getAppResourceData(appResource, routes, services, buildpacks, include_env_variables, cli, results, &wg)
+		go getAppResourceData(appResource, routes, services, buildpacks, include_env_variables, cli, result, &wg)
 	}
 
 	for i := 0; i < len(apps.Resources); i++ {
 		bar.Add(1)
-		newapp := <-results
+		newapp := <-result
 		displayApps = append(displayApps, newapp)
 	}
 
@@ -134,7 +150,7 @@ func GatherData(cli plugin.CliConnection, include_env_variables bool) (map[strin
 	return orgs, spaces, displayApps
 }
 
-func getAppResourceData(app AppResource, routes Routes, services []Service, buildpacks map[string]BuildpackResources, include_env_variables bool, cli plugin.CliConnection, results chan DisplayApp, wg *sync.WaitGroup) {
+func getAppResourceData(app AppResource, routes Routes, services []Service, buildpacks map[string]BuildpackResources, include_env_variables bool, cli plugin.CliConnection, result chan DisplayApp, wg *sync.WaitGroup) {
 	defer wg.Done()
 
 	var displayApp DisplayApp
@@ -146,21 +162,41 @@ func getAppResourceData(app AppResource, routes Routes, services []Service, buil
 	displayApp.State = app.State
 	displayApp.SpaceGUID = app.RelationShips.Space.Data.SpaceGUID
 
-	displayApp = getAppProcesses(displayApp, cli)
+	displayAppChan := make(chan DisplayApp)
+	go getAppProcesses(app, cli, displayAppChan)
 
-	displayApp = getAppFeatures(displayApp, cli)
+	appWithProcess := <-displayAppChan
+	displayApp.Instances = appWithProcess.Instances
+	displayApp.Memory = appWithProcess.Memory
+	displayApp.Disk = appWithProcess.Disk
+	displayApp.LogRate = appWithProcess.LogRate
+	displayApp.HealthCheck = appWithProcess.HealthCheck
+	displayApp.ReadinessHealthCheck = appWithProcess.ReadinessHealthCheck
+	displayApp.Type = appWithProcess.Type
 
-	displayApp = getBuildpackDetails(displayApp, buildpacks)
+	go getAppFeatures(app, cli, displayAppChan)
 
-	if include_env_variables {
-		displayApp = getAppEnvironmentVariables(displayApp, cli)
-	}
+	appWithFeatures := <-displayAppChan
+	displayApp.Features = appWithFeatures.Features
 
-	displayApp = getAppRoutes(displayApp, routes, cli)
-	displayApp = getAppServices(displayApp, services)
+	go getBuildpackDetails(app, buildpacks, displayAppChan)
 
-	time.Sleep(time.Second)
+	appWithBuildpacks := <-displayAppChan
+	displayApp.DetectedBuildPackFileNames = appWithBuildpacks.DetectedBuildPackFileNames
 
-	results <- displayApp
+	go getAppRoutes(app, routes, displayAppChan)
 
+	appWithRoutes := <-displayAppChan
+	displayApp.Routes = appWithRoutes.Routes
+
+	go getAppEnvironmentVariables(app, include_env_variables, cli, displayAppChan)
+
+	appWithEnvironmentVars := <-displayAppChan
+	displayApp.Environment = appWithEnvironmentVars.Environment
+
+	close(displayAppChan)
+
+	// displayApp = getAppServices(app, services)
+
+	result <- displayApp
 }

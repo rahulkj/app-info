@@ -27,12 +27,7 @@ type CurrentDroplet struct {
 }
 
 type CurrentDropletLink struct {
-	App     AppLink     `json:"app"`
 	Package PackageLink `json:"package"`
-}
-
-type AppLink struct {
-	Href string `json:"href"`
 }
 
 type PackageLink struct {

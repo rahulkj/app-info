@@ -63,10 +63,12 @@ func unmarshallBuildpackSearchResults(apiUrl string, cli plugin.CliConnection) B
 	return tRes
 }
 
-func getBuildpackDetails(app DisplayApp, buildpacks map[string]BuildpackResources) (displayApp DisplayApp) {
-	for _, buildpack := range app.Buildpacks {
-		app.DetectedBuildPackFileNames = append(app.DetectedBuildPackFileNames, buildpacks[buildpack].Filename)
+func getBuildpackDetails(app AppResource, buildpacks map[string]BuildpackResources, displayAppChan chan DisplayApp) {
+	var displayApp DisplayApp
+
+	for _, buildpack := range app.Lifecycle.Data.Buildpacks {
+		displayApp.DetectedBuildPackFileNames = append(displayApp.DetectedBuildPackFileNames, buildpacks[buildpack].Filename)
 	}
 
-	return app
+	displayAppChan <- displayApp
 }
