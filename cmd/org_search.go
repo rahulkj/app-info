@@ -3,9 +3,6 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
-	"strings"
-
-	"github.com/cloudfoundry/cli/plugin"
 )
 
 // OrgSearchResults represents top level attributes of JSON response from Cloud Foundry API
@@ -21,9 +18,9 @@ type OrgSearchResource struct {
 	Name string `json:"name"`
 }
 
-func getOrgs(cli plugin.CliConnection) map[string]string {
+func getOrgs(config Config) map[string]string {
 	data := make(map[string]string)
-	orgs := getOrgData(cli)
+	orgs := getOrgData(config)
 
 	for _, val := range orgs.Resources {
 		data[val.GUID] = val.Name
@@ -33,13 +30,14 @@ func getOrgs(cli plugin.CliConnection) map[string]string {
 }
 
 // GetOrgData requests all of the Application data from Cloud Foundry
-func getOrgData(cli plugin.CliConnection) OrgSearchResults {
-	var res OrgSearchResults = unmarshallOrgSearchResults("/v3/organizations", cli)
+func getOrgData(config Config) OrgSearchResults {
+	apiUrl := fmt.Sprintf("%s/v3/organizations", config.ApiEndpoint)
+	var res OrgSearchResults = unmarshallOrgSearchResults(apiUrl, config)
 
 	if res.TotalPages > 1 {
 		for i := 2; i <= res.TotalPages; i++ {
-			apiUrl := fmt.Sprintf("/v3/organizations?page=%d&per_page=50", i)
-			tRes := unmarshallOrgSearchResults(apiUrl, cli)
+			apiUrl := fmt.Sprintf("%s?page=%d&per_page=100", apiUrl, i)
+			tRes := unmarshallOrgSearchResults(apiUrl, config)
 			res.Resources = append(res.Resources, tRes.Resources...)
 		}
 	}
@@ -47,11 +45,10 @@ func getOrgData(cli plugin.CliConnection) OrgSearchResults {
 	return res
 }
 
-func unmarshallOrgSearchResults(apiUrl string, cli plugin.CliConnection) OrgSearchResults {
+func unmarshallOrgSearchResults(apiUrl string, config Config) OrgSearchResults {
 	var tRes OrgSearchResults
-	cmd := []string{"curl", apiUrl}
-	output, _ := cli.CliCommandWithoutTerminalOutput(cmd...)
-	json.Unmarshal([]byte(strings.Join(output, "")), &tRes)
+	output, _ := getResponse(config, apiUrl)
+	json.Unmarshal([]byte(output), &tRes)
 
 	return tRes
 }

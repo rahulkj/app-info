@@ -2,10 +2,6 @@ package cmd
 
 import (
 	"encoding/json"
-	"net/url"
-	"strings"
-
-	"code.cloudfoundry.org/cli/plugin"
 )
 
 type AppProcesses struct {
@@ -40,20 +36,21 @@ type Data struct {
 	GUID string `json:"guid"`
 }
 
-func getAppProcesses(app AppResource, cli plugin.CliConnection, displayAppChan chan<- DisplayApp) {
+func getAppProcesses(app AppResource, config Config) DisplayApp {
+	// defer wg.Done()
+
 	var displayApp DisplayApp
 
+	apiUrl := app.AppLinks.Processes.Href
+
 	var appProcesses AppProcesses
+	output, _ := getResponse(config, apiUrl)
 
-	processUrl, _ := url.Parse(app.AppLinks.Processes.Href)
-
-	cmd := []string{"curl", processUrl.Path}
-
-	output, _ := cli.CliCommandWithoutTerminalOutput(cmd...)
-	json.Unmarshal([]byte(strings.Join(output, "")), &appProcesses)
+	json.Unmarshal([]byte(output), &appProcesses)
 
 	for _, appProcess := range appProcesses.Processes {
 		if appProcess.AppProcessRelationship.AppRelationShip.Data.GUID == app.GUID {
+			displayApp.AppGUID = app.GUID
 			displayApp.Instances = appProcess.Instances
 			displayApp.Memory = appProcess.Memory
 			displayApp.Disk = appProcess.Disk
@@ -65,5 +62,5 @@ func getAppProcesses(app AppResource, cli plugin.CliConnection, displayAppChan c
 		}
 	}
 
-	displayAppChan <- displayApp
+	return displayApp
 }

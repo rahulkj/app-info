@@ -3,9 +3,6 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
-	"strings"
-
-	"code.cloudfoundry.org/cli/plugin"
 )
 
 type Stacks struct {
@@ -29,10 +26,10 @@ func getAppStack(app *DisplayApp, stacks map[string]StackResource) {
 	app.StackGUID = stackResource.GUID
 }
 
-func getStacks(cli plugin.CliConnection) map[string]StackResource {
+func getStacks(config Config) map[string]StackResource {
 	var data map[string]StackResource
 	data = make(map[string]StackResource)
-	Stacks := getStacksData(cli)
+	Stacks := getStacksData(config)
 
 	for _, val := range Stacks.Resources {
 		data[val.Name] = val
@@ -42,13 +39,14 @@ func getStacks(cli plugin.CliConnection) map[string]StackResource {
 }
 
 // GetOrgData requests all of the Application data from Cloud Foundry
-func getStacksData(cli plugin.CliConnection) Stacks {
-	var res Stacks = unmarshallStacksearchResults("/v3/stacks", cli)
+func getStacksData(config Config) Stacks {
+	apiUrl := fmt.Sprintf("%s/v3/stacks", config.ApiEndpoint)
+	var res Stacks = unmarshallStacksearchResults(apiUrl, config)
 
 	if res.Pagination.TotalPages > 1 {
 		for i := 2; i <= res.Pagination.TotalPages; i++ {
-			apiUrl := fmt.Sprintf("/v3/stacks?page=%d&per_page=50", i)
-			tRes := unmarshallStacksearchResults(apiUrl, cli)
+			apiUrl := fmt.Sprintf("%s?page=%d&per_page=100", apiUrl, i)
+			tRes := unmarshallStacksearchResults(apiUrl, config)
 			res.Resources = append(res.Resources, tRes.Resources...)
 		}
 	}
@@ -56,11 +54,10 @@ func getStacksData(cli plugin.CliConnection) Stacks {
 	return res
 }
 
-func unmarshallStacksearchResults(apiUrl string, cli plugin.CliConnection) Stacks {
+func unmarshallStacksearchResults(apiUrl string, config Config) Stacks {
 	var tRes Stacks
-	cmd := []string{"curl", apiUrl}
-	output, _ := cli.CliCommandWithoutTerminalOutput(cmd...)
-	json.Unmarshal([]byte(strings.Join(output, "")), &tRes)
+	output, _ := getResponse(config, apiUrl)
+	json.Unmarshal([]byte(output), &tRes)
 
 	return tRes
 }

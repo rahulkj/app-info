@@ -3,13 +3,10 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
-	"net/url"
 	"os"
 	"path/filepath"
-	"strings"
 	"sync"
 
-	"github.com/cloudfoundry/cli/plugin"
 	"github.com/schollz/progressbar/v3"
 )
 
@@ -34,8 +31,8 @@ type PackageLink struct {
 	Href string `json:"href"`
 }
 
-func DownloadApplicationPackages(currentDir string, cli plugin.CliConnection) {
-	orgs, spaces, apps := GatherData(cli, false)
+func DownloadApplicationPackages(currentDir string, config Config) {
+	orgs, spaces, apps := GatherData(config, false)
 
 	var messages []string
 
@@ -46,7 +43,7 @@ func DownloadApplicationPackages(currentDir string, cli plugin.CliConnection) {
 
 	for _, app := range apps {
 		wg.Add(1)
-		go downloadAppPackages(orgs, spaces, app, currentDir, cli, result, &wg)
+		go downloadAppPackages(orgs, spaces, app, currentDir, config, result, &wg)
 	}
 
 	for i := 0; i < len(apps); i++ {
@@ -62,35 +59,42 @@ func DownloadApplicationPackages(currentDir string, cli plugin.CliConnection) {
 	}
 }
 
-func downloadAppPackages(orgs map[string]string, spaces map[string]SpaceSearchResource, app DisplayApp, currentDir string, cli plugin.CliConnection, result chan string, wg *sync.WaitGroup) {
+func downloadAppPackages(orgs map[string]string, spaces map[string]SpaceSearchResource, app DisplayApp, currentDir string, config Config, result chan string, wg *sync.WaitGroup) {
 	defer wg.Done()
 	space := spaces[app.SpaceGUID]
 	spaceName := space.Name
 	orgName := orgs[space.Relationships.RelationshipsOrg.OrgData.OrgGUID]
 
-	cmd := []string{"curl", "/v3/apps/" + app.AppGUID + "/droplets/current"}
-	output, _ := cli.CliCommandWithoutTerminalOutput(cmd...)
+	apiUrl := fmt.Sprintf("%s/v3/apps/%s/droplets/current", config.ApiEndpoint, app.AppGUID)
+
+	output, _ := getResponse(config, apiUrl)
 
 	var currentDroplet CurrentDroplet
-	json.Unmarshal([]byte(strings.Join(output, "")), &currentDroplet)
+	json.Unmarshal([]byte(output), &currentDroplet)
 
 	orgDir := currentDir + "/" + orgName + "/" + spaceName
 
 	os.MkdirAll(orgDir, os.ModePerm)
 
-	downloadAppPackage(app, currentDroplet, orgDir, cli, result)
+	downloadAppPackage(app, currentDroplet, orgDir, config, result)
 }
 
-func downloadAppPackage(app DisplayApp, currentDroplet CurrentDroplet, orgDir string, cli plugin.CliConnection, result chan string) {
+func downloadAppPackage(app DisplayApp, currentDroplet CurrentDroplet, orgDir string, config Config, result chan string) {
 
-	currentPackageUrl, _ := url.Parse(currentDroplet.Links.Package.Href)
+	apiUrl := currentDroplet.Links.Package.Href + "/download"
 
 	fileName := app.Name + "-" + app.AppGUID + ".zip"
 
 	filePath := filepath.Join(orgDir, fileName)
 
-	cmd := []string{"curl", currentPackageUrl.Path + "/download", "--output", filePath}
-	cli.CliCommandWithoutTerminalOutput(cmd...)
+	ok, err := downloadFile(config, apiUrl, filePath)
 
-	result <- "Package download successfully in: " + filePath
+	var message string
+	if ok && err == nil {
+		message = "Package download successfully in: " + filePath
+	} else {
+		message = "Package download unsuccessfully for: " + app.Name
+	}
+
+	result <- message
 }

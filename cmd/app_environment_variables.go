@@ -2,32 +2,27 @@ package cmd
 
 import (
 	"encoding/json"
-	"net/url"
-	"strings"
-
-	"code.cloudfoundry.org/cli/plugin"
 )
 
 type AppEnvironment struct {
+	AppGUID     string
 	Environment map[string]interface{} `json:"var"`
 }
 
-func getAppEnvironmentVariables(app AppResource, include_env_variables bool, cli plugin.CliConnection, displayAppChan chan<- DisplayApp) {
-	var displayApp DisplayApp
+func getAppEnvironmentVariables(app AppResource, include_env_variables bool, config Config) AppEnvironment {
+	// defer wg.Done()
+
+	var appEnvironment AppEnvironment
+
+	appEnvironment.AppGUID = app.GUID
 
 	if include_env_variables {
 
-		var appEnvironment AppEnvironment
+		apiUrl := app.AppLinks.EnvironmentVars.Href
 
-		envVarsUrl, _ := url.Parse(app.AppLinks.EnvironmentVars.Href)
-
-		cmd := []string{"curl", envVarsUrl.Path}
-
-		output, _ := cli.CliCommandWithoutTerminalOutput(cmd...)
-		json.Unmarshal([]byte(strings.Join(output, "")), &appEnvironment)
-
-		displayApp.Environment = appEnvironment.Environment
+		output, _ := getResponse(config, apiUrl)
+		json.Unmarshal([]byte(output), &appEnvironment)
 	}
 
-	displayAppChan <- displayApp
+	return appEnvironment
 }

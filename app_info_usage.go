@@ -2,89 +2,88 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"os"
-	"time"
 
 	"github.com/rahulkj/app-info/cmd"
-
-	"code.cloudfoundry.org/cli/plugin"
+	"gopkg.in/yaml.v3"
 )
 
 // AppInfo represents Buildpack Usage CLI interface
 type AppInfo struct{}
 
-// GetMetadata provides the Cloud Foundry CLI with metadata to provide user about how to use buildpack-usage command
-func (c *AppInfo) GetMetadata() plugin.PluginMetadata {
-	return plugin.PluginMetadata{
-		Name: "app-info",
-		Version: plugin.VersionType{
-			Major: 1,
-			Minor: 6,
-			Build: 0,
-		},
-		Commands: []plugin.Command{
-			{
-				Name:     "app-info",
-				HelpText: "Command to view all apps running across all orgs/spaces in the cf deployment",
-				UsageDetails: plugin.Usage{
-					Usage: "cf app-info [flags]",
-					Options: map[string]string{
-						"--csv or -c":         "Minimal application details",
-						"--json or -j":        "All application details in json format",
-						"--manifests or -m":   "Generate application mainfests in current working directory",
-						"--packages or -p":    "Download applications packages in current working directory. NOTE: Time consuming activity",
-						"--include-env or -e": "Optional flag to include environment variables in json / manifest output",
-					},
-				},
-			},
-		},
-	}
-}
-
 func main() {
-	plugin.Start(new(AppInfo))
-}
+	option := flag.String("option", "csv", "csv, json, yaml, packages")
+	configFileLocation := flag.String("config", "", "Absolute path to config file that has the cloud foundry target and bearer token")
+	includeEnvironmentVars := flag.Bool("include-env", false, "Optional flag to include environment variables in json / manifest output. (default false)")
+	flag.Parse()
 
-// Run is what is executed by the Cloud Foundry CLI when the buildpack-usage command is specified
-func (c AppInfo) Run(cli plugin.CliConnection, args []string) {
-	startTime := time.Now()
-	fmt.Println()
+	if *option == "" {
+		fmt.Println("Error: -option cannot be empty.")
+		flag.Usage()
+		os.Exit(1)
+	}
 
-	if args[0] == "app-info" {
-		if len(args) < 2 {
-			fmt.Printf("Missing flags, please run help to see the valid options")
-			os.Exit(0)
-		}
+	if *configFileLocation == "" {
+		fmt.Println("Error: -config should be specified")
+		flag.Usage()
+		os.Exit(1)
+	}
 
-		include_env_variables := false
+	var config cmd.Config
 
-		for _, arg := range args {
-			if arg == "--include-env" || arg == "-e" {
-				include_env_variables = true
-			}
-		}
+	if *configFileLocation != "" {
+		c, err := checkConfigExists(*configFileLocation)
 
-		if args[1] == "--json" || args[1] == "-j" {
-			c.printVerboseOutputInJsonFormat(cli, include_env_variables)
-		} else if args[1] == "--manifests" || args[1] == "-m" {
-			c.downloadApplicationManifests(cli, include_env_variables)
-		} else if args[1] == "--csv" || args[1] == "-c" {
-			c.printInCSVFormat(cli)
-		} else if args[1] == "--packages" || args[1] == "-p" {
-			c.downloadApplicationPackages(cli)
+		if c == nil || err != nil {
+			fmt.Println("Error: Specfied config does not have the required keys")
+			flag.Usage()
+			os.Exit(1)
 		} else {
-			fmt.Printf("Invalid flags, please run help to see the valid options")
+			config = *c
 		}
 	}
 
-	fmt.Println()
-	fmt.Println("***** Finished in", time.Since(startTime), " *****")
+	switch *option {
+	case "csv":
+		printInCSVFormat(config, *includeEnvironmentVars)
+	case "json":
+		printVerboseOutputInJsonFormat(config, *includeEnvironmentVars)
+	case "yaml":
+		downloadApplicationManifests(config, *includeEnvironmentVars)
+	case "packages":
+		downloadApplicationPackages(config)
+	default:
+		fmt.Println("Error: -option cannot be empty.")
+		flag.Usage()
+		os.Exit(1)
+	}
+
+}
+
+func checkConfigExists(filePath string) (*cmd.Config, error) {
+	data, err := os.ReadFile(filePath)
+	if err != nil {
+		return nil, err
+	}
+
+	var config cmd.Config
+	err = yaml.Unmarshal(data, &config)
+	if err != nil {
+		return nil, err
+	}
+
+	if config.ApiEndpoint == "" || config.OauthToken == "" {
+		return nil, nil
+	}
+
+	return &config, nil
 }
 
 // PrintInCSVFormat prints the app and buildpack used info on the console
-func (c AppInfo) printInCSVFormat(cli plugin.CliConnection) {
-	orgs, spaces, apps := cmd.GatherData(cli, false)
+func printInCSVFormat(config cmd.Config, include_env_variables bool) {
+	orgs, spaces, apps := cmd.GatherData(config, include_env_variables)
 
 	fmt.Println("**** Following is the csv output ****")
 	fmt.Println()
@@ -101,8 +100,8 @@ func (c AppInfo) printInCSVFormat(cli plugin.CliConnection) {
 }
 
 // PrintVerboseOutputInJsonFormat prints the app state, instances, memroy and disk data to console
-func (c AppInfo) printVerboseOutputInJsonFormat(cli plugin.CliConnection, include_env_variables bool) {
-	_, _, apps := cmd.GatherData(cli, include_env_variables)
+func printVerboseOutputInJsonFormat(config cmd.Config, include_env_variables bool) {
+	_, _, apps := cmd.GatherData(config, include_env_variables)
 
 	b, err := json.Marshal(apps)
 	if err != nil {
@@ -114,7 +113,7 @@ func (c AppInfo) printVerboseOutputInJsonFormat(cli plugin.CliConnection, includ
 	fmt.Println(string(b))
 }
 
-func (c AppInfo) downloadApplicationManifests(cli plugin.CliConnection, include_env_variables bool) {
+func downloadApplicationManifests(config cmd.Config, include_env_variables bool) {
 	currentDir, err := os.Getwd()
 	if err != nil {
 		fmt.Printf("Failed to access current directory: %s\n", err)
@@ -127,12 +126,12 @@ func (c AppInfo) downloadApplicationManifests(cli plugin.CliConnection, include_
 
 	os.MkdirAll(currentDir, os.ModePerm)
 
-	cmd.GenerateAppManifests(currentDir, cli, include_env_variables)
+	cmd.GenerateAppManifests(currentDir, config, include_env_variables)
 
 	fmt.Println("Generate application manifests are located in: ", currentDir)
 }
 
-func (c AppInfo) downloadApplicationPackages(cli plugin.CliConnection) {
+func downloadApplicationPackages(config cmd.Config) {
 	currentDir, err := os.Getwd()
 	if err != nil {
 		fmt.Printf("Failed to access current directory: %s\n", err)
@@ -145,7 +144,7 @@ func (c AppInfo) downloadApplicationPackages(cli plugin.CliConnection) {
 
 	os.MkdirAll(currentDir, os.ModePerm)
 
-	cmd.DownloadApplicationPackages(currentDir, cli)
+	cmd.DownloadApplicationPackages(currentDir, config)
 
 	fmt.Println("Application packages are located in: ", currentDir)
 }

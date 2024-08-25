@@ -6,12 +6,11 @@ import (
 	"path/filepath"
 	"sync"
 
-	"github.com/cloudfoundry/cli/plugin"
 	"gopkg.in/yaml.v3"
 )
 
-func GenerateAppManifests(currentDir string, cli plugin.CliConnection, include_env_variables bool) {
-	orgs, spaces, apps := GatherData(cli, include_env_variables)
+func GenerateAppManifests(currentDir string, config Config, include_env_variables bool) {
+	orgs, spaces, apps := GatherData(config, include_env_variables)
 
 	var wg sync.WaitGroup
 	for _, app := range apps {

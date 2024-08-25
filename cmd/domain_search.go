@@ -3,9 +3,6 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
-	"strings"
-
-	"github.com/cloudfoundry/cli/plugin"
 )
 
 type Domains struct {
@@ -22,10 +19,10 @@ type DomainResources struct {
 	Name string `json:"name"`
 }
 
-func getDomains(cli plugin.CliConnection) map[string]string {
+func getDomains(config Config) map[string]string {
 	var data map[string]string
 	data = make(map[string]string)
-	domains := getDomainsData(cli)
+	domains := getDomainsData(config)
 
 	for _, val := range domains.Resources {
 		data[val.GUID] = val.Name
@@ -35,13 +32,14 @@ func getDomains(cli plugin.CliConnection) map[string]string {
 }
 
 // GetOrgData requests all of the Application data from Cloud Foundry
-func getDomainsData(cli plugin.CliConnection) Domains {
-	var res Domains = unmarshallDomainsSearchResults("/v3/domains", cli)
+func getDomainsData(config Config) Domains {
+	apiUrl := fmt.Sprintf("%s/v3/domains", config.ApiEndpoint)
+	var res Domains = unmarshallDomainsSearchResults(apiUrl, config)
 
 	if res.Pagination.TotalPages > 1 {
 		for i := 2; i <= res.Pagination.TotalPages; i++ {
-			apiUrl := fmt.Sprintf("/v3/domains?page=%d&per_page=50", i)
-			tRes := unmarshallDomainsSearchResults(apiUrl, cli)
+			apiUrl := fmt.Sprintf("%s?page=%d&per_page=100", apiUrl, i)
+			tRes := unmarshallDomainsSearchResults(apiUrl, config)
 			res.Resources = append(res.Resources, tRes.Resources...)
 		}
 	}
@@ -49,11 +47,10 @@ func getDomainsData(cli plugin.CliConnection) Domains {
 	return res
 }
 
-func unmarshallDomainsSearchResults(apiUrl string, cli plugin.CliConnection) Domains {
+func unmarshallDomainsSearchResults(apiUrl string, config Config) Domains {
 	var tRes Domains
-	cmd := []string{"curl", apiUrl}
-	output, _ := cli.CliCommandWithoutTerminalOutput(cmd...)
-	json.Unmarshal([]byte(strings.Join(output, "")), &tRes)
+	output, _ := getResponse(config, apiUrl)
+	json.Unmarshal([]byte(output), &tRes)
 
 	return tRes
 }

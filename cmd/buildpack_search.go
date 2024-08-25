@@ -3,9 +3,6 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
-	"strings"
-
-	"github.com/cloudfoundry/cli/plugin"
 )
 
 type Buildpacks struct {
@@ -28,9 +25,14 @@ type BuildpackResources struct {
 	Locked   bool   `json:"locked"`
 }
 
-func getBuildpacks(cli plugin.CliConnection) map[string]BuildpackResources {
+type AppDetectedBuildpacks struct {
+	AppGUID                    string
+	DetectedBuildPackFileNames []string
+}
+
+func getBuildpacks(config Config) map[string]BuildpackResources {
 	data := make(map[string]BuildpackResources)
-	buildpacks := getBuildPacksData(cli)
+	buildpacks := getBuildPacksData(config)
 
 	for _, val := range buildpacks.Resources {
 		data[val.Name] = val
@@ -40,13 +42,14 @@ func getBuildpacks(cli plugin.CliConnection) map[string]BuildpackResources {
 }
 
 // GetOrgData requests all of the Application data from Cloud Foundry
-func getBuildPacksData(cli plugin.CliConnection) Buildpacks {
-	var res Buildpacks = unmarshallBuildpackSearchResults("/v3/buildpacks", cli)
+func getBuildPacksData(config Config) Buildpacks {
+	apiUrl := fmt.Sprintf("%s/v3/buildpacks", config.ApiEndpoint)
+	var res Buildpacks = unmarshallBuildpackSearchResults(apiUrl, config)
 
 	if res.Pagination.TotalPages > 1 {
 		for i := 2; i <= res.Pagination.TotalPages; i++ {
-			apiUrl := fmt.Sprintf("/v3/buildpacks?page=%d&per_page=50", i)
-			tRes := unmarshallBuildpackSearchResults(apiUrl, cli)
+			apiUrl := fmt.Sprintf("%s?page=%d&per_page=100", apiUrl, i)
+			tRes := unmarshallBuildpackSearchResults(apiUrl, config)
 			res.Resources = append(res.Resources, tRes.Resources...)
 		}
 	}
@@ -54,21 +57,23 @@ func getBuildPacksData(cli plugin.CliConnection) Buildpacks {
 	return res
 }
 
-func unmarshallBuildpackSearchResults(apiUrl string, cli plugin.CliConnection) Buildpacks {
+func unmarshallBuildpackSearchResults(apiUrl string, config Config) Buildpacks {
 	var tRes Buildpacks
-	cmd := []string{"curl", apiUrl}
-	output, _ := cli.CliCommandWithoutTerminalOutput(cmd...)
-	json.Unmarshal([]byte(strings.Join(output, "")), &tRes)
+
+	output, _ := getResponse(config, apiUrl)
+	json.Unmarshal([]byte(output), &tRes)
 
 	return tRes
 }
 
-func getBuildpackDetails(app AppResource, buildpacks map[string]BuildpackResources, displayAppChan chan<- DisplayApp) {
-	var displayApp DisplayApp
+func getBuildpackDetails(app AppResource, buildpacks map[string]BuildpackResources) AppDetectedBuildpacks {
+	// defer wg.Done()
+	var appDetectedBuildpacks AppDetectedBuildpacks
 
 	for _, buildpack := range app.Lifecycle.Data.Buildpacks {
-		displayApp.DetectedBuildPackFileNames = append(displayApp.DetectedBuildPackFileNames, buildpacks[buildpack].Filename)
+		appDetectedBuildpacks.AppGUID = app.GUID
+		appDetectedBuildpacks.DetectedBuildPackFileNames = append(appDetectedBuildpacks.DetectedBuildPackFileNames, buildpacks[buildpack].Filename)
 	}
 
-	displayAppChan <- displayApp
+	return appDetectedBuildpacks
 }

@@ -2,13 +2,10 @@ package cmd
 
 import (
 	"encoding/json"
-	"net/url"
-	"strings"
-
-	"code.cloudfoundry.org/cli/plugin"
 )
 
 type AppFeatures struct {
+	AppGUID  string
 	Features []AppFeatureResource `json:"resources"`
 }
 
@@ -18,19 +15,17 @@ type AppFeatureResource struct {
 	Enabled     bool   `json:"enabled"`
 }
 
-func getAppFeatures(app AppResource, cli plugin.CliConnection, displayAppChan chan<- DisplayApp) {
-	var displayApp DisplayApp
+func getAppFeatures(app AppResource, config Config) AppFeatures {
+	// defer wg.Done()
 
 	var appFeatures AppFeatures
 
-	featuresUrl, _ := url.Parse(app.AppLinks.Features.Href)
+	appFeatures.AppGUID = app.GUID
 
-	cmd := []string{"curl", featuresUrl.Path}
+	apiUrl := app.AppLinks.Features.Href
 
-	output, _ := cli.CliCommandWithoutTerminalOutput(cmd...)
-	json.Unmarshal([]byte(strings.Join(output, "")), &appFeatures)
+	output, _ := getResponse(config, apiUrl)
+	json.Unmarshal([]byte(output), &appFeatures)
 
-	displayApp.Features = appFeatures.Features
-
-	displayAppChan <- displayApp
+	return appFeatures
 }
