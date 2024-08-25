@@ -4,17 +4,6 @@ import (
 	"encoding/json"
 )
 
-type AppFeatures struct {
-	AppGUID  string
-	Features []AppFeatureResource `json:"resources"`
-}
-
-type AppFeatureResource struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Enabled     bool   `json:"enabled"`
-}
-
 func getAppFeatures(app AppResource, config Config) AppFeatures {
 	// defer wg.Done()
 

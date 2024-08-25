@@ -10,27 +10,6 @@ import (
 	"github.com/schollz/progressbar/v3"
 )
 
-type AppPackages struct {
-	Resources []AppPackageResource `json:"resources"`
-}
-
-type AppPackageResource struct {
-	GUID string `json:"guid"`
-}
-
-type CurrentDroplet struct {
-	GUID  string             `json:"guid"`
-	Links CurrentDropletLink `json:"links"`
-}
-
-type CurrentDropletLink struct {
-	Package PackageLink `json:"package"`
-}
-
-type PackageLink struct {
-	Href string `json:"href"`
-}
-
 func DownloadApplicationPackages(currentDir string, config Config) {
 	orgs, spaces, apps := GatherData(config, false)
 
@@ -63,7 +42,7 @@ func downloadAppPackages(orgs map[string]string, spaces map[string]SpaceSearchRe
 	defer wg.Done()
 	space := spaces[app.SpaceGUID]
 	spaceName := space.Name
-	orgName := orgs[space.Relationships.RelationshipsOrg.OrgData.OrgGUID]
+	orgName := orgs[space.Relationships.RelationshipsOrg.OrgData.GUID]
 
 	apiUrl := fmt.Sprintf("%s/v3/apps/%s/droplets/current", config.ApiEndpoint, app.AppGUID)
 

@@ -30,7 +30,7 @@ func createAppManifest(orgs map[string]string, spaces map[string]SpaceSearchReso
 
 	space := spaces[app.SpaceGUID]
 	spaceName := space.Name
-	orgName := orgs[space.Relationships.RelationshipsOrg.OrgData.OrgGUID]
+	orgName := orgs[space.Relationships.RelationshipsOrg.OrgData.GUID]
 
 	yamlData, err := yaml.Marshal(app)
 	if err != nil {

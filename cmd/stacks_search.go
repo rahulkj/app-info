@@ -5,22 +5,6 @@ import (
 	"fmt"
 )
 
-type Stacks struct {
-	Resources  []StackResource  `json:"resources"`
-	Pagination StacksPagination `json:"pagination"`
-}
-
-type StacksPagination struct {
-	TotalPages int `json:"total_pages"`
-}
-
-type StackResource struct {
-	GUID        string `json:"guid"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Default     bool   `json:"default"`
-}
-
 func getAppStack(app *DisplayApp, stacks map[string]StackResource) {
 	var stackResource StackResource = stacks[app.Stack]
 	app.StackGUID = stackResource.GUID

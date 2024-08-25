@@ -5,31 +5,6 @@ import (
 	"fmt"
 )
 
-type Buildpacks struct {
-	Resources  []BuildpackResources `json:"resources"`
-	Pagination BuildpacksPagination `json:"pagination"`
-}
-
-type BuildpacksPagination struct {
-	TotalPages int `json:"total_pages"`
-}
-
-type BuildpackResources struct {
-	GUID     string `json:"guid"`
-	Name     string `json:"name"`
-	Stack    string `json:"stack"`
-	State    string `json:"state"`
-	Position int    `json:"position"`
-	Filename string `json:"filename"`
-	Enabled  bool   `json:"enabled"`
-	Locked   bool   `json:"locked"`
-}
-
-type AppDetectedBuildpacks struct {
-	AppGUID                    string
-	DetectedBuildPackFileNames []string
-}
-
 func getBuildpacks(config Config) map[string]BuildpackResources {
 	data := make(map[string]BuildpackResources)
 	buildpacks := getBuildPacksData(config)

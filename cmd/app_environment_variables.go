@@ -4,11 +4,6 @@ import (
 	"encoding/json"
 )
 
-type AppEnvironment struct {
-	AppGUID     string
-	Environment map[string]interface{} `json:"var"`
-}
-
 func getAppEnvironmentVariables(app AppResource, include_env_variables bool, config Config) AppEnvironment {
 	// defer wg.Done()
 

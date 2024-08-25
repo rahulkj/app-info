@@ -8,87 +8,6 @@ import (
 	"github.com/schollz/progressbar/v3"
 )
 
-// AppSearchResults represents top level attributes of JSON response from Cloud Foundry API
-type Apps struct {
-	Resources  []AppResource  `json:"resources"`
-	Pagination AppsPagination `json:"pagination"`
-}
-
-type AppsPagination struct {
-	TotalPages int `json:"total_pages"`
-}
-
-type AppResource struct {
-	GUID          string           `json:"guid"`
-	Name          string           `json:"name"`
-	State         string           `json:"state"`
-	Lifecycle     Lifecycle        `json:"lifecycle"`
-	RelationShips AppRelationShips `json:"relationships"`
-	AppLinks      Links            `json:"links"`
-}
-
-type Lifecycle struct {
-	Type string        `json:"type"`
-	Data LifecycleData `json:"data"`
-}
-
-type LifecycleData struct {
-	Buildpacks []string `json:"buildpacks"`
-	Stack      string   `json:"stack"`
-}
-
-type AppRelationShips struct {
-	Space AppSpace `json:"space"`
-}
-
-type AppSpace struct {
-	Data AppSpaceData `json:"data"`
-}
-
-type AppSpaceData struct {
-	SpaceGUID string `json:"guid"`
-}
-
-type Links struct {
-	Self              Link `json:"self"`
-	EnvironmentVars   Link `json:"environment_variables"`
-	Space             Link `json:"space"`
-	Processes         Link `json:"processes"`
-	Packages          Link `json:"packages"`
-	CurrentDroplet    Link `json:"current_droplet"`
-	Droplets          Link `json:"droplets"`
-	Tasks             Link `json:"tasks"`
-	Revisions         Link `json:"revisions"`
-	DeployedRevisions Link `json:"deployed_revisions"`
-	Features          Link `json:"features"`
-}
-
-type Link struct {
-	Href string `json:"href"`
-}
-type DisplayApp struct {
-	Name                       string                 `json:"name"`
-	AppGUID                    string                 `json:"guid"`
-	Instances                  int                    `json:"instances"`
-	State                      string                 `json:"state"`
-	Memory                     int                    `json:"memory_in_mb"`
-	Disk                       int                    `json:"disk_in_mb"`
-	LogRate                    int                    `json:"log_rate_limit_in_bytes_per_second"`
-	Buildpacks                 []string               `json:"buildpacks"`
-	DetectedBuildPack          string                 `json:"detected_buildpack"`
-	DetectedBuildPackFileNames []string               `json:"detected_buildpack_filenames"`
-	SpaceGUID                  string                 `json:"space_guid"`
-	Environment                map[string]interface{} `json:"environment_json"`
-	HealthCheck                string                 `json:"health_check_type"`
-	ReadinessHealthCheck       string                 `json:"readiness_health_check_type"`
-	Type                       string                 `json:"type"`
-	Routes                     []string               `json:"routes"`
-	Stack                      string                 `json:"stack"`
-	Services                   []Service              `json:"services"`
-	Features                   []AppFeatureResource   `json:"resources"`
-	StackGUID                  string                 `json:"stackguid"`
-}
-
 type AppData interface{}
 
 type BasicAppData struct {
@@ -134,7 +53,7 @@ func GatherData(config Config, include_env_variables bool) (map[string]string, m
 	apps := getAppData(config)
 	buildpacks := getBuildpacks(config)
 	routes := getAllRoutes(config)
-	// services := getAllServices(cli)
+	services := getServices(config)
 
 	var displayApps []DisplayApp
 
@@ -174,6 +93,10 @@ func GatherData(config Config, include_env_variables bool) (map[string]string, m
 			displayApp.Environment = appEnvironment.Environment
 			appFeatures := getAppFeatures(appResource, config)
 			displayApp.Features = appFeatures.Features
+
+			appServices := getAppSevices(appResource, services)
+			displayApp.Services = appServices.Services
+
 			appDataCh <- displayApp
 		}()
 		// wg.Add(6)
@@ -254,7 +177,7 @@ func getAppBasicData(app AppResource) BasicAppData {
 	basicData.Stack = app.Lifecycle.Data.Stack
 	basicData.Buildpacks = app.Lifecycle.Data.Buildpacks
 	basicData.State = app.State
-	basicData.SpaceGUID = app.RelationShips.Space.Data.SpaceGUID
+	basicData.SpaceGUID = app.RelationShips.Space.Data.GUID
 
 	// ch <- basicData
 

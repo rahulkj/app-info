@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/rahulkj/app-info/cmd"
 	"gopkg.in/yaml.v3"
@@ -14,6 +15,7 @@ import (
 type AppInfo struct{}
 
 func main() {
+	startTime := time.Now()
 	option := flag.String("option", "csv", "csv, json, yaml, packages")
 	configFileLocation := flag.String("config", "", "Absolute path to config file that has the cloud foundry target and bearer token")
 	includeEnvironmentVars := flag.Bool("include-env", false, "Optional flag to include environment variables in json / manifest output. (default false)")
@@ -60,6 +62,8 @@ func main() {
 		os.Exit(1)
 	}
 
+	fmt.Println()
+	fmt.Println("***** Finished in", time.Since(startTime), " *****")
 }
 
 func checkConfigExists(filePath string) (*cmd.Config, error) {
@@ -93,7 +97,7 @@ func printInCSVFormat(config cmd.Config, include_env_variables bool) {
 
 		space := spaces[val.SpaceGUID]
 		spaceName := space.Name
-		orgName := orgs[space.Relationships.RelationshipsOrg.OrgData.OrgGUID]
+		orgName := orgs[space.Relationships.RelationshipsOrg.OrgData.GUID]
 
 		fmt.Printf("%s,%s,%s,%s,%v,%v MB,%v MB,%s,%s,%s,%s,%s\n", orgName, spaceName, val.Name, val.State, val.Instances, val.Memory, val.Disk, val.HealthCheck, val.Stack, val.Buildpacks, val.DetectedBuildPack, val.DetectedBuildPackFileNames)
 	}
