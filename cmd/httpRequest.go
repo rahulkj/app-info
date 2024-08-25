@@ -74,11 +74,13 @@ func downloadFile(config Config, url string, filePath string) (bool, error) {
 	req, err := createRequest("GET", config.OauthToken, url)
 	if err != nil {
 		logger.Printf("Error making HTTP request: %v\n", err)
+		return false, err
 	}
 
 	resp, err := createHttpClient().Do(req)
 	if err != nil {
 		logger.Printf("Error making HTTP request: %v\n", err)
+		return false, err
 	}
 
 	defer resp.Body.Close()

@@ -80,20 +80,24 @@ func downloadAppPackages(orgs map[string]string, spaces map[string]SpaceSearchRe
 }
 
 func downloadAppPackage(app DisplayApp, currentDroplet CurrentDroplet, orgDir string, config Config, result chan string) {
-
-	apiUrl := currentDroplet.Links.Package.Href + "/download"
-
-	fileName := app.Name + "-" + app.AppGUID + ".zip"
-
-	filePath := filepath.Join(orgDir, fileName)
-
-	ok, err := downloadFile(config, apiUrl, filePath)
-
 	var message string
-	if ok && err == nil {
-		message = "Package download successfully in: " + filePath
+
+	if currentDroplet.Links.Package.Href != "" {
+		apiUrl := currentDroplet.Links.Package.Href + "/download"
+
+		fileName := app.Name + "-" + app.AppGUID + ".zip"
+
+		filePath := filepath.Join(orgDir, fileName)
+
+		ok, err := downloadFile(config, apiUrl, filePath)
+
+		if ok && err == nil {
+			message = fmt.Sprintf("Package download successfully for %s in: %s", app.Name, filePath)
+		} else {
+			message = fmt.Sprintf("Package download unsuccessfully for: %s", app.Name)
+		}
 	} else {
-		message = "Package download unsuccessfully for: " + app.Name
+		message = fmt.Sprintf("Package does not exist for: %s", app.Name)
 	}
 
 	result <- message

@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"sync"
@@ -25,13 +26,15 @@ func GenerateAppManifests(currentDir string, config Config, include_env_variable
 }
 
 func createAppManifest(orgs map[string]string, spaces map[string]SpaceSearchResource, app DisplayApp, currentDir string) {
+	logger := log.New(os.Stdout, "Log: ", log.Ldate|log.Ltime)
+
 	space := spaces[app.SpaceGUID]
 	spaceName := space.Name
 	orgName := orgs[space.Relationships.RelationshipsOrg.OrgData.OrgGUID]
 
 	yamlData, err := yaml.Marshal(app)
 	if err != nil {
-		fmt.Printf("Failed to marshal YAML: %s\n", err)
+		logger.Printf("Failed to marshal YAML: %s\n", err)
 		return
 	}
 
@@ -44,8 +47,9 @@ func createAppManifest(orgs map[string]string, spaces map[string]SpaceSearchReso
 	filePath := filepath.Join(orgDir, fileName)
 
 	if err := os.WriteFile(filePath, []byte(yamlData), 0644); err != nil {
-		fmt.Printf("Failed to write file '%s': %s\n", fileName, err)
+		logger.Printf("Failed to write file '%s': %s\n", fileName, err)
 		return
 	}
+
 	fmt.Printf("File '%s' created successfully.\n", fileName)
 }
