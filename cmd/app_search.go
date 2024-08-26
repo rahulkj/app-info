@@ -47,7 +47,7 @@ func unmarshallAppSearchResults(path string, config Config) Apps {
 	return tRes
 }
 
-func GatherData(config Config, includeEnvVariables bool) (map[string]string, map[string]SpaceSearchResource, []DisplayApp, []ServiceInstancesResource) {
+func GatherData(config Config, includeEnvVariables bool) (map[string]string, map[string]SpaceSearchResource, []DisplayApp, []Service) {
 
 	orgs := getOrgs(config)
 	spaces := getSpaces(config)

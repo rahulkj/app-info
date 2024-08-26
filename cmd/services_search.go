@@ -78,9 +78,11 @@ func unmarshallServiceInstanceBindingResults(apiUrl string, config Config) Servi
 	return tRes
 }
 
-func getServices(config Config) (map[string][]ServiceInstancesResource, []ServiceInstancesResource) {
+func getServices(config Config) (map[string][]ServiceInstancesResource, []Service) {
 	appServicesBinding := make(map[string][]ServiceInstancesResource)
-	var unboundServices []ServiceInstancesResource
+
+	var unboundServices []Service
+	var unboundServicesRaw []ServiceInstancesResource
 
 	services := getAllServices(config)
 
@@ -113,9 +115,14 @@ func getServices(config Config) (map[string][]ServiceInstancesResource, []Servic
 				serviceInstanceResources = append(serviceInstanceResources, services[serviceInstanceGuid])
 				appServicesBinding[appGuid] = serviceInstanceResources
 			} else {
-				unboundServices = append(unboundServices, services[serviceCredentialBindingResource.ServiceInstanceGUID])
+				unboundServicesRaw = append(unboundServicesRaw, services[serviceCredentialBindingResource.ServiceInstanceGUID])
 			}
 		}
+	}
+
+	for _, unboundService := range unboundServicesRaw {
+		service := getDisplayService(unboundService)
+		unboundServices = append(unboundServices, service)
 	}
 
 	return appServicesBinding, unboundServices
@@ -127,17 +134,26 @@ func getAppSevices(app AppResource, services map[string][]ServiceInstancesResour
 	appServices := services[app.GUID]
 
 	for _, service := range appServices {
-		var appService Service
-
-		appService.Name = service.Name
-		appService.GUID = service.GUID
-		appService.Type = service.Type
-
-		appService.Description = service.MaintenanceInfo.Description
-		appService.Version = service.MaintenanceInfo.Version
-
+		appService := getDisplayService(service)
 		displayApp.Services = append(displayApp.Services, appService)
 	}
 
 	return displayApp
+}
+
+func getDisplayService(serviceInstanceResource ServiceInstancesResource) Service {
+	var service Service
+
+	service.Name = serviceInstanceResource.Name
+	service.GUID = serviceInstanceResource.GUID
+	service.Type = serviceInstanceResource.Type
+	service.CreatedAt = serviceInstanceResource.CreatedAt
+	service.UpdatedAt = serviceInstanceResource.UpdatedAt
+
+	service.Description = serviceInstanceResource.MaintenanceInfo.Description
+	service.Version = serviceInstanceResource.MaintenanceInfo.Version
+
+	service.SpaceGUID = serviceInstanceResource.Relationships.Space.Data.GUID
+
+	return service
 }

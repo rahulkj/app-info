@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"log"
 	"os"
 	"time"
 
@@ -111,26 +112,41 @@ func printInCSVFormat(config cmd.Config, includeEnvVariables bool) {
 
 	if len(unboundServices) != 0 {
 		cmd.Green("**** Following is the csv output for unused services ****\n")
+		fmt.Println()
+
 		fmt.Printf("%s,%s,%s,%s,%s,%s,%s\n", "SERVICENAME", "CREATED_AT", "UPDATED_AT", "TYPE", "VERSION", "DESCRIPTION", "SPACE")
 
 		for _, service := range unboundServices {
-			fmt.Printf("%s,%s,%s,%s,%s,%s,%s\n", service.Name, service.CreatedAt, service.UpdatedAt, service.Type, service.MaintenanceInfo.Version, service.MaintenanceInfo.Description, spaces[service.Relationships.Space.Data.GUID].Name)
+			fmt.Printf("%s,%s,%s,%s,%s,%s,%s\n", service.Name, service.CreatedAt, service.UpdatedAt, service.Type, service.Version, service.Description, spaces[service.SpaceGUID])
 		}
 	}
 }
 
 // PrintVerboseOutputInJsonFormat prints the app state, instances, memroy and disk data to console
 func printVerboseOutputInJsonFormat(config cmd.Config, includeEnvVariables bool) {
-	_, _, apps, _ := cmd.GatherData(config, includeEnvVariables)
+	_, _, apps, unboundServices := cmd.GatherData(config, includeEnvVariables)
 
-	b, err := json.Marshal(apps)
+	appData, err := json.Marshal(apps)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	cmd.Green("**** Following is the json output ****\n")
-	fmt.Println(string(b))
+	cmd.Green("**** Following is the json output with all applications ****\n")
+	fmt.Println(string(appData))
+	log.Println(string(appData))
+
+	if len(unboundServices) > 0 {
+		unboundServicesData, err := json.Marshal(unboundServices)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		cmd.Green("**** Following is the json output with all unbound services ****\n")
+		fmt.Println(string(unboundServicesData))
+		log.Println(string(unboundServicesData))
+	}
 }
 
 func downloadApplicationManifests(config cmd.Config, includeEnvVariables bool) {
@@ -146,9 +162,9 @@ func downloadApplicationManifests(config cmd.Config, includeEnvVariables bool) {
 
 	os.MkdirAll(currentDir, os.ModePerm)
 
-	cmd.GenerateAppManifests(currentDir, config, includeEnvVariables)
+	cmd.GenerateManifests(currentDir, config, includeEnvVariables)
 
-	cmd.Green("Generate application manifests are located in: %s\n", currentDir)
+	cmd.Green("Generated manifests are located in: %s\n", currentDir)
 }
 
 func downloadApplicationPackages(config cmd.Config) {

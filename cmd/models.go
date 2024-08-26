@@ -112,7 +112,6 @@ type DisplayApp struct {
 	Disk                       int                    `json:"disk_in_mb"`
 	LogRate                    int                    `json:"log_rate_limit_in_bytes_per_second"`
 	Buildpacks                 []string               `json:"buildpacks"`
-	DetectedBuildPack          string                 `json:"detected_buildpack"`
 	DetectedBuildPackFileNames []string               `json:"detected_buildpack_filenames"`
 	SpaceGUID                  string                 `json:"space_guid"`
 	Environment                map[string]interface{} `json:"environment_json"`
@@ -123,7 +122,6 @@ type DisplayApp struct {
 	Stack                      string                 `json:"stack"`
 	Services                   []Service              `json:"services"`
 	Features                   []AppFeatureResource   `json:"resources"`
-	StackGUID                  string                 `json:"stackguid"`
 }
 
 type Buildpacks struct {
@@ -290,6 +288,9 @@ type Service struct {
 	Type        string `json:"type"`
 	Version     string `json:"version"`
 	Description string `json:"description"`
+	SpaceGUID   string `json:"space_guid"`
+	CreatedAt   string `json:"created_at"`
+	UpdatedAt   string `json:"updated_at"`
 }
 
 type Info struct {

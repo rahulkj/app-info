@@ -7,7 +7,7 @@ import (
 
 func getAppStack(app *DisplayApp, stacks map[string]StackResource) {
 	var stackResource StackResource = stacks[app.Stack]
-	app.StackGUID = stackResource.GUID
+	app.Stack = stackResource.Name
 }
 
 func getStacks(config Config) map[string]StackResource {
