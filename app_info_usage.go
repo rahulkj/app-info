@@ -12,8 +12,15 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+var (
+	version = "0.0.0"
+	date    = "unknown"
+)
+
 func main() {
 	cmd.Logger()
+
+	fmt.Printf("AppInfo version: %s built at: %s\n", version, date)
 
 	startTime := time.Now()
 	option := flag.String("option", "csv", "csv, json, yaml, packages")

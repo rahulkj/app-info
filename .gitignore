@@ -3,3 +3,4 @@ output*
 config.yaml
 *.log
 *.json
+dist/
