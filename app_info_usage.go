@@ -8,7 +8,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/rahulkj/app-info/cmd/v2"
+	"github.com/rahulkj/app-info/v2/cmd"
 	"gopkg.in/yaml.v3"
 )
 
