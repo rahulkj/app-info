@@ -280,10 +280,11 @@ type ServiceInstanceBindings struct {
 }
 
 type ServiceInstanceBindingResource struct {
-	GUID          string                                     `json:"guid"`
-	Type          string                                     `json:"type"`
-	Relationships ServiceInstanceBindingResourceRelationship `json:"relationships"`
-	Links         Links                                      `json:"links"`
+	ServiceInstanceGUID string
+	GUID                string                                     `json:"guid"`
+	Type                string                                     `json:"type"`
+	Relationships       ServiceInstanceBindingResourceRelationship `json:"relationships"`
+	Links               Links                                      `json:"links"`
 }
 
 type ServiceInstanceBindingResourceRelationship struct {
@@ -304,5 +305,11 @@ type Service struct {
 	Name        string `json:"name"`
 	Type        string `json:"type"`
 	Version     string `json:"version"`
+	Description string `json:"description"`
+}
+
+type Info struct {
+	Name        string `json:"name"`
+	Build       string `json:"build"`
 	Description string `json:"description"`
 }

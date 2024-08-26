@@ -5,8 +5,6 @@ import (
 )
 
 func getAppFeatures(app AppResource, config Config) AppFeatures {
-	// defer wg.Done()
-
 	var appFeatures AppFeatures
 
 	appFeatures.AppGUID = app.GUID

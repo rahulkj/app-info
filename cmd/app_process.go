@@ -5,8 +5,6 @@ import (
 )
 
 func getAppProcesses(app AppResource, config Config) DisplayApp {
-	// defer wg.Done()
-
 	var displayApp DisplayApp
 
 	apiUrl := app.AppLinks.Processes.Href

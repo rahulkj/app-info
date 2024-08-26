@@ -11,9 +11,6 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// AppInfo represents Buildpack Usage CLI interface
-type AppInfo struct{}
-
 func main() {
 	startTime := time.Now()
 	option := flag.String("option", "csv", "csv, json, yaml, packages")
@@ -22,13 +19,13 @@ func main() {
 	flag.Parse()
 
 	if *option == "" {
-		fmt.Println("Error: -option cannot be empty.")
+		cmd.Red("Error: -option cannot be empty.\n")
 		flag.Usage()
 		os.Exit(1)
 	}
 
 	if *configFileLocation == "" {
-		fmt.Println("Error: -config should be specified")
+		cmd.Red("Error: -config should be specified\n")
 		flag.Usage()
 		os.Exit(1)
 	}
@@ -39,13 +36,16 @@ func main() {
 		c, err := checkConfigExists(*configFileLocation)
 
 		if c == nil || err != nil {
-			fmt.Println("Error: Specfied config does not have the required keys")
+			cmd.Red("Error: Specfied config does not have the required keys\n")
 			flag.Usage()
 			os.Exit(1)
 		} else {
 			config = *c
 		}
 	}
+
+	info := cmd.GetInfo(config)
+	fmt.Printf("Connecting to TAS version: %s\n", info.Build)
 
 	switch *option {
 	case "csv":
@@ -57,13 +57,13 @@ func main() {
 	case "packages":
 		downloadApplicationPackages(config)
 	default:
-		fmt.Println("Error: -option cannot be empty.")
+		cmd.Red("Error: -option is invalid.\n")
 		flag.Usage()
 		os.Exit(1)
 	}
 
 	fmt.Println()
-	fmt.Println("***** Finished in", time.Since(startTime), " *****")
+	cmd.Yellow("***** Finished in %s *****\n", time.Since(startTime))
 }
 
 func checkConfigExists(filePath string) (*cmd.Config, error) {
@@ -89,7 +89,7 @@ func checkConfigExists(filePath string) (*cmd.Config, error) {
 func printInCSVFormat(config cmd.Config, include_env_variables bool) {
 	orgs, spaces, apps := cmd.GatherData(config, include_env_variables)
 
-	fmt.Println("**** Following is the csv output ****")
+	cmd.Green("**** Following is the csv output ****\n")
 	fmt.Println()
 
 	fmt.Printf("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", "ORG", "SPACE", "APPLICATION", "STATE", "INSTANCES", "MEMORY", "DISK", "HEALTH_CHECK", "STACK", "BUILDPACK", "DETECTED_BUILDPACK", "DETECTED_BUILDPACK_FILENAME")
@@ -113,42 +113,42 @@ func printVerboseOutputInJsonFormat(config cmd.Config, include_env_variables boo
 		return
 	}
 
-	fmt.Println("**** Following is the json output ****")
+	cmd.Green("**** Following is the json output ****\n")
 	fmt.Println(string(b))
 }
 
 func downloadApplicationManifests(config cmd.Config, include_env_variables bool) {
 	currentDir, err := os.Getwd()
 	if err != nil {
-		fmt.Printf("Failed to access current directory: %s\n", err)
+		cmd.Red("Failed to access current directory: %s\n", err)
 		return
 	}
 
 	currentDir = currentDir + "/output"
 
-	fmt.Println("Output will be generated in: ", currentDir)
+	cmd.Yellow("Output will be generated in: %s\n", currentDir)
 
 	os.MkdirAll(currentDir, os.ModePerm)
 
 	cmd.GenerateAppManifests(currentDir, config, include_env_variables)
 
-	fmt.Println("Generate application manifests are located in: ", currentDir)
+	cmd.Green("Generate application manifests are located in: %s\n", currentDir)
 }
 
 func downloadApplicationPackages(config cmd.Config) {
 	currentDir, err := os.Getwd()
 	if err != nil {
-		fmt.Printf("Failed to access current directory: %s\n", err)
+		cmd.Red("Failed to access current directory: %s\n", err)
 		return
 	}
 
 	currentDir = currentDir + "/output"
 
-	fmt.Println("Packages will be downloaded into: ", currentDir)
+	cmd.Yellow("Packages will be downloaded into: %s\n", currentDir)
 
 	os.MkdirAll(currentDir, os.ModePerm)
 
 	cmd.DownloadApplicationPackages(currentDir, config)
 
-	fmt.Println("Application packages are located in: ", currentDir)
+	cmd.Green("Application packages are located in: %s\n", currentDir)
 }

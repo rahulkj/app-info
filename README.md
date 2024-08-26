@@ -9,6 +9,8 @@ A command line utility for Cloud Foundry to view the buildpacks, instances, capa
    token: eyJqzZXIiLCJyb3V0aW5n0NzA5ODAzYzc3ZDBlYjFiNGU0YyIsImVtYWlsIjkVG0oMQVRw2aiksg
    cf_endpoint: https://api.sys.example.com
    ```
+
+   **NOTE:** To fetch the token, please login using the [cf](https://github.com/cloudfoundry/cli/releases) cli, and once authenticated, run the `cf oauth-token` command to fetch the token.
 * Run the executable
     `./releases/app-info-darwin-amd64 -config=config.yaml`
 

@@ -36,6 +36,7 @@ func createHttpClient() *http.Client {
 }
 
 func getResponse(config Config, url string) (string, error) {
+
 	logger := log.New(os.Stdout, "Log: ", log.Ldate|log.Ltime)
 
 	req, err := createRequest("GET", config.OauthToken, url)
@@ -55,6 +56,9 @@ func getResponse(config Config, url string) (string, error) {
 	// Check if the response status is OK (200)
 	if resp.StatusCode != http.StatusOK {
 		logger.Printf("Error: received non-OK HTTP status: %s\n", resp.Status)
+
+		parseStatus(resp.StatusCode, url)
+
 		return "", err
 	}
 
@@ -88,6 +92,9 @@ func downloadFile(config Config, url string, filePath string) (bool, error) {
 	// Check if the response status is OK (200)
 	if resp.StatusCode != http.StatusOK {
 		logger.Printf("Error: received non-OK HTTP status: %s\n", resp.Status)
+
+		parseStatus(resp.StatusCode, url)
+
 		return false, err
 	}
 
@@ -107,4 +114,14 @@ func downloadFile(config Config, url string, filePath string) (bool, error) {
 	}
 
 	return true, nil
+}
+
+func parseStatus(code int, url string) {
+	switch code {
+	case 401:
+		Red("Cannot login using the provided info\n")
+		os.Exit(1)
+	case 404:
+		Yellow("Cannot find the url %s\n", url)
+	}
 }

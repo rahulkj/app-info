@@ -5,8 +5,6 @@ import (
 )
 
 func getAppEnvironmentVariables(app AppResource, include_env_variables bool, config Config) AppEnvironment {
-	// defer wg.Done()
-
 	var appEnvironment AppEnvironment
 
 	appEnvironment.AppGUID = app.GUID

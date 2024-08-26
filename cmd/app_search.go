@@ -3,6 +3,7 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"sync"
 
 	"github.com/schollz/progressbar/v3"
@@ -21,7 +22,7 @@ type BasicAppData struct {
 
 // GetAppData requests all of the Application data from Cloud Foundry
 func getAppData(config Config) Apps {
-	fmt.Println("**** Gathering application metadata from all orgs and spaces ****")
+	Yellow("**** Gathering application metadata from all orgs and spaces ****\n")
 
 	res := unmarshallAppSearchResults("/v3/apps", config)
 
@@ -53,7 +54,9 @@ func GatherData(config Config, include_env_variables bool) (map[string]string, m
 	apps := getAppData(config)
 	buildpacks := getBuildpacks(config)
 	routes := getAllRoutes(config)
-	services := getServices(config)
+	services, unboundServices := getServices(config)
+
+	log.Printf("Unbound service instances found: %d\n", len(unboundServices))
 
 	var displayApps []DisplayApp
 
@@ -99,7 +102,6 @@ func GatherData(config Config, include_env_variables bool) (map[string]string, m
 
 			appDataCh <- displayApp
 		}()
-		// wg.Add(6)
 	}
 
 	go func() {
@@ -112,64 +114,10 @@ func GatherData(config Config, include_env_variables bool) (map[string]string, m
 		displayApps = append(displayApps, data)
 	}
 
-	// allAppsData := make(map[string]DisplayApp)
-
-	// for data := range appDataCh {
-	// 	bar.Add(1)
-	// 	switch v := data.(type) {
-	// 	case DisplayApp:
-	// 		displayApp := allAppsData[v.AppGUID]
-	// 		displayApp.Instances = v.Instances
-	// 		displayApp.Memory = v.Memory
-	// 		displayApp.Disk = v.Disk
-	// 		displayApp.LogRate = v.LogRate
-	// 		displayApp.HealthCheck = v.HealthCheck
-	// 		displayApp.ReadinessHealthCheck = v.ReadinessHealthCheck
-	// 		displayApp.Type = v.Type
-	// 		allAppsData[v.AppGUID] = displayApp
-	// 	case AppDetectedBuildpacks:
-	// 		displayApp := allAppsData[v.AppGUID]
-	// 		displayApp.DetectedBuildPackFileNames = v.DetectedBuildPackFileNames
-	// 		allAppsData[v.AppGUID] = displayApp
-	// 	case AppRoutes:
-	// 		displayApp := allAppsData[v.AppGUID]
-	// 		displayApp.Routes = v.Routes
-	// 		allAppsData[v.AppGUID] = displayApp
-	// 	case AppEnvironment:
-	// 		displayApp := allAppsData[v.AppGUID]
-	// 		displayApp.Environment = v.Environment
-	// 		allAppsData[v.AppGUID] = displayApp
-	// 	case AppFeatures:
-	// 		displayApp := allAppsData[v.AppGUID]
-	// 		displayApp.Features = v.Features
-	// 		allAppsData[v.AppGUID] = displayApp
-	// 	case BasicAppData:
-	// 		displayApp := allAppsData[v.AppGUID]
-	// 		displayApp.Name = v.Name
-	// 		displayApp.AppGUID = v.AppGUID
-	// 		displayApp.Stack = v.Stack
-	// 		displayApp.Buildpacks = v.Buildpacks
-	// 		displayApp.State = v.State
-	// 		displayApp.SpaceGUID = v.SpaceGUID
-	// 		allAppsData[v.AppGUID] = displayApp
-	// 	default:
-	// 		log.Println("Unexpected data type received")
-	// 	}
-	// }
-
-	// for _, displayApp := range allAppsData {
-	// 	bar.Add(1)
-	// 	displayApps = append(displayApps, displayApp)
-	// }
-
-	// displayApp = getAppServices(app, services)
 	return orgs, spaces, displayApps
 }
 
 func getAppBasicData(app AppResource) BasicAppData {
-
-	// defer wg.Done()
-
 	var basicData BasicAppData
 
 	basicData.Name = app.Name
@@ -178,8 +126,6 @@ func getAppBasicData(app AppResource) BasicAppData {
 	basicData.Buildpacks = app.Lifecycle.Data.Buildpacks
 	basicData.State = app.State
 	basicData.SpaceGUID = app.RelationShips.Space.Data.GUID
-
-	// ch <- basicData
 
 	return basicData
 }

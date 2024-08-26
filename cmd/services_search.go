@@ -37,20 +37,33 @@ func unmarshallServiceInstancesResults(apiUrl string, config Config) ServiceInst
 }
 
 func getAllAppServiceBindings(config Config, serviceInstanceResource ServiceInstancesResource) ServiceInstanceBindings {
+
 	var res ServiceInstanceBindings
+
+	var result ServiceInstanceBindings
 
 	apiUrl := serviceInstanceResource.Links.ServiceCredentialBindings.Href
 
 	if apiUrl != "" {
-		res = unmarshallServiceInstanceBindingResults(apiUrl, config)
+		result = unmarshallServiceInstanceBindingResults(apiUrl, config)
 
 		if res.Pagination.TotalPages > 1 {
-			for i := 2; i <= res.Pagination.TotalPages; i++ {
+			for i := 2; i <= result.Pagination.TotalPages; i++ {
 				apiUrl := fmt.Sprintf("%s?page=%d&per_page=100", apiUrl, i)
 				tRes := unmarshallServiceInstanceBindingResults(apiUrl, config)
-				res.Resources = append(res.Resources, tRes.Resources...)
+				result.Resources = append(result.Resources, tRes.Resources...)
 			}
 		}
+	}
+
+	if len(result.Resources) == 0 {
+		var sib ServiceInstanceBindingResource
+		result.Resources = append(result.Resources, sib)
+	}
+
+	for _, sib := range result.Resources {
+		sib.ServiceInstanceGUID = serviceInstanceResource.GUID
+		res.Resources = append(res.Resources, sib)
 	}
 
 	return res
@@ -65,8 +78,9 @@ func unmarshallServiceInstanceBindingResults(apiUrl string, config Config) Servi
 	return tRes
 }
 
-func getServices(config Config) map[string][]ServiceInstancesResource {
+func getServices(config Config) (map[string][]ServiceInstancesResource, []ServiceInstancesResource) {
 	appServicesBinding := make(map[string][]ServiceInstancesResource)
+	var unboundServices []ServiceInstancesResource
 
 	services := getAllServices(config)
 
@@ -98,11 +112,13 @@ func getServices(config Config) map[string][]ServiceInstancesResource {
 				serviceInstanceResources := appServicesBinding[appGuid]
 				serviceInstanceResources = append(serviceInstanceResources, services[serviceInstanceGuid])
 				appServicesBinding[appGuid] = serviceInstanceResources
+			} else {
+				unboundServices = append(unboundServices, services[serviceCredentialBindingResource.ServiceInstanceGUID])
 			}
 		}
 	}
 
-	return appServicesBinding
+	return appServicesBinding, unboundServices
 }
 
 func getAppSevices(app AppResource, services map[string][]ServiceInstancesResource) DisplayApp {
