@@ -1,4 +1,4 @@
-module github.com/rahulkj/app-info
+module github.com/rahulkj/app-info/v2
 
 go 1.23.0
 
@@ -9,12 +9,16 @@ require (
 )
 
 require (
+	code.cloudfoundry.org/cli v7.1.0+incompatible // indirect
+	github.com/cloudfoundry/cli v7.1.0+incompatible // indirect
+	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mitchellh/colorstring v0.0.0-20190213212951-d06e56a500db // indirect
+	github.com/nxadm/tail v1.4.11 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
-	github.com/stretchr/testify v1.5.1 // indirect
-	golang.org/x/sys v0.24.0 // indirect
+	golang.org/x/net v0.28.0 // indirect
+	golang.org/x/sys v0.23.0 // indirect
 	golang.org/x/term v0.23.0 // indirect
-	gopkg.in/yaml.v2 v2.3.0 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
