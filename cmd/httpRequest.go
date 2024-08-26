@@ -36,18 +36,15 @@ func createHttpClient() *http.Client {
 }
 
 func getResponse(config Config, url string) (string, error) {
-
-	logger := log.New(os.Stdout, "Log: ", log.Ldate|log.Ltime)
-
 	req, err := createRequest("GET", config.OauthToken, url)
 	if err != nil {
-		logger.Printf("Error making HTTP request: %v\n", err)
+		log.Printf("Error making HTTP request: %v\n", err)
 		return "", err
 	}
 
 	resp, err := createHttpClient().Do(req)
 	if err != nil {
-		logger.Printf("Error making HTTP request: %v\n", err)
+		log.Printf("Error making HTTP request: %v\n", err)
 		return "", err
 	}
 
@@ -55,7 +52,7 @@ func getResponse(config Config, url string) (string, error) {
 
 	// Check if the response status is OK (200)
 	if resp.StatusCode != http.StatusOK {
-		logger.Printf("Error: received non-OK HTTP status: %s\n", resp.Status)
+		log.Printf("Error: received non-OK HTTP status: %s\n", resp.Status)
 
 		parseStatus(resp.StatusCode, url)
 
@@ -65,7 +62,7 @@ func getResponse(config Config, url string) (string, error) {
 	// Read the response body
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		logger.Printf("Error reading response body: %v\n", err)
+		log.Printf("Error reading response body: %v\n", err)
 		return "", err
 	}
 
@@ -73,17 +70,16 @@ func getResponse(config Config, url string) (string, error) {
 }
 
 func downloadFile(config Config, url string, filePath string) (bool, error) {
-	logger := log.New(os.Stdout, "Log:", log.Ldate|log.Ltime)
 
 	req, err := createRequest("GET", config.OauthToken, url)
 	if err != nil {
-		logger.Printf("Error making HTTP request: %v\n", err)
+		log.Printf("Error making HTTP request: %v\n", err)
 		return false, err
 	}
 
 	resp, err := createHttpClient().Do(req)
 	if err != nil {
-		logger.Printf("Error making HTTP request: %v\n", err)
+		log.Printf("Error making HTTP request: %v\n", err)
 		return false, err
 	}
 
@@ -91,7 +87,7 @@ func downloadFile(config Config, url string, filePath string) (bool, error) {
 
 	// Check if the response status is OK (200)
 	if resp.StatusCode != http.StatusOK {
-		logger.Printf("Error: received non-OK HTTP status: %s\n", resp.Status)
+		log.Printf("Error: received non-OK HTTP status: %s\n", resp.Status)
 
 		parseStatus(resp.StatusCode, url)
 
@@ -101,7 +97,7 @@ func downloadFile(config Config, url string, filePath string) (bool, error) {
 	// Create the output file
 	out, err := os.Create(filePath)
 	if err != nil {
-		logger.Printf("Error creating output file: %v\n", err)
+		log.Printf("Error creating output file: %v\n", err)
 		return false, err
 	}
 	defer out.Close()
@@ -109,7 +105,7 @@ func downloadFile(config Config, url string, filePath string) (bool, error) {
 	// Copy the response body to the output file
 	_, err = io.Copy(out, resp.Body)
 	if err != nil {
-		logger.Printf("Error saving file: %v\n", err)
+		log.Printf("Error saving file: %v\n", err)
 		return false, err
 	}
 
@@ -121,6 +117,9 @@ func parseStatus(code int, url string) {
 	case 401:
 		Red("Cannot login using the provided info\n")
 		os.Exit(1)
+	case 403:
+		log.Printf("Not authorized to access the url %s\n", url)
+		Yellow("Not authorized to access the url, check logs for more info\n")
 	case 404:
 		Yellow("Cannot find the url %s\n", url)
 	}

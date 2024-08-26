@@ -12,6 +12,8 @@ import (
 )
 
 func main() {
+	cmd.Logger()
+
 	startTime := time.Now()
 	option := flag.String("option", "csv", "csv, json, yaml, packages")
 	configFileLocation := flag.String("config", "", "Absolute path to config file that has the cloud foundry target and bearer token")
@@ -86,26 +88,40 @@ func checkConfigExists(filePath string) (*cmd.Config, error) {
 }
 
 // PrintInCSVFormat prints the app and buildpack used info on the console
-func printInCSVFormat(config cmd.Config, include_env_variables bool) {
-	orgs, spaces, apps := cmd.GatherData(config, include_env_variables)
+func printInCSVFormat(config cmd.Config, includeEnvVariables bool) {
+	orgs, spaces, apps, unboundServices := cmd.GatherData(config, includeEnvVariables)
 
-	cmd.Green("**** Following is the csv output ****\n")
+	cmd.Green("**** Following is the csv output for apps ****\n")
 	fmt.Println()
 
-	fmt.Printf("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", "ORG", "SPACE", "APPLICATION", "STATE", "INSTANCES", "MEMORY", "DISK", "HEALTH_CHECK", "STACK", "BUILDPACK", "DETECTED_BUILDPACK", "DETECTED_BUILDPACK_FILENAME")
+	fmt.Printf("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", "ORG", "SPACE", "APPLICATION", "STATE", "INSTANCES", "MEMORY", "DISK", "HEALTH_CHECK", "STACK", "BUILDPACK", "DETECTED_BUILDPACK_FILENAME", "SERVICES")
 	for _, val := range apps {
 
 		space := spaces[val.SpaceGUID]
 		spaceName := space.Name
-		orgName := orgs[space.Relationships.RelationshipsOrg.OrgData.GUID]
+		orgName := orgs[space.Relationships.RelationshipsOrg.Data.GUID]
 
-		fmt.Printf("%s,%s,%s,%s,%v,%v MB,%v MB,%s,%s,%s,%s,%s\n", orgName, spaceName, val.Name, val.State, val.Instances, val.Memory, val.Disk, val.HealthCheck, val.Stack, val.Buildpacks, val.DetectedBuildPack, val.DetectedBuildPackFileNames)
+		var service_names []string
+		for _, service := range val.Services {
+			service_names = append(service_names, service.Name)
+		}
+
+		fmt.Printf("%s,%s,%s,%s,%v,%v MB,%v MB,%s,%s,%s,%s,%s\n", orgName, spaceName, val.Name, val.State, val.Instances, val.Memory, val.Disk, val.HealthCheck, val.Stack, val.Buildpacks, val.DetectedBuildPackFileNames, service_names)
+	}
+
+	if len(unboundServices) != 0 {
+		cmd.Green("**** Following is the csv output for unused services ****\n")
+		fmt.Printf("%s,%s,%s,%s,%s,%s,%s\n", "SERVICENAME", "CREATED_AT", "UPDATED_AT", "TYPE", "VERSION", "DESCRIPTION", "SPACE")
+
+		for _, service := range unboundServices {
+			fmt.Printf("%s,%s,%s,%s,%s,%s,%s\n", service.Name, service.CreatedAt, service.UpdatedAt, service.Type, service.MaintenanceInfo.Version, service.MaintenanceInfo.Description, spaces[service.Relationships.Space.Data.GUID].Name)
+		}
 	}
 }
 
 // PrintVerboseOutputInJsonFormat prints the app state, instances, memroy and disk data to console
-func printVerboseOutputInJsonFormat(config cmd.Config, include_env_variables bool) {
-	_, _, apps := cmd.GatherData(config, include_env_variables)
+func printVerboseOutputInJsonFormat(config cmd.Config, includeEnvVariables bool) {
+	_, _, apps, _ := cmd.GatherData(config, includeEnvVariables)
 
 	b, err := json.Marshal(apps)
 	if err != nil {
@@ -117,7 +133,7 @@ func printVerboseOutputInJsonFormat(config cmd.Config, include_env_variables boo
 	fmt.Println(string(b))
 }
 
-func downloadApplicationManifests(config cmd.Config, include_env_variables bool) {
+func downloadApplicationManifests(config cmd.Config, includeEnvVariables bool) {
 	currentDir, err := os.Getwd()
 	if err != nil {
 		cmd.Red("Failed to access current directory: %s\n", err)
@@ -130,7 +146,7 @@ func downloadApplicationManifests(config cmd.Config, include_env_variables bool)
 
 	os.MkdirAll(currentDir, os.ModePerm)
 
-	cmd.GenerateAppManifests(currentDir, config, include_env_variables)
+	cmd.GenerateAppManifests(currentDir, config, includeEnvVariables)
 
 	cmd.Green("Generate application manifests are located in: %s\n", currentDir)
 }

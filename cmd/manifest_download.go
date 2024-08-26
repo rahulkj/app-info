@@ -11,7 +11,7 @@ import (
 )
 
 func GenerateAppManifests(currentDir string, config Config, include_env_variables bool) {
-	orgs, spaces, apps := GatherData(config, include_env_variables)
+	orgs, spaces, apps, _ := GatherData(config, include_env_variables)
 
 	var wg sync.WaitGroup
 	for _, app := range apps {
@@ -26,15 +26,14 @@ func GenerateAppManifests(currentDir string, config Config, include_env_variable
 }
 
 func createAppManifest(orgs map[string]string, spaces map[string]SpaceSearchResource, app DisplayApp, currentDir string) {
-	logger := log.New(os.Stdout, "Log: ", log.Ldate|log.Ltime)
 
 	space := spaces[app.SpaceGUID]
 	spaceName := space.Name
-	orgName := orgs[space.Relationships.RelationshipsOrg.OrgData.GUID]
+	orgName := orgs[space.Relationships.RelationshipsOrg.Data.GUID]
 
 	yamlData, err := yaml.Marshal(app)
 	if err != nil {
-		logger.Printf("Failed to marshal YAML: %s\n", err)
+		log.Printf("Failed to marshal YAML: %s\n", err)
 		return
 	}
 
@@ -47,7 +46,7 @@ func createAppManifest(orgs map[string]string, spaces map[string]SpaceSearchReso
 	filePath := filepath.Join(orgDir, fileName)
 
 	if err := os.WriteFile(filePath, []byte(yamlData), 0644); err != nil {
-		logger.Printf("Failed to write file '%s': %s\n", fileName, err)
+		log.Printf("Failed to write file '%s': %s\n", fileName, err)
 		return
 	}
 

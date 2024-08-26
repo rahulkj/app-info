@@ -3,7 +3,6 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"sync"
 
 	"github.com/schollz/progressbar/v3"
@@ -21,7 +20,7 @@ type BasicAppData struct {
 }
 
 // GetAppData requests all of the Application data from Cloud Foundry
-func getAppData(config Config) Apps {
+func getAppsData(config Config) Apps {
 	Yellow("**** Gathering application metadata from all orgs and spaces ****\n")
 
 	res := unmarshallAppSearchResults("/v3/apps", config)
@@ -48,15 +47,14 @@ func unmarshallAppSearchResults(path string, config Config) Apps {
 	return tRes
 }
 
-func GatherData(config Config, include_env_variables bool) (map[string]string, map[string]SpaceSearchResource, []DisplayApp) {
+func GatherData(config Config, includeEnvVariables bool) (map[string]string, map[string]SpaceSearchResource, []DisplayApp, []ServiceInstancesResource) {
+
 	orgs := getOrgs(config)
 	spaces := getSpaces(config)
-	apps := getAppData(config)
+	apps := getAppsData(config)
 	buildpacks := getBuildpacks(config)
 	routes := getAllRoutes(config)
 	services, unboundServices := getServices(config)
-
-	log.Printf("Unbound service instances found: %d\n", len(unboundServices))
 
 	var displayApps []DisplayApp
 
@@ -92,7 +90,7 @@ func GatherData(config Config, include_env_variables bool) (map[string]string, m
 			appRoutes := getAppRoutes(appResource, routes)
 			displayApp.Routes = appRoutes.Routes
 
-			appEnvironment := getAppEnvironmentVariables(appResource, include_env_variables, config)
+			appEnvironment := getAppEnvironmentVariables(appResource, includeEnvVariables, config)
 			displayApp.Environment = appEnvironment.Environment
 			appFeatures := getAppFeatures(appResource, config)
 			displayApp.Features = appFeatures.Features
@@ -114,7 +112,7 @@ func GatherData(config Config, include_env_variables bool) (map[string]string, m
 		displayApps = append(displayApps, data)
 	}
 
-	return orgs, spaces, displayApps
+	return orgs, spaces, displayApps, unboundServices
 }
 
 func getAppBasicData(app AppResource) BasicAppData {

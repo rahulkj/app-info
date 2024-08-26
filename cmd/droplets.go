@@ -11,7 +11,7 @@ import (
 )
 
 func DownloadApplicationPackages(currentDir string, config Config) {
-	orgs, spaces, apps := GatherData(config, false)
+	orgs, spaces, apps, _ := GatherData(config, false)
 
 	var messages []string
 
@@ -42,7 +42,7 @@ func downloadAppPackages(orgs map[string]string, spaces map[string]SpaceSearchRe
 	defer wg.Done()
 	space := spaces[app.SpaceGUID]
 	spaceName := space.Name
-	orgName := orgs[space.Relationships.RelationshipsOrg.OrgData.GUID]
+	orgName := orgs[space.Relationships.RelationshipsOrg.Data.GUID]
 
 	apiUrl := fmt.Sprintf("%s/v3/apps/%s/droplets/current", config.ApiEndpoint, app.AppGUID)
 

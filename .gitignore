@@ -1,3 +1,5 @@
 app-info*
 output
 config.yaml
+*.log
+*.json

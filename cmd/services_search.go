@@ -105,8 +105,8 @@ func getServices(config Config) (map[string][]ServiceInstancesResource, []Servic
 
 	for data := range appDataCh {
 		for _, serviceCredentialBindingResource := range data.Resources {
-			appGuid := serviceCredentialBindingResource.Relationships.App.AppData.GUID
-			serviceInstanceGuid := serviceCredentialBindingResource.Relationships.ServiceInstance.ServiceInstanceData.GUID
+			appGuid := serviceCredentialBindingResource.Relationships.App.Data.GUID
+			serviceInstanceGuid := serviceCredentialBindingResource.Relationships.ServiceInstance.Data.GUID
 
 			if appGuid != "" {
 				serviceInstanceResources := appServicesBinding[appGuid]

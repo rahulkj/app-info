@@ -26,10 +26,10 @@ type AppHealthCheck struct {
 }
 
 type AppProcessRelationship struct {
-	AppRelationShip AppRelationShip `json:"app"`
+	AppRelationShip DataHolder `json:"app"`
 }
 
-type AppRelationShip struct {
+type DataHolder struct {
 	Data Data `json:"data"`
 }
 
@@ -79,11 +79,7 @@ type LifecycleData struct {
 }
 
 type AppRelationShips struct {
-	Space AppSpace `json:"space"`
-}
-
-type AppSpace struct {
-	Data Data `json:"data"`
+	Space DataHolder `json:"space"`
 }
 
 type Links struct {
@@ -224,11 +220,7 @@ type SpaceSearchResource struct {
 }
 
 type SpaceRelationship struct {
-	RelationshipsOrg RelationshipsOrg `json:"organization"`
-}
-
-type RelationshipsOrg struct {
-	OrgData Data `json:"data"`
+	RelationshipsOrg DataHolder `json:"organization"`
 }
 
 type Stacks struct {
@@ -265,8 +257,8 @@ type ServiceInstancesResource struct {
 }
 
 type ServiceInstancesResourceRelationship struct {
-	Space       Data `json:"data"`
-	ServicePlan Data `json:"service_plan"`
+	Space       DataHolder `json:"space"`
+	ServicePlan DataHolder `json:"service_plan"`
 }
 
 type MaintenanceInfo struct {
@@ -288,16 +280,8 @@ type ServiceInstanceBindingResource struct {
 }
 
 type ServiceInstanceBindingResourceRelationship struct {
-	App             ServiceInstanceBindingResourceApp `json:"app"`
-	ServiceInstance ServiceInstanceBindingResourceRef `json:"service_instance"`
-}
-
-type ServiceInstanceBindingResourceApp struct {
-	AppData Data `json:"data"`
-}
-
-type ServiceInstanceBindingResourceRef struct {
-	ServiceInstanceData Data `json:"data"`
+	App             DataHolder `json:"app"`
+	ServiceInstance DataHolder `json:"service_instance"`
 }
 
 type Service struct {

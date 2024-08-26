@@ -4,13 +4,12 @@ import (
 	"encoding/json"
 )
 
-func getAppEnvironmentVariables(app AppResource, include_env_variables bool, config Config) AppEnvironment {
+func getAppEnvironmentVariables(app AppResource, includeEnvVariables bool, config Config) AppEnvironment {
 	var appEnvironment AppEnvironment
 
 	appEnvironment.AppGUID = app.GUID
 
-	if include_env_variables {
-
+	if includeEnvVariables {
 		apiUrl := app.AppLinks.EnvironmentVars.Href
 
 		output, _ := getResponse(config, apiUrl)

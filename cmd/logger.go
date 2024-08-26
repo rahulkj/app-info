@@ -1,6 +1,11 @@
 package cmd
 
-import "github.com/fatih/color"
+import (
+	"log"
+	"os"
+
+	"github.com/fatih/color"
+)
 
 var Red = GetColorRed().PrintfFunc()
 var Green = GetColorGreen().PrintfFunc()
@@ -25,4 +30,11 @@ func GetColorBlue() *color.Color {
 func GetColorYellow() *color.Color {
 	col := color.New(color.FgYellow)
 	return col
+}
+
+func Logger() {
+	logfile, _ := os.Create("appinfo.log")
+	log.SetOutput(logfile)
+	log.SetPrefix("Log: ")
+	log.SetFlags(log.Ldate | log.Ltime)
 }
