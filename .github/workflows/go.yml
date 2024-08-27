@@ -27,7 +27,7 @@ jobs:
       run: sudo snap install goreleaser --classic
       
     - name: Build
-      run: goreleaser build --clean --auto-snapshot
+      run: goreleaser build --clean --snapshot
     
     - name: Upload artifacts
       uses: actions/upload-artifact@master
