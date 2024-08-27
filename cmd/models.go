@@ -66,6 +66,8 @@ type AppResource struct {
 	Lifecycle     Lifecycle        `json:"lifecycle"`
 	RelationShips AppRelationShips `json:"relationships"`
 	AppLinks      Links            `json:"links"`
+	CreatedAt     string           `json:"created_at"`
+	UpdatedAt     string           `json:"updated_at"`
 }
 
 type Lifecycle struct {
@@ -122,6 +124,8 @@ type DisplayApp struct {
 	Stack                      string                 `json:"stack"`
 	Services                   []Service              `json:"services"`
 	Features                   []AppFeatureResource   `json:"resources"`
+	CreatedAt                  string                 `json:"created_at"`
+	UpdatedAt                  string                 `json:"updated_at"`
 }
 
 type Buildpacks struct {

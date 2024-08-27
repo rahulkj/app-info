@@ -17,6 +17,8 @@ type BasicAppData struct {
 	State      string   `json:"state"`
 	Buildpacks []string `json:"buildpacks"`
 	SpaceGUID  string   `json:"space_guid"`
+	CreatedAt  string   `json:"created_at"`
+	UpdatedAt  string   `json:"updated_at"`
 }
 
 // GetAppData requests all of the Application data from Cloud Foundry
@@ -74,6 +76,8 @@ func GatherData(config Config, includeEnvVariables bool) (map[string]string, map
 			displayApp.Buildpacks = basicData.Buildpacks
 			displayApp.State = basicData.State
 			displayApp.SpaceGUID = basicData.SpaceGUID
+			displayApp.CreatedAt = basicData.CreatedAt
+			displayApp.UpdatedAt = basicData.UpdatedAt
 
 			disApp := getAppProcesses(appResource, config)
 			displayApp.Instances = disApp.Instances
@@ -124,6 +128,8 @@ func getAppBasicData(app AppResource) BasicAppData {
 	basicData.Buildpacks = app.Lifecycle.Data.Buildpacks
 	basicData.State = app.State
 	basicData.SpaceGUID = app.RelationShips.Space.Data.GUID
+	basicData.CreatedAt = app.CreatedAt
+	basicData.UpdatedAt = app.UpdatedAt
 
 	return basicData
 }
